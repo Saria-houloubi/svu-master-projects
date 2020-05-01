@@ -1,0 +1,21 @@
+﻿html, body {
+    height: 100%;
+}
+/*
+	The top continer of the page
+	so to push put the footer in and push it to the bottom
+*/
+.hole-page-container {
+    min-height: 100vh;
+    padding-bottom: 30px;
+}
+/*
+	The sticky footer in the bottom 
+	works with dynamic html content
+*/
+footer {
+    position: relative;
+    margin-top: -30px;
+    height: 30px;
+    clear: both;
+}

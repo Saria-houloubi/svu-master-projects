@@ -3,22 +3,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+    <!--Set page title-->
     <title>@ViewBag.Title - SVU-Projects</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <!--Add css files-->
+    <link href="~/css/main.css" rel="stylesheet" />
     <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
 <body>
+    <div class="hole-page-container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a href="/" class="navbar-brand">SVU Projects</a>
+            <!--Toggle button for small screen-->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> 
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    @RenderBody()
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav"> 
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">AWP</a>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+
+        <div class="container">
+            <!--Inject vide here-->
+            @RenderBody()
+        </div>
+        
+    </div>
 
     
-    <footer>
-        <hr />
-        <p>
-            Copyright &copy; @DateTime.UtcNow.Year
-        </p>
+    <!--footer start-->
+    <footer class="text-center">
+        <hr class="m-0" />
+        <span>Copyright &copy; @DateTime.Now.Year</span>
     </footer>
 
+    <!--JS files-->
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
 </body>
