@@ -1,5 +1,13 @@
-﻿
-.card .custome-card-img{
-    max-width : 500px;
-    margin : auto;
+﻿.card {
+    justify-content: center;
+    text-align: center;
 }
+.card img {
+    width : 50%;
+    margin : 0px auto   ;
+}
+
+.card-body p {
+    white-space : pre-line;
+}
+
