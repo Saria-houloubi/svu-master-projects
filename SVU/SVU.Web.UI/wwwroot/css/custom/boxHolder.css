@@ -1,0 +1,24 @@
+﻿
+/*
+    The styles for the inner header navigation
+*/
+
+.box-holder {
+    border : solid 1px;
+    border-color : white;
+
+    background-color : whitesmoke;
+
+    height:60px;
+    width:100%;
+    
+    top:0;
+    position:sticky;
+    z-index : 1000; 
+}
+
+.box-content{
+    padding : 10px;
+    text-align : center;
+}
+

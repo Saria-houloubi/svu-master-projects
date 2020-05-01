@@ -1,0 +1,14 @@
+﻿/*
+    Custom menus
+*/
+
+.v-scroll-menu{
+    white-space: nowrap;
+    overflow : auto;
+}
+
+.v-scroll-menu .card {
+    display : inline-block;
+    padding : 14px;
+}
+

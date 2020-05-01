@@ -1,15 +1,15 @@
 ﻿<!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <!--Set page title-->
-    <title>@ViewBag.Title - SVU-Projects</title>
+    <title>@ViewBag.Title</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width" />
     <!--Add css files-->
     <link href="~/css/main.css" rel="stylesheet" />
     <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -17,29 +17,39 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a href="/" class="navbar-brand">SVU Projects</a>
             <!--Toggle button for small screen-->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> 
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav"> 
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">AWP</a>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" aria-haspopup="true"
+                           id="navbarDropDown" role="button" data-toggle="dropdown" aria-expanded="false">
+                            Looking for a spacfic class
+                        </a>
+                        <div class="dropdown-menu" id="navbarDropDown">
+                            <a class="dropdown-item" href="/class/ADE">ADE (Data Exchange)</a>
+                            <a class="dropdown-item" href="/class/ADM">ADM (Data Mining)</a>
+                            <a class="dropdown-item" href="/class/ADP">ADP (Distribution Programming)</a>
+                            <a class="dropdown-item" href="/class/AWE">AWE (Web Engineering)</a>
+                            <a class="dropdown-item" href="/class/AWP">AWP (Web Programming)</a>
+                        </div>
                     </li>
                 </ul>
             </div>
 
         </nav>
 
-        <div class="container">
+        <div>
             <!--Inject vide here-->
             @RenderBody()
         </div>
-        
+
     </div>
 
-    
+
     <!--footer start-->
     <footer class="text-center">
         <hr class="m-0" />
@@ -49,6 +59,8 @@
     <!--JS files-->
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/font-awesome/js/all.min.js"></script>
+
 </body>
 
 </html>
