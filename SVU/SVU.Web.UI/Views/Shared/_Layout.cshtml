@@ -4,10 +4,23 @@
 
 <head>
     <title>@ViewBag.Title - SVU-Projects</title>
+    <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
 <body>
+
     @RenderBody()
+
+    
+    <footer>
+        <hr />
+        <p>
+            Copyright &copy; @DateTime.UtcNow.Year
+        </p>
+    </footer>
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>
