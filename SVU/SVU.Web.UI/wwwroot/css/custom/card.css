@@ -2,12 +2,12 @@
     justify-content: center;
     text-align: center;
 }
-.card img {
-    width : 50%;
-    margin : 0px auto   ;
-}
+
+    .card img {
+        width: 50%;
+        margin: 0px auto;
+    }
 
 .card-body p {
-    white-space : pre-line;
+    white-space: pre-line;
 }
-

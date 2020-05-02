@@ -1,12 +1,15 @@
-﻿@import "custom/container.css";
+﻿@import "animation/slide.css";
+@import "animation/puls.css";
+@import "custom/container.css";
 @import "custom/menu.css";
 @import "custom/card.css";
 @import "custom/boxHolder.css";
+@import "custom/image.css";
 
 nav {
     z-index:10000;
-
 }
+
 html, body {
     height: 100%;
 }
@@ -27,4 +30,5 @@ footer {
     margin-top: -50px;
     height: 50px;
     clear: both;
+    padding :0px 10px;
 }
