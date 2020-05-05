@@ -12,9 +12,9 @@ namespace SVU.Database.Models
     public class Session : BaseEntityModel
     {
         #region Properties
+        public string Title { get; set; }
         public string Description { get; set; }
-        public float FileSize { get; set; }
-        public string DownloadLink { get; set; }
+        public string ImageUrl { get; set; }
         [ForeignKey(nameof(Course))]
         public Guid CourseId { get; set; }
         #endregion

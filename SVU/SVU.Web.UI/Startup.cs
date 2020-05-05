@@ -28,6 +28,7 @@ namespace SVU.Web.UI
             services.AddSingleton<ILogginService, DefaultLoggingSservice>();
 
             services.AddScoped<IInitializeDatabaseService, MSSQLInitializeDatabaseService>();
+            services.AddScoped<ICourseDatabaseService, MSSQLCourseDatabaseService>();
             //Add the database context to DI piplline
             services.AddDbContext<SVUDbContext>(options =>
             {
@@ -36,7 +37,7 @@ namespace SVU.Web.UI
                 //Connecte to the right connection
                 options.UseSqlServer(Configuration.GetConnectionString(envName));
             });
-           
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

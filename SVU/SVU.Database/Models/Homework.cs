@@ -14,10 +14,8 @@ namespace SVU.Database.Models
         #region Properties
 
         public string Description { get; set; }
-        public string Note { get; set; }
-        public string CodeLink { get; set; }
-        public string OnlineLink { get; set; }
-
+        public string Title { get; set; }
+        public string ImageUrl { get; set; }
         [ForeignKey(nameof(Course))]
         public Guid CourseId { get; set; }
         #endregion

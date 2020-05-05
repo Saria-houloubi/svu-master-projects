@@ -14,6 +14,12 @@ namespace SVU.Database.Models
     {
         #region Properties
         public string Name { get; set; }
+        public string ShortName { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
+        [NotMapped]
+        public string FullName => $"{FullName} (${ShortName})";
+
         /// <summary>
         /// the id of the program this course belongs to
         /// </summary>
@@ -24,6 +30,7 @@ namespace SVU.Database.Models
         #region Navigation Properties
         public Program Program { get; set; }
         public IEnumerable<Session> Sessions { get; set; }
+        public IEnumerable<Homework> Homeworks { get; set; }
         public IEnumerable<ExternalLink> Links { get; set; }
         #endregion
 

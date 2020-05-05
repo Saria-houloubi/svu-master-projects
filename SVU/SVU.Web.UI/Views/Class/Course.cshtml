@@ -1,0 +1,72 @@
+﻿@model SVU.Web.UI.ViewModels.CourseViewModel
+@{
+    ViewBag.Title = Model.Course.Name;
+}
+
+@Html.Partial("_CourseNavigation.cshtml");
+<div class="slide-in-left">
+    <!--About part-->
+    <div class="p-5 bg-dark" id="about">
+        <div class="card ">
+            <img src="@Model.Course.ImageUrl" alt="@Model.Course.ShortName image">
+            <div class="card-body">
+                <h5 class="card-title text-center">About</h5>
+                <hr />
+                <p class="card-text">
+                    @Model.Course.Description
+                </p>
+                @foreach (var link in Model.Course.Links)
+                {
+                    <a href="@link.Url" class="btn btn-primary">@link.Title</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!--Lectures part-->
+    <div class="py-5" id="lectures">
+        <div class="v-scroll-menu">
+            @foreach (var lecture in Model.Course.Sessions)
+            {
+                <div class="card">
+                    <img src="@lecture.ImageUrl" />
+                    <div class="card-body">
+                        <h5>@lecture.Title</h5>
+                        <hr />
+                        <p class="card-text">
+                            <span class="text-info">Description : </span> @lecture.Description
+                        </p>
+                        @foreach (var link in lecture.Links)
+                        {
+                            <a href="@link.Url" class="btn btn-info">@link.Title</a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!--Homework part-->
+    <div class="py-5 bg-dark mb-2" id="homework">
+        <div class="v-scroll-menu">
+            <div class="card">
+                @foreach (var homework in Model.Course.Homeworks)
+                {
+                    <img src="@homework.ImageUrl" />
+                    <div class="card-body">
+                        <h5>@homework.Title</h5>
+                        <hr />
+                        <p class="card-text">
+                            <span class="text-info">Description : </span> @homework.Description
+                        </p>
+                        @foreach (var link in homework.Links)
+                        {
+                            <a href="@link.Url" class="btn btn-info">@link.Title</a>
+                        }
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

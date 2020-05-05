@@ -11,9 +11,9 @@ namespace SVU.Database.Models
     public class ExternalLink : BaseEntityModel
     {
         #region Properties
+        public string Title { get; set; }
         public string Description { get; set; }
-        public string Note { get; set; }
-        public string Link { get; set; }
+        public string Url { get; set; }
         #endregion
 
         #region Constructer

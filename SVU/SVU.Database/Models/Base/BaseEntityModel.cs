@@ -15,6 +15,7 @@ namespace SVU.Database.Models.Base
         public DateTime CreationDate { get; set; }
         [DataType("datetime2")]
         public DateTime LastUpdatedDate { get; set; }
+        public string Note { get; set; }
         #endregion
 
         #region Constructer
