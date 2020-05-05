@@ -21,4 +21,9 @@
     <None Include="wwwroot\favicon.ico" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\SVU.Database\SVU.Database.csproj" />
+  </ItemGroup>
+
 </Project>
