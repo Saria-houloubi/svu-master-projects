@@ -1,0 +1,104 @@
+﻿@model SVU.Web.UI.ViewModels.CourseViewModel
+@{
+    ViewBag.Title = Model.Course.Name;
+}
+
+@Html.Partial("_CourseNavigation.cshtml");
+<div class="slide-in-left min-vh-100">
+    <!--About part-->
+    <div class="p-5 bg-dark" id="about">
+        <div class="card ">
+            <img src="@Model.Course.ImageUrl" alt="@Model.Course.ShortName image">
+            <div class="card-body">
+                <h5 class="card-title text-center">About</h5>
+                <hr />
+                <p class="card-text">
+                    @Html.Raw(@Model.Course.Description)
+                </p>
+                @foreach (var link in Model.Course.Links)
+                {
+                    <a href="@link.Url" class="btn btn-primary">@link.Title</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!--Lectures part-->
+    <div class="py-5 min-vh-100" id="lectures">
+        <div class=" text-center" >
+            <h4>Lectures</h4>
+            <hr class="mx-5"/>
+        </div>
+        
+        @if (Model.Course.Sessions != null && Model.Course.Sessions.Any())
+        {
+
+            <div class="row container">
+                <div class="col-lg-2 text-center">
+                    <img src="~/img/lecture.svg" alt="Lecure image" />
+                </div>
+
+                <div class="col-lg-10">
+                    <table class="table">
+                        @foreach (var lecture in Model.Course.Sessions)
+                        {
+                            <tr>
+                                <td>@lecture.Title</td>
+                                <td>@lecture.Description</td>
+                                @foreach (var link in lecture.Links)
+                                {
+                                    <td><a href="@link.Url" class="btn btn-info">@link.Title</a></td>
+                                }
+                            </tr>
+                        }
+                    </table>
+
+                </div>
+            </div>
+
+
+        }
+        else
+        {
+            @Html.Partial("/Views/Shared/_NoDataImage.cshtml");
+        }
+    </div>
+
+    <!--Homework part-->
+    <div class="py-5 bg-dark mb-2 min-vh-100" id="homework">
+        <div class="v-scroll-menu">
+            <div class=" text-center text-white">
+                <h4>Homeworks</h4>
+                <hr class="mx-5 border-white" />
+            </div>
+
+            @if (Model.Course.Homeworks != null && Model.Course.Homeworks.Any())
+            {
+                <div class="card">
+
+                    @foreach (var homework in Model.Course.Homeworks)
+                    {
+                        <img src="@homework.ImageUrl" />
+                        <div class="card-body">
+                            <h5>@homework.Title</h5>
+                            <hr />
+                            <p class="card-text">
+                                <span class="text-info">Description : </span> @homework.Description
+                            </p>
+                            @foreach (var link in homework.Links)
+                            {
+                                <a href="@link.Url" class="btn btn-info">@link.Title</a>
+                            }
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                @Html.Partial("/Views/Shared/_NoDataImage.cshtml");
+            }
+
+        </div>
+    </div>
+</div>

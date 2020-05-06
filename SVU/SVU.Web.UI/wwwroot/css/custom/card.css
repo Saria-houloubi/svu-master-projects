@@ -7,7 +7,12 @@
         width: 50%;
         margin: 0px auto;
     }
+    
 
 .card-body p {
     white-space: pre-line;
+}
+
+.lecture-card {
+    width: 200px;
 }

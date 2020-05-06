@@ -34,9 +34,9 @@ namespace SVU.Database.Service.MSSQL
             {
                 return await DbContext.Courses
                     .Include(item => item.Links)
-                    .Include(item => item.Sessions)
-                    .Include(item => item.Homeworks)
-                    .SingleOrDefaultAsync(item => item.Name.ToLower() == name.ToLower());
+                    .Include(item => item.Sessions).ThenInclude(item=>item.Links)
+                    .Include(item => item.Homeworks).ThenInclude(item => item.Links)
+                    .SingleOrDefaultAsync(item => item.ShortName.ToLower() == name.ToLower());
             }
             catch (System.Exception ex)
             {

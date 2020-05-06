@@ -33,7 +33,7 @@ namespace SVU.Web.UI.Controllers
         /// <param name="course">The name of the course to be mapped to</param>
         /// <returns></returns>
         [HttpGet("/class/{course}")]
-        public async Task<IActionResult> Course(string course)
+        public async Task<IActionResult> Index(string course)
         {
             //Get the data for the sent course
             var result = await CourseDatabaseService.GetCourse(course);

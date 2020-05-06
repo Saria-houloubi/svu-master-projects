@@ -17,9 +17,6 @@ namespace SVU.Database.Models
         public string ShortName { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
-        [NotMapped]
-        public string FullName => $"{FullName} (${ShortName})";
-
         /// <summary>
         /// the id of the program this course belongs to
         /// </summary>
@@ -42,6 +39,8 @@ namespace SVU.Database.Models
         {
             //Create the list
             Sessions = new Collection<Session>();
+            Homeworks = new Collection<Homework>();
+            Links = new Collection<ExternalLink>();
         }
         #endregion
     }

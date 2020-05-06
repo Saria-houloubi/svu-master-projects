@@ -21,6 +21,7 @@ html, body {
     min-height: 100vh;
     padding-bottom: 50px;
 }
+
 /*
 	The sticky footer in the bottom 
 	works with dynamic html content
@@ -30,5 +31,5 @@ footer {
     margin-top: -50px;
     height: 50px;
     clear: both;
-    padding :0px 10px;
+    padding: 0px 10px;
 }

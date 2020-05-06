@@ -29,6 +29,8 @@ namespace SVU.Database.Models
         {
             //Create the collection 
             Courses = new Collection<Course>();
+            Links = new Collection<ExternalLink>();
+
         }
         #endregion
     }

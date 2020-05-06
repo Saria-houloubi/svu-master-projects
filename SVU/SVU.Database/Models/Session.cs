@@ -1,6 +1,7 @@
 ﻿using SVU.Database.Models.Base;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SVU.Database.Models
@@ -31,6 +32,7 @@ namespace SVU.Database.Models
         /// </summary>
         public Session()
         {
+            Links = new Collection<ExternalLink>();
 
         }
         #endregion

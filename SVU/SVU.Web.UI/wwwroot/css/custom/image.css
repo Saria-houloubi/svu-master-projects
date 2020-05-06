@@ -1,8 +1,6 @@
 ﻿/*
     Custom images
 */
-.side-img {
-    max-width: 300px;
+    img {
+    max-width : 40vw;
 }
-
-
