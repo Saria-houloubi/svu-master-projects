@@ -24,11 +24,13 @@ namespace SVU.Web.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Add the wanted services
+            //Add the wanted services to the DI pipeline
             services.AddSingleton<ILogginService, DefaultLoggingSservice>();
 
             services.AddScoped<IInitializeDatabaseService, MSSQLInitializeDatabaseService>();
             services.AddScoped<ICourseDatabaseService, MSSQLCourseDatabaseService>();
+            services.AddScoped<IFileDatabaseService, MSSQLFileDatabaseService>();
+
             //Add the database context to DI piplline
             services.AddDbContext<SVUDbContext>(options =>
             {

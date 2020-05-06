@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SVU.Database.IService;
 using SVU.Web.UI.Controllers.Base;
+using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace SVU.Web.UI.Controllers
         /// </summary>
         /// <param name="course">The name of the course to be mapped to</param>
         /// <returns></returns>
-        [HttpGet("/class/{course}")]
+        [HttpGet("[controller]/{course}")]
         public async Task<IActionResult> Index(string course)
         {
             //Get the data for the sent course
@@ -46,7 +47,7 @@ namespace SVU.Web.UI.Controllers
                     Course = result
                 });
             }
-            return View("_NotFound");
+            return View(StaticViewNames.NOTFOUND);
         }
         #endregion
 

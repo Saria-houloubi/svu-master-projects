@@ -14,7 +14,6 @@ namespace SVU.Database.Service.MSSQL
     public class MSSQLCourseDatabaseService : BaseMSSQLService, ICourseDatabaseService
     {
         #region Properties
-        public ILogginService LogginService { get; private set; }
         #endregion
 
         #region Constructer
@@ -22,9 +21,8 @@ namespace SVU.Database.Service.MSSQL
         /// Default constructer
         /// </summary>
         public MSSQLCourseDatabaseService(SVUDbContext dbContext, ILogginService logginService)
-            : base(dbContext)
+            : base(dbContext,logginService)
         {
-            LogginService = logginService;
         }
         #endregion
 

@@ -4,13 +4,16 @@
 }
 
 @Html.Partial("_CourseNavigation.cshtml");
-<div class="slide-in-left min-vh-100">
+<div class="slide-in-left min-vh-100 ">
     <!--About part-->
     <div class="p-5 bg-dark" id="about">
         <div class="card ">
-            <img src="@Model.Course.ImageUrl" alt="@Model.Course.ShortName image">
-            <div class="card-body">
-                <h5 class="card-title text-center">About</h5>
+            <div class="text-center">
+                <img src="@Model.Course.ImageUrl" alt="@Model.Course.ShortName image">
+            </div>
+
+            <div class="card-body text-center">
+                <h5 class="card-title ">About</h5>
                 <hr />
                 <p class="card-text">
                     @Html.Raw(@Model.Course.Description)
@@ -25,20 +28,20 @@
 
     <!--Lectures part-->
     <div class="py-5 min-vh-100" id="lectures">
-        <div class=" text-center" >
+        <div class=" text-center">
             <h4>Lectures</h4>
-            <hr class="mx-5"/>
+            <hr class="mx-5" />
         </div>
-        
+
         @if (Model.Course.Sessions != null && Model.Course.Sessions.Any())
         {
 
             <div class="row container">
-                <div class="col-lg-2 text-center">
-                    <img src="~/img/lecture.svg" alt="Lecure image" />
+                <div class="col-lg-6 text-center">
+                    <img src="~/img/lecture.svg" alt="lecture image" />
                 </div>
 
-                <div class="col-lg-10">
+                <div class="col-lg">
                     <table class="table">
                         @foreach (var lecture in Model.Course.Sessions)
                         {
@@ -66,39 +69,42 @@
 
     <!--Homework part-->
     <div class="py-5 bg-dark mb-2 min-vh-100" id="homework">
-        <div class="v-scroll-menu">
-            <div class=" text-center text-white">
-                <h4>Homeworks</h4>
-                <hr class="mx-5 border-white" />
-            </div>
+        <div class="text-center text-white">
+            <h4>Homeworks</h4>
+            <hr class="mx-5 border-white" />
+        </div>
+        @if (Model.Course.Homeworks != null && Model.Course.Homeworks.Any())
+        {
+            <div class="row container">
+                <div class="col-lg-6 text-center">
+                    <img src="~/img/homework.svg" alt="homework image" />
+                </div>
 
-            @if (Model.Course.Homeworks != null && Model.Course.Homeworks.Any())
-            {
-                <div class="card">
-
-                    @foreach (var homework in Model.Course.Homeworks)
-                    {
-                        <img src="@homework.ImageUrl" />
-                        <div class="card-body">
-                            <h5>@homework.Title</h5>
-                            <hr />
-                            <p class="card-text">
-                                <span class="text-info">Description : </span> @homework.Description
-                            </p>
+                <div class="col-lg">
+                    <table class="table table-dark border-white">
+                        @foreach (var homework in Model.Course.Homeworks)
+                        {
+                        <tr>
+                            <td>@homework.Title</td>
+                            <td>@homework.Description</td>
                             @foreach (var link in homework.Links)
                             {
-                                <a href="@link.Url" class="btn btn-info">@link.Title</a>
+                                <td>
+                                    <a href="@link.Url" class="btn btn-info">@link.Title</a>
+                                </td>
                             }
-                        </div>
-                    }
+                        </tr>
+                        }
+                    </table>
 
                 </div>
-            }
-            else
-            {
-                @Html.Partial("/Views/Shared/_NoDataImage.cshtml");
-            }
+            </div>
 
-        </div>
+
+        }
+        else
+        {
+            @Html.Partial("/Views/Shared/_NoDataImage.cshtml");
+        }
     </div>
 </div>

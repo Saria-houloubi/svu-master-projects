@@ -1,4 +1,5 @@
 ﻿using SVU.Database.DatabaseContext;
+using SVU.Logging.IServices;
 
 namespace SVU.Database.Service.MSSQL.Base
 {
@@ -8,6 +9,8 @@ namespace SVU.Database.Service.MSSQL.Base
     public class BaseMSSQLService
     {
         #region Properties
+        public ILogginService LogginService { get; private set; }
+
         protected SVUDbContext DbContext { get; private set; }
         #endregion
 
@@ -15,9 +18,10 @@ namespace SVU.Database.Service.MSSQL.Base
         /// <summary>
         /// Default constructer
         /// </summary>
-        public BaseMSSQLService(SVUDbContext dbContext)
+        public BaseMSSQLService(SVUDbContext dbContext,ILogginService logginService)
         {
             DbContext = dbContext;
+            LogginService = logginService;
         }
         #endregion
     }
