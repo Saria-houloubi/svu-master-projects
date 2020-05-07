@@ -1,0 +1,132 @@
+﻿@model SVU.Web.UI.ViewModels.HomeworkADMViewModel
+@{
+    ViewBag.title = "ADM heart classification";
+}
+<!--Part Title-->
+<div class="container text-center slide-in-left pt-2">
+    <h1>ADM heart classification homework</h1>
+    <hr />
+</div>
+<div class="container-fluid slide-in-right">
+    <form id="patientInfo">
+        <div class="row">
+            <input type="number" class="form-control m-1 col-lg" id="age" min="0" max="1000" placeholder="Age" />
+
+            <select class="custom-select m-1 col-lg" id="chestPainType">
+                @foreach (var type in Model.HeartDiseasesRecords.Select(item => item.ChestPainType).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+
+            <input type="number" class="form-control m-1 col-lg" id="restBloodPressure" min="0" placeholder="Rest Blood Pressure" />
+            <div class="input-group m-1 col-lg p-0">
+                <div class="input-group-prepend ">
+                    <div class="input-group-text">
+                        <input type="checkbox" aria-label="Checkbox for following text input" id="bloodSuger">
+                    </div>
+                </div>
+                <label class="form-control">Blood Suger</label>
+            </div>
+            <select class="custom-select m-1 col-lg " id="restElectro">
+                @foreach (var type in Model.HeartDiseasesRecords.Select(item => item.RestElectro).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <input type="number" class="form-control m-1 col-lg" id="maxHeartRate" min="0" placeholder="Max Heart Rate" />
+            <div class="input-group m-1 col-lg p-0">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox" aria-label="Checkbox for following text input" id="exerciceAngina">
+                    </div>
+                </div>
+                <label class="form-control">Exercice Angina</label>
+            </div>
+
+        </div>
+        <div class="row">
+            <input type="button" class="btn btn-primary m-1 col-lg" value="Calculate ID3" onclick="getClassification('id3')" />
+            <input type="button" class="btn btn-primary m-1 col-lg" value="Calculate Bayes" onclick="getClassification('bayes')" />
+        </div>
+    </form>
+
+    <h5>Dataset:</h5>
+    <table class="table table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Age</th>
+                <th scope="col">Chest Pain Type</th>
+                <th scope="col">Rest Blood Pressure</th>
+                <th scope="col">Blood Suger</th>
+                <th scope="col">Rest Electro</th>
+                <th scope="col">Max Heart Rate</th>
+                <th scope="col">Exercice Angina</th>
+                <th scope="col">Disease</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.HeartDiseasesRecords != null)
+                {
+                    for (int i = 0; i < Model.HeartDiseasesRecords.Count(); i++)
+                    {
+                        var elemnet = Model.HeartDiseasesRecords.ElementAt(i);
+                        //The background for if the disease is true or false;
+                        var bg = elemnet.Disease ? "bg-danger" : "bg-success";
+                        <tr>
+                            <th scope="row">@i</th>
+                            <td>@elemnet.Age</td>
+                            <td>@elemnet.ChestPainType</td>
+                            <td>@elemnet.RestBloodPressure</td>
+                            <td>@elemnet.BloodSugar     </td>
+                            <td>@elemnet.RestElectro</td>
+                            <td>@elemnet.MaxHeartRate</td>
+                            <td>@elemnet.ExerciceAngina</td>
+                            <td class="@bg text-light">@elemnet.Disease</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    //
+    //Will send an ajax requesting containing the patient values
+    //  type : the type of algorithm we are working with
+    //
+    function getClassification(type) {
+        //Get the form data
+        var Age = $('#age').val();
+        var ChestPainType = $('#chestPainType').val();
+        var RestBloodPressure = $('#restBloodPressure').val();
+        var BloodSuger = $('#bloodSuger')[0].checked;
+        var RestElectro = $('#restElectro').val();
+        var MaxHeartRate = $('#maxHeartRate').val();
+        var ExerciceAngina = $('#exerciceAngina')[0].checked;
+        //Send the ajax request
+        $.ajax(`/homework/adm/${type}`, {
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Age,
+                ChestPainType,
+                RestBloodPressure,
+                BloodSuger,
+                RestElectro,
+                MaxHeartRate,
+                ExerciceAngina
+            }),
+            success: function (res) {
+                console.log(res)
+            },
+            error: function (err) {
+                showAlert('error', err.responseText);
+            }
+        })
+    }
+</script>

@@ -15,7 +15,7 @@
 <body>
     <div class="hole-page-container">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a href="/" class="navbar-brand"><img src="~/img/book-and-glasses.svg" alt="logo" style="max-width : 40px" title="logo-image"/></a>
+            <a href="/" class="navbar-brand"><img src="~/img/book-and-glasses.svg" alt="logo" style="max-width : 40px" title="logo-image" /></a>
             <!--Toggle button for small screen-->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,10 +28,10 @@
                         <a class="nav-link" href="/#about" title="about-part">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="/#target" title="target-part">Target</a>
+                        <a class="nav-link" href="/#target" title="target-part">Target</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="/#contactus" title="contactus-part">Contact us</a>
+                        <a class="nav-link" href="/#contactus" title="contactus-part">Contact us</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" aria-haspopup="true"
@@ -52,6 +52,17 @@
         </nav>
 
         <div>
+
+            <!--Success or Error alarm part-->
+            <div class=" p-2">
+                <div class="alert alert-success collapse" id="successAlert">
+
+                </div>
+                <div class="alert alert-danger collapse" id="errorAlert">
+
+                </div>
+            </div>
+
             <!--Inject vide here-->
             @RenderBody()
         </div>
@@ -60,15 +71,16 @@
 
 
     <!--footer start-->
-    <footer >
+    <footer>
         <hr class="my-2" />
-        <span >Copyright &copy; @DateTime.Now.Year</span>
+        <span>Copyright &copy; @DateTime.Now.Year</span>
     </footer>
 
     <!--JS files-->
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
     <script src="~/lib/font-awesome/js/all.min.js"></script>
+    <script src="~/js/main.js"></script>
 
 </body>
 

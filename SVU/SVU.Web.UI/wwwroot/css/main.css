@@ -5,6 +5,7 @@
 @import "custom/card.css";
 @import "custom/boxHolder.css";
 @import "custom/image.css";
+@import "custom/table.css";
 
 nav {
     z-index:10000;
@@ -33,3 +34,4 @@ footer {
     clear: both;
     padding: 0px 10px;
 }
+

@@ -30,6 +30,7 @@ namespace SVU.Web.UI
             services.AddScoped<IInitializeDatabaseService, MSSQLInitializeDatabaseService>();
             services.AddScoped<ICourseDatabaseService, MSSQLCourseDatabaseService>();
             services.AddScoped<IFileDatabaseService, MSSQLFileDatabaseService>();
+            services.AddScoped<IDataSetDatabaseService, MSSQLDataSetDatabaseService>();
 
             //Add the database context to DI piplline
             services.AddDbContext<SVUDbContext>(options =>

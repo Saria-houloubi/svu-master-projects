@@ -5,13 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="IServices\IProgramsService.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <ProjectReference Include="..\SVU.Logging\SVU.Logging.csproj" />
   </ItemGroup>
 
 </Project>

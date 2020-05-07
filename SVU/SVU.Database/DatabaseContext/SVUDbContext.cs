@@ -81,6 +81,8 @@ namespace SVU.Database.DatabaseContext
         public DbSet<Session> Sessions { get; private set; }
         public DbSet<Homework> Homeworks { get; private set; }
         public DbSet<ExternalLink> ExternalLinks { get; private set; }
+
+        public DbSet<HeartDisease> HeartDiseases { get; private set; }
         #endregion
     }
 }
