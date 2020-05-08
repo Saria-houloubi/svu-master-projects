@@ -35,31 +35,21 @@
 
         @if (Model.Course.Sessions != null && Model.Course.Sessions.Any())
         {
-
-            <div class="row container">
-                <div class="col-lg-6 text-center">
-                    <img src="~/img/lecture.svg" alt="lecture image" />
-                </div>
-
-                <div class="col-lg">
-                    <table class="table">
-                        @foreach (var lecture in Model.Course.Sessions)
-                        {
-                            <tr>
-                                <td>@lecture.Title</td>
-                                <td>@lecture.Description</td>
-                                @foreach (var link in lecture.Links)
-                                {
-                                    <td><a href="@link.Url" class="btn btn-info">@link.Title</a></td>
-                                }
-                            </tr>
-                        }
-                    </table>
-
-                </div>
+            <div class="container">
+                <table class="table">
+                    @foreach (var lecture in Model.Course.Sessions)
+                    {
+                        <tr>
+                            <td>@lecture.Title</td>
+                            <td>@lecture.Description</td>
+                            @foreach (var link in lecture.Links)
+                            {
+                                <td><a href="@link.Url" class="btn btn-info">@link.Title</a></td>
+                            }
+                        </tr>
+                    }
+                </table>
             </div>
-
-
         }
         else
         {
@@ -75,15 +65,10 @@
         </div>
         @if (Model.Course.Homeworks != null && Model.Course.Homeworks.Any())
         {
-            <div class="row container">
-                <div class="col-lg-6 text-center">
-                    <img src="~/img/homework.svg" alt="homework image" />
-                </div>
-
-                <div class="col-lg">
-                    <table class="table table-dark border-white">
-                        @foreach (var homework in Model.Course.Homeworks)
-                        {
+            <div class="container">
+                <table class="table table-dark border-white">
+                    @foreach (var homework in Model.Course.Homeworks)
+                    {
                         <tr>
                             <td>@homework.Title</td>
                             <td>@homework.Description</td>
@@ -94,13 +79,9 @@
                                 </td>
                             }
                         </tr>
-                        }
-                    </table>
-
-                </div>
+                    }
+                </table>
             </div>
-
-
         }
         else
         {
