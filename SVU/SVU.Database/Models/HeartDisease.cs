@@ -7,7 +7,7 @@ namespace SVU.Database.Models
     /// This table was added db first and then mapped witht the properties here
     /// </summary>
     [Table(name: "HeartDisease", Schema = "SVUDataSet")]
-    public class HeartDisease : BaseEntityModel
+    public class HeartDisease : BaseIdentityModel
     {
         #region Properties
         public double Age { get; set; }

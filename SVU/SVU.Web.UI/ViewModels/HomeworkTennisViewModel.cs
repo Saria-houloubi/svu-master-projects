@@ -4,20 +4,21 @@ using System.Collections.ObjectModel;
 
 namespace SVU.Web.UI.ViewModels
 {
-    public class HomeworkHeartDiseaseViewModel
+    public class HomeworkTennisViewModel
     {
 
         #region Properties
-        public IEnumerable<HeartDisease> HeartDiseasesRecords { get; set; }
+        public IEnumerable<Tennis> TennisRecords { get; set; }
         #endregion
 
         #region Constructer
         /// <summary>
         /// Default constructer
         /// </summary>
-        public HomeworkHeartDiseaseViewModel()
+        public HomeworkTennisViewModel()
         {
-            HeartDiseasesRecords = new Collection<HeartDisease>();
+
+            TennisRecords = new Collection<Tennis>();
         }
         #endregion
     }

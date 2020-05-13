@@ -60,7 +60,7 @@ namespace SVU.Web.UI
             //Create the database if not found
             initializeDatabaseService.InitailizeDatabase();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 

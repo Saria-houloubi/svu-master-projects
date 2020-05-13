@@ -41,5 +41,18 @@ namespace SVU.Database.Service.MSSQL
             }
             return null;
         }
+
+        public async Task<IEnumerable<Tennis>> GetTennisRecords()
+        {
+            try
+            {
+                return await DbContext.Tennis.ToListAsync();
+            }
+            catch (System.Exception ex)
+            {
+                LogginService.LogException(ex);
+            }
+            return null;
+        }
     }
 }

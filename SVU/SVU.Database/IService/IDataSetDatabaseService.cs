@@ -1,7 +1,5 @@
 ﻿using SVU.Database.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SVU.Database.IService
@@ -16,6 +14,11 @@ namespace SVU.Database.IService
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<HeartDisease>> GetHeartDiseaseRecords();
+        /// <summary>
+        /// Gets a lit of the tennis records
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Tennis>> GetTennisRecords();
 
     }
 }

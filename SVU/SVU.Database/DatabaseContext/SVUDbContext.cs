@@ -83,6 +83,7 @@ namespace SVU.Database.DatabaseContext
         public DbSet<ExternalLink> ExternalLinks { get; private set; }
 
         public DbSet<HeartDisease> HeartDiseases { get; private set; }
+        public DbSet<Tennis> Tennis{ get; private set; }
         #endregion
     }
 }

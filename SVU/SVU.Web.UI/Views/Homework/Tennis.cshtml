@@ -1,0 +1,156 @@
+﻿@model SVU.Web.UI.ViewModels.HomeworkTennisViewModel
+@{
+    ViewBag.title = "ADM tennis classification";
+}
+<!--Part Title-->
+<div class="container text-center slide-in-left pt-2">
+    <h1>ADM tennis classification homework</h1>
+    <hr />
+</div>
+<div class="container-fluid slide-in-right">
+    <form id="patientInfo">
+        <div class="form-group row m-2">
+            <label class="col-form-label font-weight-bold" for="humidty">Humidty : </label>
+            <select class="custom-select m-1 col-lg" id="humidty">
+                @foreach (var type in Model.TennisRecords.Select(item => item.Humidity).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <label class="col-form-label font-weight-bold" for="outlook">Outlook : </label>
+            <select class="custom-select m-1 col-lg " id="outlook">
+                @foreach (var type in Model.TennisRecords.Select(item => item.Outlook).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <label class="col-form-label font-weight-bold" for="temperature">Temperature : </label>
+            <select class="custom-select m-1 col-lg" id="temperature">
+                @foreach (var type in Model.TennisRecords.Select(item => item.Temp).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <label class="col-form-label font-weight-bold" for="wind">Wind : </label>
+            <select class="custom-select m-1 col-lg " id="wind">
+                @foreach (var type in Model.TennisRecords.Select(item => item.Wind).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+        <div class="row">
+            <input type="button" class="btn btn-primary m-1 col-lg" value="Calculate ID3" onclick="getClassification('id3')" />
+            <input type="button" class="btn btn-primary m-1 col-lg" value="Calculate Bayes" onclick="getClassification('bayes')" />
+        </div>
+    </form>
+    <hr />
+    <h5>Predections :</h5>
+    <table class="table text-center">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">SSAS</th>
+                <th scope="col">Coded</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="col" class="font-weight-bold">Bayes</td>
+                <td><span id="ssas_bayes" class="text-primary"></span></td>
+                <td><span id="coded_bayes" class="text-primary"></span></td>
+            </tr>
+            <tr>
+                <td scope="col" class="font-weight-bold">ID3</td>
+                <td><span id="ssas_id3" class="text-primary"></span></td>
+                <td><span id="coded_id3" class="text-primary"></span></td>
+            </tr>
+
+        </tbody>
+    </table>
+    <hr />
+    <h5>Dataset:</h5>
+    <table class="table table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Outlook</th>
+                <th scope="col">Temperature</th>
+                <th scope="col">Humidty</th>
+                <th scope="col">Wind</th>
+                <th scope="col">Play</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.TennisRecords != null)
+                {
+                    for (int i = 0; i < Model.TennisRecords.Count(); i++)
+                    {
+                        var elemnet = Model.TennisRecords.ElementAt(i);
+                        //The background for if the disease is true or false;
+                        var bg = elemnet.Play == "Yes" ? "bg-danger" : "bg-success";
+                        <tr>
+                            <th scope="row">@i</th>
+                            <td>@elemnet.Outlook</td>
+                            <td>@elemnet.Temp</td>
+                            <td>@elemnet.Humidity</td>
+                            <td>@elemnet.Wind</td>
+                            <td class="@bg text-light">@elemnet.Play</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    //
+    //Will send an ajax requesting containing the patient values
+    //  type : the type of algorithm we are working with
+    //
+    function getClassification(type) {
+        //Get the form data
+        var outlook = $('#outlook')[0].value;
+        var temperature = $('#temperature')[0].value;
+        var humidty = $('#humidty')[0].value;
+        var wind = $('#wind')[0].value;
+        //Create the sass query to execute
+        var dmxQueryId3 = `select play from [Tennis MM ID3] natural prediction join (select '${outlook}' as outlook, '${temperature}' as temp, '${humidty}' as humidity, '${wind}' as wind) as t`;
+        var dmxQueryBayes = `select flattened predicthistogram(play) from [Tennis MM Bayes] natural prediction join (select '${outlook}' as outlook, '${temperature}' as temp, '${humidty}' as humidity, '${wind}' as wind) as t`;
+        //Choose the wanted query
+        var dmxQuery = type === 'bayes' ? dmxQueryBayes : dmxQueryId3;
+        showAlert('success', `Executing query \n ${dmxQuery}`, 0)
+        //Get the SASS value first
+        $.ajax(`http://ssas.sariahouloubi.com/api/Analysis/ExecuteQuery`, {
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Query: dmxQuery
+            }),
+            success: function (data) {
+                //Update the needed span
+                if (type === 'bayes') {
+                    console.log(data);
+                    var values = '';
+                    for (var i = 0; i < data.length; i++) {
+                        values = values.concat(`${data[i]["Expression.play"]} : ${(data[i]["Expression.$PROBABILITY"] * 100).toFixed(1)}%\n`)
+                    }
+                    $("#ssas_bayes")[0].innerText = values;
+                }
+                else
+                    $("#ssas_id3")[0].innerText = data[0].play;
+
+            },
+            error: function (err) {
+                showAlert('error', err.responseText);
+            }
+
+        }).always(function () {
+            hideAlert('success');
+        })
+    }
+
+</script>

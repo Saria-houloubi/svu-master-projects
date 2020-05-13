@@ -2,8 +2,8 @@
 using SVU.Database.IService;
 using SVU.Web.UI.Controllers.Base;
 using SVU.Web.UI.Models.Homework;
+using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SVU.Web.UI.Controllers
@@ -33,13 +33,30 @@ namespace SVU.Web.UI.Controllers
         /// <summary>
         /// The adm course home work for classification using ID3 and bayes
         /// </summary>
+        /// <param name="id">The id (name) of the homework</param>
         /// <returns></returns>
-        public async Task<IActionResult> ADM()
+        public async Task<IActionResult> ADM(string id)
         {
-            return View(new HomeworkADMViewModel
+            if (!string.IsNullOrEmpty(id))
             {
-                HeartDiseasesRecords = await DataSetDatabaseService.GetHeartDiseaseRecords()
-            });
+                switch (id.ToLower())
+                {
+                    case "tennis":
+                        return View(id, new HomeworkTennisViewModel
+                        {
+                            TennisRecords = await DataSetDatabaseService.GetTennisRecords()
+                        });
+                    case "heartdisease":
+                        return View(id, new HomeworkHeartDiseaseViewModel
+                        {
+                            HeartDiseasesRecords = await DataSetDatabaseService.GetHeartDiseaseRecords()
+                        });
+
+                    default:
+                        break;
+                }
+            }
+            return View(StaticViewNames.NOTFOUND);
         }
 
         #endregion
@@ -56,7 +73,7 @@ namespace SVU.Web.UI.Controllers
             //Check if the data is send correctly
             if (ModelState.IsValid)
             {
-                return View(new HomeworkADMViewModel
+                return View(new HomeworkHeartDiseaseViewModel
                 {
                     HeartDiseasesRecords = await DataSetDatabaseService.GetHeartDiseaseRecords()
                 });

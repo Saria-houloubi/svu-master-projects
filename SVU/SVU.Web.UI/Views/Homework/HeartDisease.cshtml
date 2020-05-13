@@ -1,4 +1,4 @@
-﻿@model SVU.Web.UI.ViewModels.HomeworkADMViewModel
+﻿@model SVU.Web.UI.ViewModels.HomeworkHeartDiseaseViewModel
 @{
     ViewBag.title = "ADM heart classification";
 }
@@ -50,7 +50,31 @@
             <input type="button" class="btn btn-primary m-1 col-lg" value="Calculate Bayes" onclick="getClassification('bayes')" />
         </div>
     </form>
+    <hr />
+    <h5>Predections :</h5>
+    <table class="table table-bordered text-center">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">SSAS</th>
+                <th scope="col">Coded</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="col">Bayes</td>
+                <td id="sass_bayes"></td>
+                <td id="coded_bayes"></td>
+            </tr>
+            <tr>
+                <td scope="col">ID3</td>
+                <td id="sass_id3"></td>
+                <td id="coded_id3"></td>
+            </tr>
 
+        </tbody>
+    </table>
+    <hr />
     <h5>Dataset:</h5>
     <table class="table table-hover table-bordered">
         <thead class="thead-dark">
