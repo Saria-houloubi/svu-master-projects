@@ -9,7 +9,7 @@ namespace SVU.Database.Service.MSSQL.Base
     public class BaseMSSQLService
     {
         #region Properties
-        public ILogginService LogginService { get; private set; }
+        public ILoggingService LogginService { get; private set; }
 
         protected SVUDbContext DbContext { get; private set; }
         #endregion
@@ -18,7 +18,7 @@ namespace SVU.Database.Service.MSSQL.Base
         /// <summary>
         /// Default constructer
         /// </summary>
-        public BaseMSSQLService(SVUDbContext dbContext,ILogginService logginService)
+        public BaseMSSQLService(SVUDbContext dbContext,ILoggingService logginService)
         {
             DbContext = dbContext;
             LogginService = logginService;

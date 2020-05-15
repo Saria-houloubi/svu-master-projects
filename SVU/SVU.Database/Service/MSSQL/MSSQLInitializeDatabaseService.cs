@@ -18,7 +18,7 @@ namespace SVU.Database.Service.MSSQL
         /// <summary>
         /// Default constructer
         /// </summary>
-        public MSSQLInitializeDatabaseService(ILogginService logginService, SVUDbContext dbContext)
+        public MSSQLInitializeDatabaseService(ILoggingService logginService, SVUDbContext dbContext)
             : base(dbContext, logginService)
         {
         }

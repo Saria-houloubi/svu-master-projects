@@ -6,7 +6,7 @@ namespace SVU.Logging.Services
     /// <summary>
     /// The default loggin service class
     /// </summary>
-    public class DefaultLoggingSservice : ILogginService
+    public class DefaultLoggingSservice : ILoggingService
     {
         #region Constructer
         /// <summary>

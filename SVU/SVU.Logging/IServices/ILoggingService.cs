@@ -5,7 +5,7 @@ namespace SVU.Logging.IServices
     /// <summary>
     /// The base logging service functions
     /// </summary>
-    public interface ILogginService
+    public interface ILoggingService
     {
         void LogException(Exception ex);
     }

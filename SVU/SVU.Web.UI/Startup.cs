@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SVU.Database.DatabaseContext;
@@ -25,7 +26,9 @@ namespace SVU.Web.UI
         public void ConfigureServices(IServiceCollection services)
         {
             //Add the wanted services to the DI pipeline
-            services.AddSingleton<ILogginService, DefaultLoggingSservice>();
+            services.AddSingleton<ILoggingService, DefaultLoggingSservice>();
+            services.AddSingleton<IMemoryCache, MemoryCache>();
+
 
             services.AddScoped<IInitializeDatabaseService, MSSQLInitializeDatabaseService>();
             services.AddScoped<ICourseDatabaseService, MSSQLCourseDatabaseService>();

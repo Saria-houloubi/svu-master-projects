@@ -20,7 +20,7 @@ namespace SVU.Database.Service.MSSQL
         /// <summary>
         /// Default constructer
         /// </summary>
-        public MSSQLCourseDatabaseService(SVUDbContext dbContext, ILogginService logginService)
+        public MSSQLCourseDatabaseService(SVUDbContext dbContext, ILoggingService logginService)
             : base(dbContext,logginService)
         {
         }

@@ -22,7 +22,7 @@ namespace SVU.Database.Service.MSSQL
         /// <summary>
         /// Default constructer
         /// </summary>
-        public MSSQLFileDatabaseService(SVUDbContext dbContext, ILogginService logginService)
+        public MSSQLFileDatabaseService(SVUDbContext dbContext, ILoggingService logginService)
             : base(dbContext, logginService)
         {
         }

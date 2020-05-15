@@ -20,5 +20,11 @@ namespace SVU.Database.IService
         /// <returns></returns>
         Task<IEnumerable<Tennis>> GetTennisRecords();
 
+        /// <summary>
+        /// Get a db set based on it name 
+        /// </summary>
+        /// <param name="setName"></param>
+        /// <returns></returns>
+        Task<IEnumerable<object>> GetDbSet(string setName);
     }
 }

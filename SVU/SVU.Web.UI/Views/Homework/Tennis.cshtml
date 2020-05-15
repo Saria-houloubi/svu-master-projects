@@ -10,13 +10,6 @@
 <div class="container-fluid slide-in-right">
     <form id="patientInfo">
         <div class="form-group row m-2">
-            <label class="col-form-label font-weight-bold" for="humidty">Humidty : </label>
-            <select class="custom-select m-1 col-lg" id="humidty">
-                @foreach (var type in Model.TennisRecords.Select(item => item.Humidity).Distinct())
-                {
-                    <option value="@type">@type</option>
-                }
-            </select>
             <label class="col-form-label font-weight-bold" for="outlook">Outlook : </label>
             <select class="custom-select m-1 col-lg " id="outlook">
                 @foreach (var type in Model.TennisRecords.Select(item => item.Outlook).Distinct())
@@ -27,6 +20,13 @@
             <label class="col-form-label font-weight-bold" for="temperature">Temperature : </label>
             <select class="custom-select m-1 col-lg" id="temperature">
                 @foreach (var type in Model.TennisRecords.Select(item => item.Temp).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <label class="col-form-label font-weight-bold" for="humidty">Humidty : </label>
+            <select class="custom-select m-1 col-lg" id="humidty">
+                @foreach (var type in Model.TennisRecords.Select(item => item.Humidity).Distinct())
                 {
                     <option value="@type">@type</option>
                 }
@@ -70,7 +70,7 @@
     </table>
     <hr />
     <h5>Dataset:</h5>
-    <table class="table table-hover table-bordered">
+    <table class="table table-hover table-bordered lg-table">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
@@ -107,11 +107,67 @@
 
 
 <script>
+
     //
     //Will send an ajax requesting containing the patient values
     //  type : the type of algorithm we are working with
     //
     function getClassification(type) {
+
+        getCodedClassifcation(type);
+        getSSASClassification(type);
+    }
+    //
+    //Gets the result from the coded alogrithm
+    //  type : the type of algorithm we are working with
+    //
+    function getCodedClassifcation(type) {
+        //Get the form data
+        var outlook = $('#outlook')[0].value;
+        var temperature = $('#temperature')[0].value;
+        var humidty = $('#humidty')[0].value;
+        var wind = $('#wind')[0].value;
+        $.ajax(`/homework/CalculateBayes`, {
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Target: "Play",
+                DbSet: "tennis",
+                IgnoreProperties: ["Play", "Note", "Id", "CreationDate", "LastUpdatedDate"],
+                TestExample: {
+                    "Outlook": outlook,
+                    "Wind": wind,
+                    "Temp": temperature,
+                    "Humidity": humidty
+                }
+            }),
+            success: function (data) {
+                console.log(data);
+                //Update the needed span
+                if (type === 'bayes') {
+                    console.log(data);
+                    var values = '';
+                    for (var prop in data.results) {
+                        values = values.concat(`${prop} : ${(data.results[prop] * 100).toFixed(1)}%\n`)
+                    }
+                    $("#coded_bayes")[0].innerText = values;
+                }
+                else
+                    $("#coded_id3")[0].innerText = data[0].play;
+
+            },
+            error: function (err) {
+                showAlert('error', err.responseText);
+            }
+
+        })
+
+    }
+    //
+    //Get the results from the SSAS
+    //  type : the type of algorithm we are working with
+    //
+    function getSSASClassification(type) {
         //Get the form data
         var outlook = $('#outlook')[0].value;
         var temperature = $('#temperature')[0].value;
@@ -133,7 +189,6 @@
             success: function (data) {
                 //Update the needed span
                 if (type === 'bayes') {
-                    console.log(data);
                     var values = '';
                     for (var i = 0; i < data.length; i++) {
                         values = values.concat(`${data[i]["Expression.play"]} : ${(data[i]["Expression.$PROBABILITY"] * 100).toFixed(1)}%\n`)
@@ -152,5 +207,6 @@
             hideAlert('success');
         })
     }
+
 
 </script>
