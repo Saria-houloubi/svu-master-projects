@@ -85,9 +85,9 @@
             @{
                 if (Model.TennisRecords != null)
                 {
-                    for (int i = 0; i < Model.TennisRecords.Count(); i++)
+                    for (int i = 1; i <= Model.TennisRecords.Count(); i++)
                     {
-                        var elemnet = Model.TennisRecords.ElementAt(i);
+                        var elemnet = Model.TennisRecords.ElementAt(i-1);
                         //The background for if the disease is true or false;
                         var bg = elemnet.Play == "Yes" ? "bg-danger" : "bg-success";
                         <tr>
@@ -113,7 +113,6 @@
     //  type : the type of algorithm we are working with
     //
     function getClassification(type) {
-
         getCodedClassifcation(type);
         getSSASClassification(type);
     }
@@ -142,10 +141,8 @@
                 }
             }),
             success: function (data) {
-                console.log(data);
                 //Update the needed span
                 if (type === 'bayes') {
-                    console.log(data);
                     var values = '';
                     for (var prop in data.results) {
                         values = values.concat(`${prop} : ${(data.results[prop] * 100).toFixed(1)}%\n`)

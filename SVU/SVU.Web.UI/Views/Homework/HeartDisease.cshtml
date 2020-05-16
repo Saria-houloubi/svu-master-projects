@@ -52,7 +52,7 @@
     </form>
     <hr />
     <h5>Predections :</h5>
-    <table class="table table-bordered text-center">
+    <table class="table text-center">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
@@ -62,14 +62,14 @@
         </thead>
         <tbody>
             <tr>
-                <td scope="col">Bayes</td>
-                <td id="sass_bayes"></td>
-                <td id="coded_bayes"></td>
+                <td scope="col" class="font-weight-bold">Bayes</td>
+                <td><span id="ssas_bayes" class="text-primary"></span></td>
+                <td><span id="coded_bayes" class="text-primary"></span></td>
             </tr>
             <tr>
-                <td scope="col">ID3</td>
-                <td id="sass_id3"></td>
-                <td id="coded_id3"></td>
+                <td scope="col" class="font-weight-bold">ID3</td>
+                <td><span id="ssas_id3" class="text-primary"></span></td>
+                <td><span id="coded_id3" class="text-primary"></span></td>
             </tr>
 
         </tbody>
@@ -94,9 +94,9 @@
             @{
                 if (Model.HeartDiseasesRecords != null)
                 {
-                    for (int i = 0; i < Model.HeartDiseasesRecords.Count(); i++)
+                    for (int i = 1; i < Model.HeartDiseasesRecords.Count(); i++)
                     {
-                        var elemnet = Model.HeartDiseasesRecords.ElementAt(i);
+                        var elemnet = Model.HeartDiseasesRecords.ElementAt(i - 1);
                         //The background for if the disease is true or false;
                         var bg = elemnet.Disease ? "bg-danger" : "bg-success";
                         <tr>
@@ -124,33 +124,122 @@
     //  type : the type of algorithm we are working with
     //
     function getClassification(type) {
+        var age = $('#age').val();
+        var restBloodPressure = $('#restBloodPressure').val();
+        var maxHeartRate = $('#maxHeartRate').val();
+
+        //A simple check if all the values are provided
+        if (!age || !restBloodPressure || !maxHeartRate) {
+            showAlert("error", "Some values are missing")
+            return;
+        }
+        
+        getCodedClassifcation(type);
+        getSSASClassification(type);
+    }
+    //
+    //Gets the result from the coded alogrithm
+    //  type : the type of algorithm we are working with
+    //
+    function getCodedClassifcation(type) {
         //Get the form data
-        var Age = $('#age').val();
-        var ChestPainType = $('#chestPainType').val();
-        var RestBloodPressure = $('#restBloodPressure').val();
-        var BloodSuger = $('#bloodSuger')[0].checked;
-        var RestElectro = $('#restElectro').val();
-        var MaxHeartRate = $('#maxHeartRate').val();
-        var ExerciceAngina = $('#exerciceAngina')[0].checked;
-        //Send the ajax request
-        $.ajax(`/homework/adm/${type}`, {
+        var age = $('#age').val();
+        var chestPainType = $('#chestPainType')[0].value;
+        var restBloodPressure = $('#restBloodPressure').val();
+        var bloodSuger = $('#bloodSuger').prop("checked");
+        var restElectro = $('#restElectro')[0].value;
+        var maxHeartRate = $('#maxHeartRate').val();
+        var exerciceAngina = $('#exerciceAngina').prop("checked");
+
+        
+        $.ajax(`/homework/CalculateBayes`, {
             method: 'post',
             contentType: 'application/json',
             data: JSON.stringify({
-                Age,
-                ChestPainType,
-                RestBloodPressure,
-                BloodSuger,
-                RestElectro,
-                MaxHeartRate,
-                ExerciceAngina
+                Target: "Disease",
+                DbSet: "heartdisease",
+                IgnoreProperties: ["Disease", "Note", "Id", "CreationDate", "LastUpdatedDate"],
+                TestExample: {
+                    "Age": age,
+                    "ChestPainType": chestPainType,
+                    "RestBloodPressure": restBloodPressure,
+                    "BloodSuger": bloodSuger,
+                    "RestElectro": restElectro,
+                    "MaxHeartRate": maxHeartRate,
+                    "ExerciceAngina": exerciceAngina
+
+                }
             }),
-            success: function (res) {
-                console.log(res)
+            success: function (data) {
+                console.log(data);
+                //Update the needed span
+                if (type === 'bayes') {
+                    console.log(data);
+                    var values = '';
+                    for (var prop in data.results) {
+                        values = values.concat(`${prop} : ${(data.results[prop] * 100).toFixed(1)}%\n`)
+                    }
+                    $("#coded_bayes")[0].innerText = values;
+                }
+                else
+                    $("#coded_id3")[0].innerText = data[0].play;
+
             },
             error: function (err) {
                 showAlert('error', err.responseText);
             }
+
+        })
+
+    }
+    //
+    //Get the results from the SSAS
+    //  type : the type of algorithm we are working with
+    //
+    function getSSASClassification(type) {
+        //Get the form data
+        var age = $('#age').val();
+        var chestPainType = $('#chestPainType')[0].value;
+        var restBloodPressure = $('#restBloodPressure').val();
+        var bloodSuger = $('#bloodSuger').prop("checked");
+        var restElectro = $('#restElectro')[0].value;
+        var maxHeartRate = $('#maxHeartRate').val();
+        var exerciceAngina = $('#exerciceAngina').prop("checked");
+
+        //Create the sass query to execute
+        var dmxQueryId3 = `select disease from [Heart Disease MM ID3] natural prediction join (select '${age}' as age, '${chestPainType}' as ChestPainType, '${restBloodPressure}' as RestBloodPressure, '${bloodSuger}' as BloodSugar,'${restElectro}' as RestElectro,'${maxHeartRate}' as MaxHeartRate,'${exerciceAngina}' as ExerciceAngina) as t`;
+        var dmxQueryBayes = `select flattened predicthistogram(disease) from [Heart Disease MM Bayes] natural prediction join (select '${age}' as age, '${chestPainType}' as ChestPainType, '${restBloodPressure}' as RestBloodPressure, '${bloodSuger}' as BloodSugar,'${restElectro}' as RestElectro,'${maxHeartRate}' as MaxHeartRate,'${exerciceAngina}' as ExerciceAngina) as t`;
+        //Choose the wanted query
+        var dmxQuery = type === 'bayes' ? dmxQueryBayes : dmxQueryId3;
+        showAlert('success', `Executing query \n ${dmxQuery}`, 0)
+
+        //Get the SASS value first
+        $.ajax(`http://ssas.sariahouloubi.com/api/Analysis/ExecuteQuery`, {
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Query: dmxQuery
+            }),
+            success: function (data) {
+                //Update the needed span
+                if (type === 'bayes') {
+                    var values = '';
+                    for (var i = 0; i < data.length; i++) {
+                        values = values.concat(`${data[i]["Expression.disease"]} : ${(data[i]["Expression.$PROBABILITY"] * 100).toFixed(1)}%\n`)
+                    }
+                    $("#ssas_bayes")[0].innerText = values;
+                }
+                else
+                    $("#ssas_id3")[0].innerText = data[0].play;
+
+            },
+            error: function (err) {
+                showAlert('error', err.responseText);
+            }
+
+        }).always(function () {
+            hideAlert('success');
         })
     }
+
 </script>
