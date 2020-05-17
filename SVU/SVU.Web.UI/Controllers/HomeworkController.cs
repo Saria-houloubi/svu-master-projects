@@ -6,6 +6,7 @@ using SVU.Web.UI.Controllers.Base;
 using SVU.Web.UI.Models.Homework;
 using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels;
+using SVU.Web.UI.ViewModels.Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,6 @@ namespace SVU.Web.UI.Controllers
     {
         #region Properties
         public IDataSetDatabaseService DataSetDatabaseService { get; private set; }
-        public ILoggingService LoggingService { get; private set; }
         public IMemoryCache MemoryCache { get; private set; }
 
         /// <summary>
@@ -36,9 +36,9 @@ namespace SVU.Web.UI.Controllers
         /// Default constructer
         /// </summary>
         public HomeworkController(IDataSetDatabaseService dataSetDatabaseService, ILoggingService loggingService, IMemoryCache memoryCache)
+            : base(loggingService)
         {
             DataSetDatabaseService = dataSetDatabaseService;
-            LoggingService = loggingService;
             MemoryCache = memoryCache;
         }
         #endregion
@@ -50,6 +50,7 @@ namespace SVU.Web.UI.Controllers
         /// </summary>
         /// <param name="id">The id (name) of the homework</param>
         /// <returns></returns>
+        [HttpGet]
         public async Task<IActionResult> ADM(string id)
         {
             if (!string.IsNullOrEmpty(id))
@@ -73,7 +74,15 @@ namespace SVU.Web.UI.Controllers
             }
             return View(StaticViewNames.NOTFOUND);
         }
-
+        /// <summary>
+        /// Gets the health AWP homwork view
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult AWP()
+        {
+            return View("health", new HomeworkAWPAccountViewModel());
+        }
         #endregion
 
         #region POST Requests

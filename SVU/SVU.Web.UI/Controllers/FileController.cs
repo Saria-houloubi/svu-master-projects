@@ -14,7 +14,6 @@ namespace SVU.Web.UI.Controllers
     public class FileController : BaseController
     {
         #region Properties
-        public ILoggingService LogginService { get; private set; }
         public IFileDatabaseService FileDatabaseService { get; private set; }
         #endregion
 
@@ -23,8 +22,8 @@ namespace SVU.Web.UI.Controllers
         /// Default constructer
         /// </summary>
         public FileController(ILoggingService logginService, IFileDatabaseService fileDatabaseService)
+            :base(logginService)
         {
-            LogginService = logginService;
             FileDatabaseService = fileDatabaseService;
         }
         #endregion

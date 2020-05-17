@@ -3,7 +3,7 @@
     ViewBag.Title = Model.Course.Name;
 }
 
-@Html.Partial("_CourseNavigation.cshtml");
+<partial name="_CourseNavigation" />
 <div class="slide-in-left min-vh-100 ">
     <!--About part-->
     <div class="p-5 bg-dark" id="about">
@@ -57,7 +57,7 @@
         }
         else
         {
-            @Html.Partial("/Views/Shared/_NoDataImage.cshtml");
+            <partial name="_NoDataImage" />
         }
     </div>
 
@@ -92,7 +92,7 @@
         }
         else
         {
-            @Html.Partial("/Views/Shared/_NoDataImage.cshtml");
+            <partial name="_NoDataImage" />
         }
     </div>
 </div>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SVU.Logging.IServices;
 using SVU.Web.UI.Controllers.Base;
 
 namespace SVU.Web.UI.Controllers
@@ -14,7 +15,8 @@ namespace SVU.Web.UI.Controllers
         /// <summary>
         /// Default constructer
         /// </summary>
-        public HomeController()
+        public HomeController(ILoggingService loggingService)
+            : base(loggingService)
         {
 
         }

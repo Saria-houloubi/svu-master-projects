@@ -20,7 +20,7 @@ namespace SVU.Database.Models
         /// <summary>
         /// The users that hold this role
         /// </summary>
-        public IEnumerable<HealthUserRole> Users { get; set; }
+        public IEnumerable<HealthUser> Users { get; set; }
         #endregion
 
         #region Constructer

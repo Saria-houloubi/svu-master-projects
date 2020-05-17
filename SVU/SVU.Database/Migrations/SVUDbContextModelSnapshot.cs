@@ -230,35 +230,15 @@ namespace SVU.Database.Migrations
 
                     b.Property<string>("Password");
 
+                    b.Property<Guid?>("RoleId");
+
                     b.Property<string>("Username");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users","Health");
-                });
-
-            modelBuilder.Entity("SVU.Database.Models.HealthUserRole", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<DateTime>("LastUpdatedDate");
-
-                    b.Property<string>("Note");
-
-                    b.Property<Guid>("RoleId");
-
-                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRoles","Health");
+                    b.ToTable("Users","Health");
                 });
 
             modelBuilder.Entity("SVU.Database.Models.HeartDisease", b =>
@@ -468,17 +448,11 @@ namespace SVU.Database.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("SVU.Database.Models.HealthUserRole", b =>
+            modelBuilder.Entity("SVU.Database.Models.HealthUser", b =>
                 {
                     b.HasOne("SVU.Database.Models.HealthRole", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SVU.Database.Models.HealthUser", "User")
-                        .WithMany("Roles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoleId");
                 });
 
             modelBuilder.Entity("SVU.Database.Models.Homework", b =>

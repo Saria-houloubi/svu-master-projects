@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SVU.Database.IService;
+using SVU.Logging.IServices;
 using SVU.Web.UI.Controllers.Base;
 using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels;
@@ -21,7 +22,8 @@ namespace SVU.Web.UI.Controllers
         /// <summary>
         /// Default constructer
         /// </summary>
-        public CourseController(ICourseDatabaseService courseDatabaseService)
+        public CourseController(ICourseDatabaseService courseDatabaseService, ILoggingService loggingService)
+            : base(loggingService)
         {
             CourseDatabaseService = courseDatabaseService;
         }

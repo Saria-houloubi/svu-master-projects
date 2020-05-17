@@ -97,7 +97,6 @@ namespace SVU.Database.DatabaseContext
         public DbSet<HealthRequest> HealthRequests { get; private set; }
         public DbSet<HealthRole> HealthRoles { get; private set; }
         public DbSet<HealthUser> HealthUsers { get; private set; }
-        public DbSet<HealthUserRole> HealthUserRoles{ get; private set; }
         public DbSet<HealthRequestReply> HealthRequestReplies { get; private set; }
 
         #endregion

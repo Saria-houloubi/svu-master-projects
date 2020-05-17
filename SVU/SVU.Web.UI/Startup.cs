@@ -34,6 +34,7 @@ namespace SVU.Web.UI
             services.AddScoped<ICourseDatabaseService, MSSQLCourseDatabaseService>();
             services.AddScoped<IFileDatabaseService, MSSQLFileDatabaseService>();
             services.AddScoped<IDataSetDatabaseService, MSSQLDataSetDatabaseService>();
+            services.AddScoped<IHealthAccountService, MSSQLHealthAccountService>();
 
             //Add the database context to DI piplline
             services.AddDbContext<SVUDbContext>(options =>
@@ -43,6 +44,13 @@ namespace SVU.Web.UI
                 //Connecte to the right connection
                 options.UseSqlServer(Configuration.GetConnectionString(envName));
             });
+
+            //Add cookies to the request pipeline
+            services.AddAuthentication()
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/homework/Awp";
+                });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -63,10 +71,9 @@ namespace SVU.Web.UI
             //Create the database if not found
             initializeDatabaseService.InitailizeDatabase();
 
-            //app.UseHttpsRedirection();
-
             app.UseStaticFiles();
 
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

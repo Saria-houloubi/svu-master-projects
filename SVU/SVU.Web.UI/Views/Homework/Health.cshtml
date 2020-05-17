@@ -1,0 +1,73 @@
+﻿@model SVU.Web.UI.ViewModels.Account.HomeworkAWPAccountViewModel
+@{
+    ViewBag.title = "ADM heart classification";
+}
+<!--Part Title-->
+<div class="container text-center slide-in-left pt-2">
+    <h1>Health AWP homework</h1>
+    <hr />
+</div>
+
+<div class="container slide-in-right ">
+    <p>
+        Welcome to our super health <i class="fa fa-heart text-danger"></i> website where we have <a href="#">Blogs</a> for all kind of health issues.
+        <br />
+        You can also send us a <a href="#">Request</a> and with our team of best doctores will replay back to you. <i class="fa fa-smile text-primary"></i>
+    </p>
+
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <span class="display-4">
+            Do you have an account ?
+        </span>
+
+        @if (Model.Erros.Any())
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var error in Model.Erros)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form asp-action="login" asp-controller="AWPAccount" method="post">
+
+
+            <div class="form-group">
+                <label class="col-form-label" asp-for="Usernmae"></label>
+                <input class="form-control" asp-for="Usernmae" />
+                <span asp-validation-for="Usernmae" class="text-danger" />
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-form-label" asp-for="Password"></label>
+                <input class="form-control" asp-for="Password" />
+                <span asp-validation-for="Password" class="text-danger" />
+            </div>
+
+
+            <input type="submit" value="Login" class="btn btn-primary btn-lg" />
+        </form>
+    }
+    else
+    {
+        <h1>Hello @User.Identity.Name</h1>
+    }
+
+
+</div>
+
+<div class="container text-center slide-in-left mt-2 p-5 bg-light">
+    <h1>Developers <i class="fa fa-laptop-code"></i></h1>
+    <hr />
+    <h4>Saria Houloubi</h4>
+    <h4>Mohammed Shaker</h4>
+    <h4>Bakr Hawari</h4>
+    <h4>Ibrahim Moharam</h4>
+    <hr />
+
+</div>

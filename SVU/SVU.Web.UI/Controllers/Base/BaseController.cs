@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SVU.Logging.IServices;
+using SVU.Shared.Messages;
 
 namespace SVU.Web.UI.Controllers.Base
 {
@@ -9,16 +11,16 @@ namespace SVU.Web.UI.Controllers.Base
     public class BaseController : Controller
     {
         #region Properties
-
+        public ILoggingService LoggingService { get; set; }
         #endregion
 
         #region Constructer
         /// <summary>
         /// Default constructer
         /// </summary>
-        public BaseController()
+        public BaseController(ILoggingService loggingService)
         {
-
+            LoggingService = loggingService;
         }
         #endregion
 
@@ -29,6 +31,8 @@ namespace SVU.Web.UI.Controllers.Base
         /// <param name="message"></param>
         /// <returns></returns>
         protected IActionResult InternalServerError(object message = null) => StatusCode(StatusCodes.Status500InternalServerError, message);
+        protected IActionResult CustomBadRequest(object message = null) => StatusCode(StatusCodes.Status400BadRequest, message ?? ErrorMessages.InvaildData);
+        protected IActionResult InvaildLoginAttempt(object message = null) => StatusCode(StatusCodes.Status401Unauthorized, message ?? ErrorMessages.InvaildLoginAttempt);
         #endregion
     }
 }

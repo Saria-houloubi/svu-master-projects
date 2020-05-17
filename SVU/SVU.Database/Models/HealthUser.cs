@@ -1,5 +1,4 @@
 ﻿using SVU.Database.Models.Base;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SVU.Database.Models
@@ -19,7 +18,7 @@ namespace SVU.Database.Models
         /// <summary>
         /// The roles this use has been granted
         /// </summary>
-        public IEnumerable<HealthUserRole> Roles { get; set; }
+        public HealthRole Role { get; set; }
         #endregion
         #region Constructer
         /// <summary>
