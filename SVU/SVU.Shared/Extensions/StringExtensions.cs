@@ -47,12 +47,9 @@ namespace SVU.Shared.Extensions
         /// <returns></returns>
         public static bool VerifyMD5Hash(this string input, string hash)
         {
-            //Get the md5 hash value
-            var hashInput = input.GetMD5Hash();
-
             StringComparer stringComparer = StringComparer.OrdinalIgnoreCase;
 
-            if (stringComparer.Compare(input, hash) == 0)
+            if (stringComparer.Compare(input.GetMD5Hash(), hash) == 0)
             {
                 return true;
             }

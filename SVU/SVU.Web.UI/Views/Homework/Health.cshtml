@@ -21,9 +21,9 @@
             Do you have an account ?
         </span>
 
-        @if (Model.Erros.Any())
+        @if (Model != null && Model.Erros.Any())
         {
-            <div class="alert alert-danger">
+            <div class="alert alert-danger my-4">
                 <ul>
                     @foreach (var error in Model.Erros)
                     {
@@ -55,7 +55,8 @@
     }
     else
     {
-        <h1>Hello @User.Identity.Name</h1>
+        <h1>Welcome back! @User.Identity.Name, </h1>
+        <span class="text-info"><i class="fa fa-calendar-alt"></i>  @DateTime.UtcNow.ToShortDateString()</span>
     }
 
 

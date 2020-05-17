@@ -55,14 +55,14 @@ namespace SVU.Web.UI.Controllers
                         new Claim(ClaimTypes.NameIdentifier, result.Id.ToString()),
                     };
                     //Create the claim identity
-                    var claimIdentity = new ClaimsIdentity(claims);
+                    var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     //Authorize the user and issue a cookie
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIdentity));
-                    return View(returnUrl ?? "/Homework/health.cshtml");
+                    return Redirect(returnUrl ?? "/homework/awp");
                 }
                 //Add the error message to the model
                 model.Erros.Add(ErrorMessages.InvaildLoginAttempt);
-                return View("/homework/health.cshtml", model);
+                return View("/Views/homework/health.cshtml", model);
             }
             return CustomBadRequest();
         }
