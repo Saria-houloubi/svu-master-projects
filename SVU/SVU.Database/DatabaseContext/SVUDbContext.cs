@@ -29,11 +29,6 @@ namespace SVU.Database.DatabaseContext
         #endregion
 
         #region Overrides
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-        }
         public override int SaveChanges()
         {
             SetCreationAndLastUpdatedDates();
@@ -88,18 +83,7 @@ namespace SVU.Database.DatabaseContext
         public DbSet<ExternalLink> ExternalLinks { get; private set; }
 
         public DbSet<HeartDisease> HeartDiseases { get; private set; }
-        public DbSet<Tennis> Tennis { get; private set; }
-
-        public DbSet<Blog> Blogs { get; private set; }
-        public DbSet<Tag> Tags { get; private set; }
-        public DbSet<BlogTag> BlogTags { get; private set; }
-
-        public DbSet<HealthRequest> HealthRequests { get; private set; }
-        public DbSet<HealthRole> HealthRoles { get; private set; }
-        public DbSet<HealthUser> HealthUsers { get; private set; }
-        public DbSet<HealthUserRole> HealthUserRoles{ get; private set; }
-        public DbSet<HealthRequestReply> HealthRequestReplies { get; private set; }
-
+        public DbSet<Tennis> Tennis{ get; private set; }
         #endregion
     }
 }

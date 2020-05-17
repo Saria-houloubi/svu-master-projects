@@ -32,25 +32,21 @@
             <h4>Lectures</h4>
             <hr class="mx-5" />
         </div>
+
         @if (Model.Course.Sessions != null && Model.Course.Sessions.Any())
         {
             <div class="container">
                 <table class="table">
-
-                    @{
-                        var orderd = Model.Course.Sessions.OrderByDescending(item => item.CreationDate);
-                        foreach (var lecture in orderd)
-                        {
-                            <tr>
-                                <td>@lecture.Title</td>
-                                <td>@lecture.Description</td>
-                                @foreach (var link in lecture.Links)
-                                {
-                                    <td><a href="@link.Url" class="btn btn-info">@link.Title</a></td>
-                                }
-                                <td>@lecture.CreationDate.ToShortDateString()</td>
-                            </tr>
-                        }
+                    @foreach (var lecture in Model.Course.Sessions)
+                    {
+                        <tr>
+                            <td>@lecture.Title</td>
+                            <td>@lecture.Description</td>
+                            @foreach (var link in lecture.Links)
+                            {
+                                <td><a href="@link.Url" class="btn btn-info">@link.Title</a></td>
+                            }
+                        </tr>
                     }
                 </table>
             </div>
@@ -71,21 +67,18 @@
         {
             <div class="container">
                 <table class="table table-dark border-white">
-                    @{
-                        var orderd = Model.Course.Homeworks.OrderByDescending(item => item.CreationDate);
-                        foreach (var homework in orderd)
-                        {
-                            <tr>
-                                <td>@homework.Title</td>
-                                <td>@homework.Description</td>
-                                @foreach (var link in homework.Links)
-                                {
-                                    <td>
-                                        <a href="@link.Url" class="btn btn-info">@link.Title</a>
-                                    </td>
-                                }
-                            </tr>
-                        }
+                    @foreach (var homework in Model.Course.Homeworks)
+                    {
+                        <tr>
+                            <td>@homework.Title</td>
+                            <td>@homework.Description</td>
+                            @foreach (var link in homework.Links)
+                            {
+                                <td>
+                                    <a href="@link.Url" class="btn btn-info">@link.Title</a>
+                                </td>
+                            }
+                        </tr>
                     }
                 </table>
             </div>
