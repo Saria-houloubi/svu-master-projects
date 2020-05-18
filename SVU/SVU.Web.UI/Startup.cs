@@ -11,6 +11,7 @@ using SVU.Database.IService;
 using SVU.Database.Service.MSSQL;
 using SVU.Logging.IServices;
 using SVU.Logging.Services;
+using SVU.Web.UI.Middlewares;
 
 namespace SVU.Web.UI
 {
@@ -26,8 +27,21 @@ namespace SVU.Web.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //The environment that we are working in
+            var envName = services.BuildServiceProvider().GetService<IHostingEnvironment>().EnvironmentName;
+
             //Add the wanted services to the DI pipeline
-            services.AddSingleton<ILoggingService, DefaultLoggingSservice>();
+            switch (envName.ToLower())
+            {
+                case "development":
+                    services.AddSingleton<ILoggingService, DefaultLoggingSservice>();
+                    break;
+                case "production":
+                    services.AddSingleton<ILoggingService, SaveMyDataLogginService>();
+                    break;
+                default:
+                    break;
+            }
             services.AddSingleton<IMemoryCache, MemoryCache>();
 
 
@@ -40,8 +54,6 @@ namespace SVU.Web.UI
             //Add the database context to DI piplline
             services.AddDbContext<SVUDbContext>(options =>
             {
-                //Get the env that the project is working on
-                var envName = services.BuildServiceProvider().GetService<IHostingEnvironment>().EnvironmentName;
                 //Connecte to the right connection
                 options.UseSqlServer(Configuration.GetConnectionString(envName));
             });
@@ -74,7 +86,10 @@ namespace SVU.Web.UI
 
             app.UseStaticFiles();
 
+            app.UseMiddleware<CustomLoggingMiddleware>();
+
             app.UseAuthentication();
+
 
             app.UseMvc(routes =>
             {

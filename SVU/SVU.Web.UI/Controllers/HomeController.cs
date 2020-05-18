@@ -18,7 +18,6 @@ namespace SVU.Web.UI.Controllers
         public HomeController(ILoggingService loggingService)
             : base(loggingService)
         {
-
         }
         #endregion
 

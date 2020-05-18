@@ -1,5 +1,7 @@
-﻿using SVU.Logging.IServices;
+﻿using Microsoft.AspNetCore.Http;
+using SVU.Logging.IServices;
 using System;
+using System.Threading.Tasks;
 
 namespace SVU.Logging.Services
 {
@@ -17,9 +19,18 @@ namespace SVU.Logging.Services
 
         }
         #endregion
-        public void LogException(Exception ex)
+        public Task LogException(Exception ex)
         {
             Console.WriteLine(ex.GetBaseException().Message);
+
+            return Task.CompletedTask;
+        }
+
+        public Task LogRequest(HttpRequest data)
+        {
+            Console.WriteLine(data.ToString());
+
+            return Task.CompletedTask;
         }
     }
 }

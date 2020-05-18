@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logging", "Logging", "{4DB8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{85F4570F-0FEC-4EC7-BD99-0F46DB1F53E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVU.Shared", "SVU.Shared\SVU.Shared.csproj", "{15209DB5-E755-4EC2-9F94-79726CD17A25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SVU.Shared", "SVU.Shared\SVU.Shared.csproj", "{15209DB5-E755-4EC2-9F94-79726CD17A25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Threading.Tasks;
 
 namespace SVU.Logging.IServices
 {
@@ -7,6 +9,18 @@ namespace SVU.Logging.IServices
     /// </summary>
     public interface ILoggingService
     {
-        void LogException(Exception ex);
+        /// <summary>
+        /// Logs an exception
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        Task LogException(Exception ex);
+        /// <summary>
+        /// Logs a request data
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task LogRequest(HttpRequest data);
+
     }
 }
