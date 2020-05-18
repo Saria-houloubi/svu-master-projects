@@ -37,7 +37,7 @@ namespace SVU.Web.UI
                     services.AddSingleton<ILoggingService, DefaultLoggingSservice>();
                     break;
                 case "production":
-                    services.AddSingleton<ILoggingService, SaveMyDataLogginService>();
+                    services.AddSingleton<ILoggingService, SaveMyDataLoggingService>();
                     break;
                 default:
                     break;

@@ -17,7 +17,7 @@ namespace SVU.Logging.Services
     /// logs any data into Savemydata.sariahouloubi.com
     ///     for docs on the APIs <see cref="https://savemydata.sariahouloubi.com/home/apiguid"/>
     /// </summary>
-    public class SaveMyDataLogginService : ILoggingService
+    public class SaveMyDataLoggingService : ILoggingService
     {
         #region Properties
         /// <summary>
@@ -37,7 +37,7 @@ namespace SVU.Logging.Services
         /// <summary>
         /// Default constructer
         /// </summary>
-        public SaveMyDataLogginService(IConfiguration configuration)
+        public SaveMyDataLoggingService(IConfiguration configuration)
         {
             SaveMyDataConfiguration = new SaveMyDataConfiguration();
             //Bind the section values
