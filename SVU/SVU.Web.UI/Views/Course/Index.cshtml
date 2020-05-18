@@ -20,7 +20,7 @@
                 </p>
                 @foreach (var link in Model.Course.Links)
                 {
-                    <a href="@link.Url" class="btn btn-primary">@link.Title</a>
+                    <a href="@link.Url" class="btn btn-primary m-1">@link.Title</a>
                 }
             </div>
         </div>
@@ -35,7 +35,7 @@
         @if (Model.Course.Sessions != null && Model.Course.Sessions.Any())
         {
             <div class="container">
-                <table class="table">
+                <table class="table lg-table">
 
                     @{
                         var orderd = Model.Course.Sessions.OrderByDescending(item => item.CreationDate);
@@ -70,7 +70,7 @@
         @if (Model.Course.Homeworks != null && Model.Course.Homeworks.Any())
         {
             <div class="container">
-                <table class="table table-dark border-white">
+                <table class="table table-dark border-white lg-table">
                     @{
                         var orderd = Model.Course.Homeworks.OrderByDescending(item => item.CreationDate);
                         foreach (var homework in orderd)
