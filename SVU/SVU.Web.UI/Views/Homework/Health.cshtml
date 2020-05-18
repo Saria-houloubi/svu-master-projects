@@ -55,8 +55,7 @@
     }
     else
     {
-        <h1>Welcome back! @User.Identity.Name, </h1>
-        <span class="text-info"><i class="fa fa-calendar-alt"></i>  @DateTime.UtcNow.ToShortDateString()</span>
+        <partial name="./Health/HealthControlPanel.cshtml"/>
     }
 
 

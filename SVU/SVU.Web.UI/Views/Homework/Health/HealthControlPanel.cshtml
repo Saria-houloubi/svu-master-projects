@@ -1,0 +1,74 @@
+﻿<div>
+    <h1>Welcome back! @User.Identity.Name, </h1>
+    <span class="text-info"><i class="fa fa-calendar-alt"></i>  @DateTime.UtcNow.ToShortDateString()</span>
+    <div class="m-2 text-center">
+        <a href="#blog_create_part" class="btn btn-primary">Create Blog</a>
+        <a href="#blog_list_part" class="btn btn-primary">Blogs</a>
+        <button class="btn btn-primary">Health Request</button>
+        <button class="btn btn-primary">Reply Health Request</button>
+    </div>
+</div>
+
+<div id="blog_create_part">
+    <h4>Create <i class="fa fa-plus-circle"></i></h4>
+    <hr />
+    <div>
+        <div class="input-group my-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Title : </span>
+            </div>
+            <input class="form-control" type="text" />
+        </div>
+        <div class="input-group my-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Thumnbnnail image :</span>
+            </div>
+            <input class="form-control" type="file" />
+        </div>
+        <div class="input-group my-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Content :</span>
+            </div>
+            <textarea class="form-control"></textarea>
+        </div>
+        <div class="input-group my-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Note :</span>
+            </div>
+            <textarea class="form-control"></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-success">Add</button>
+            <button class="btn btn-warning">Edit</button>
+            <button class="btn btn-primary">Preview</button>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5" id="blog_list_part">
+    <h4>Blogs <i class="fa fa-paperclip"></i></h4>
+    <hr />
+    <table class="table table-hover lg-table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Image</th>
+                <th scope="col">Content</th>
+                <th scope="col">Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < 5; i++)
+            {
+                <tr>
+                    <td>Title @i</td>
+                    <td>Image @i</td>
+                    <td>Content @i</td>
+                    <td>Note @i</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
