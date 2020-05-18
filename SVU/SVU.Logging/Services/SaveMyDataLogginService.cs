@@ -68,7 +68,7 @@ namespace SVU.Logging.Services
             await CreateRecord(SaveMyDataConfiguration.DbName, SaveMyDataConfiguration.RequestsTableName, new
             {
                 httpRequest.Method,
-                httpRequest.Host,
+                Host = httpRequest.Host.HasValue ? httpRequest.Host.Host : "No host found",
                 httpRequest.IsHttps,
                 QueryString = httpRequest.QueryString.HasValue ? httpRequest.QueryString.Value : "No Query string values",
                 httpRequest.Path,
