@@ -1,6 +1,7 @@
 ﻿using SVU.Database.Models.Base;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SVU.Database.Models
@@ -12,7 +13,7 @@ namespace SVU.Database.Models
     public class Blog : BaseEntityModel
     {
         #region Properties
-
+        [Required]
         public string Title { get; set; }
         /// <summary>
         /// The image will be saved as a base64 string
@@ -21,12 +22,13 @@ namespace SVU.Database.Models
         /// <summary>
         /// The content of the image which will be in html or .md type
         /// </summary>
+        [Required]
         public string Content { get; set; }
 
         public int VisitCout { get; set; }
 
-        [ForeignKey(nameof(Auther))]
-        public Guid AutherId { get; set; }
+        [ForeignKey(nameof(LastEditUser))]
+        public Guid LastEditUserId { get; set; }
         #endregion
 
         #region Navigation Properties
@@ -34,6 +36,7 @@ namespace SVU.Database.Models
         /// The auther of this artical
         /// </summary>
         public HealthUser Auther { get; set; }
+        public HealthUser LastEditUser { get; set; }
 
         public IEnumerable<BlogTag> Tags { get; set; }
         #endregion
