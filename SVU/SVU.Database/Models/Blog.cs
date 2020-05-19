@@ -29,6 +29,8 @@ namespace SVU.Database.Models
 
         [ForeignKey(nameof(LastEditUser))]
         public Guid LastEditUserId { get; set; }
+        [ForeignKey(nameof(AutherId))]
+        public Guid AutherId { get; set; }
         #endregion
 
         #region Navigation Properties

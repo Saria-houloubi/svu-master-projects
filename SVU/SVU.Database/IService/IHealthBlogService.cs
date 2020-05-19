@@ -1,4 +1,5 @@
 ﻿using SVU.Database.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,6 +23,13 @@ namespace SVU.Database.IService
         /// <param name="count"></param>
         /// <returns></returns>
         Task<IEnumerable<Blog>> GetBlogs(int start, int count);
+        /// <summary>
+        /// Deletes the blog with the sent id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> DeleteBlog(Guid id);
+
 
     }
 }

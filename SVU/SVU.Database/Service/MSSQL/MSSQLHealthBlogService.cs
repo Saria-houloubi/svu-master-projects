@@ -31,7 +31,7 @@ namespace SVU.Database.Service.MSSQL
         }
 
         #endregion
-       
+
         public async Task<IEnumerable<Blog>> GetBlogs(int start, int count)
         {
             try
@@ -50,17 +50,25 @@ namespace SVU.Database.Service.MSSQL
             try
             {
                 //If there is no id assigned to the blog
-                if (blog.Id != Guid.Empty)
+                if (blog.Id == Guid.Empty)
                 {
                     //Then we need to add a new record
                     DbContext.Blogs.Add(blog);
                 }
                 else
                 {
-                    //Update the values
-                    DbContext.Attach(blog);
+                    //Get the blokg from the db
+                    var blogDb = await DbContext.Blogs.SingleOrDefaultAsync(item => item.Id == blog.Id);
+                    //Update the wanted values
+                    blogDb.Title = blog.Title;
+                    blogDb.Content = blog.Content;
+                    blogDb.Thumbnail = blog.Thumbnail;
+                    blogDb.Note = blog.Note;
+                    blogDb.LastEditUserId = blog.LastEditUserId;
+
+                    blog = blogDb;
                     //Mark it as modified
-                    DbContext.Entry(blog).State = EntityState.Modified;
+                    DbContext.Entry(blogDb).State = EntityState.Modified;
                 }
 
                 await DbContext.SaveChangesAsync();
@@ -72,6 +80,30 @@ namespace SVU.Database.Service.MSSQL
                 LogginService.LogException(ex);
             }
             return null;
+        }
+
+
+        public async Task<bool> DeleteBlog(Guid id)
+        {
+            try
+            {
+                //Get the blog
+                var blogDb = await DbContext.Blogs.SingleOrDefaultAsync(item => item.Id == id);
+
+                if (blogDb != null)
+                {
+                    //Mark it as deleted
+                    DbContext.Entry(blogDb).State = EntityState.Deleted;
+                    //Delete the record
+                    await DbContext.SaveChangesAsync();
+                }
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                LogginService.LogException(ex);
+            }
+            return false;
         }
     }
 }
