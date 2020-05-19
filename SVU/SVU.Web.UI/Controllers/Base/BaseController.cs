@@ -30,9 +30,21 @@ namespace SVU.Web.UI.Controllers.Base
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        protected IActionResult InternalServerError(object message = null) => StatusCode(StatusCodes.Status500InternalServerError, message);
-        protected IActionResult CustomBadRequest(object message = null) => StatusCode(StatusCodes.Status400BadRequest, message ?? ErrorMessages.InvaildData);
-        protected IActionResult InvaildLoginAttempt(object message = null) => StatusCode(StatusCodes.Status401Unauthorized, message ?? ErrorMessages.InvaildLoginAttempt);
+        protected IActionResult InternalServerError(object message = null) => StatusCode(StatusCodes.Status500InternalServerError, message ??
+            new
+            {
+                message = ErrorMessages.SomthingWorngHappend
+            });
+        protected IActionResult CustomBadRequest(object message = null) => StatusCode(StatusCodes.Status400BadRequest, message ??
+            new
+            {
+                message = ErrorMessages.InvaildData
+            });
+        protected IActionResult InvaildLoginAttempt(object message = null) => StatusCode(StatusCodes.Status401Unauthorized, message ??
+            new
+            {
+                message = ErrorMessages.InvaildLoginAttempt
+            });
         #endregion
     }
 }

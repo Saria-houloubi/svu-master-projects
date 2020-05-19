@@ -2,10 +2,10 @@
     <h1>Welcome back! @User.Identity.Name, </h1>
     <span class="text-info"><i class="fa fa-calendar-alt"></i>  @DateTime.UtcNow.ToShortDateString()</span>
     <div class="m-2 text-center">
-        <a href="#blog_create_part" class="btn btn-primary">Create Blog</a>
-        <a href="#blog_list_part" class="btn btn-primary">Blogs</a>
-        <button class="btn btn-primary">Health Request</button>
-        <button class="btn btn-primary">Reply Health Request</button>
+        <a href="#blog_create_part" class="btn btn-primary m-1">Create Blog</a>
+        <a href="#blog_list_part" class="btn btn-primary m-1">Blog List</a>
+        <button class="btn btn-primary m-1  ">Health Request</button>
+        <button class="btn btn-primary m-1  ">Reply Health Request</button>
     </div>
 </div>
 
@@ -39,8 +39,8 @@
         </div>
 
         <div class="btn-group">
-            <button class="btn btn-success">Add</button>
-            <button class="btn btn-warning">Edit</button>
+            <button class="btn btn-success" onclick="AddEditBlog(true)">Add</button>
+            <button class="btn btn-warning" onclick="AddEditBlog(false)">Edit</button>
             <button class="btn btn-primary">Preview</button>
         </div>
     </div>
@@ -72,3 +72,61 @@
     </table>
 
 </div>
+
+<script>
+    var startBlogIndex = 0;
+    var countBlogs = 5;
+    $(function () {
+        //Start loading the first batch of the blogs
+        loadBlogs(startBlogIndex, countBlogs);
+    })
+
+    //
+    //Loads the blogs table
+    //  start: used for pagination
+    //  count : get a count number of blogs after the start index
+    //
+    function loadBlogs(start, count) {
+        $.ajax('/AWPHealth/Blogs',
+            {
+                method: 'GET',
+                data: {
+                    start,
+                    count
+                },
+                success: function (res) {
+                    console.log(res)
+
+                    //Just move the start to the end of the count
+                    startBlogIndex += count;
+                    console.log("start", start);
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+    }
+
+    //
+    //Adds or edits a blog
+    //  isAdd : a flag to check if the operation is an add or edit
+    //
+    function AddEditBlog(isAdd) {
+        $.ajax('/AWPHealth/Blog',
+            {
+                method: 'POST',
+                data: {
+                    //TODO: bind the data
+                    Title : "Title"
+                },
+                success: function (res) {
+                    console.log("All good", res)
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+    }
+
+
+</script>

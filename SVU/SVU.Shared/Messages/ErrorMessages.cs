@@ -5,8 +5,11 @@
     /// </summary>
     public static class ErrorMessages
     {
+        public static string SomthingWorngHappend = "Ops! there seems to be somthing wrong while doing some operations";
         public static string InvaildData = "The data that was sent either is invaild or not well formated";
         public static string InvaildLoginAttempt = "Unable to authenticate with the sent username and password";
+
+
 
         
     }

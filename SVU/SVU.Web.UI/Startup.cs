@@ -50,6 +50,7 @@ namespace SVU.Web.UI
             services.AddScoped<IFileDatabaseService, MSSQLFileDatabaseService>();
             services.AddScoped<IDataSetDatabaseService, MSSQLDataSetDatabaseService>();
             services.AddScoped<IHealthAccountService, MSSQLHealthAccountService>();
+            services.AddScoped<IHealthBlogService, MSSQLHealthBlogService>();
 
             //Add the database context to DI piplline
             services.AddDbContext<SVUDbContext>(options =>
