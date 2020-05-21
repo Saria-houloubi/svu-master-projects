@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using SVU.Database.IService;
 using SVU.Database.Models;
 using SVU.Logging.IServices;
+using SVU.Shared.Messages;
 using SVU.Shared.Static;
 using SVU.Web.UI.Controllers.Base;
 using SVU.Web.UI.Extensions;
+using SVU.Web.UI.Static;
+using SVU.Web.UI.ViewModels.Health;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -36,6 +39,32 @@ namespace SVU.Web.UI.Controllers
         #endregion
 
         #region GET Requests
+        /// <summary>
+        /// Displays a blog to the user
+        /// </summary>
+        /// <param name="blog"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> Blog(string id)
+        {
+            //Try to read the blog id
+            if (Guid.TryParse(id, out Guid blogId))
+            {
+                //Try to get the blog from teh db
+                var blog = await HealthBlogService.GetBlog(blogId);
+
+                if (blog != null)
+                {
+                    return View(new HealthBlogViewModel()
+                    {
+                        Blog = blog
+                    });
+                }
+            }
+            return View(StaticViewNames.NOTFOUND);
+        }
+
+
         /// <summary>
         /// Gets a list of blogs
         /// </summary>
@@ -68,6 +97,10 @@ namespace SVU.Web.UI.Controllers
             //Check if the model is valid
             if (ModelState.IsValid)
             {
+                if (model.Content.Contains("<script>"))
+                {
+                    return CustomBadRequest($"Content : {ErrorMessages.JavaScriptNotAllowed}");
+                }
                 //Try to get the user id
                 if (Guid.TryParse(HttpContext.User.GetClaimValue(ClaimTypes.NameIdentifier), out Guid id))
                 {
@@ -101,7 +134,7 @@ namespace SVU.Web.UI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
-        public async Task<IActionResult> Blog(string id)
+        public async Task<IActionResult> DeleteBlog(string id)
         {
             //Check if we got an id
             if (Guid.TryParse(id, out Guid blogId))
@@ -121,11 +154,12 @@ namespace SVU.Web.UI.Controllers
         /// </summary>
         /// <param name="blog"></param>
         /// <returns></returns>
-        private object CreateResponseBlogJSON(Blog blog) => new
+        private object CreateResponseBlogJSON(Blog blog, bool includeThumnail = false) => new
         {
             blog.Id,
             blog.Title,
-            blog.Thumbnail,
+            ThumbnailBase64 = includeThumnail ? blog.ThumbnailBase64 : "",
+            HasThumbnail = !string.IsNullOrWhiteSpace(blog.ThumbnailBase64),
             blog.Note,
             blog.VisitCout,
             blog.Content,

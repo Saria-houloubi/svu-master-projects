@@ -1,0 +1,41 @@
+﻿@model SVU.Web.UI.Models.TagHelpers.DeleteConfirmationModel
+@*
+    Showes a confirmation alert for the delete operation
+*@
+
+<div class="modal fade position-absolute" id="delete_confirmation_modal" tabindex="-1" role="dialog" data-backdrop="false"  aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm that you want to delete record</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <div class="input-group my-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">@Model.Name</span>
+                    </div>
+                    <input class="form-control" value="@Model.Value" readonly />
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if (string.IsNullOrEmpty(Model.CancelCallbackFunctionName))
+                {
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-secondary m-1" onclick="@Model.CancelCallbackFunctionName">Cancel</button>
+                }
+                <button class="btn btn-danger m-1" onclick="@Model.DeleteCallbackFunctionName">Delete</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+

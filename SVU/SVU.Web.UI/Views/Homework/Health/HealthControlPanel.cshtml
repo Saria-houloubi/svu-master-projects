@@ -26,7 +26,7 @@
             </div>
             <input class="form-control" type="file" id="blog_thumbnail_file" accept=".png, .jpg, .gif" onchange="ReadOneImageFile(this,'png,jpg,gif','thumbnail_loading_status',setImageEncoding)" />
             <div class="ml-1" id="thumbnail_loading_status">
-                <partial name="Compontents/LoaderStatusComponent" />
+                <partial name="Components/LoaderStatusComponent" />
             </div>
         </div>
         <div class="input-group my-2">
@@ -42,15 +42,18 @@
             <textarea class="form-control" style="min-height:100px" id="blog_note"></textarea>
         </div>
 
-        <div class="btn-group">
-            <button class="btn btn-success" onclick="AddEditBlog(true)">Add</button>
-            <button class="btn btn-warning" id="edit_blog_data_button" onclick="AddEditBlog(false)" disabled>Edit</button>
-            <button class="btn btn-primary">Preview</button>
-        </div>
+        <button class="btn btn-success" onclick="AddEditBlog(this,true)">
+            <i class="fa fa-spinner fa-spin collapse"></i>
+            Add
+        </button>
+        <button class="btn btn-warning" id="edit_blog_data_button" onclick="AddEditBlog(this,false)" disabled>
+            <i class="fa fa-spinner fa-spin collapse"></i>
+            Edit
+        </button>
     </div>
 </div>
 
-<div class="mt-5" id="blog_list_part">
+<div class="mt-5 position-relative" id="blog_list_part">
     <h4>
         Blogs <i class="fa fa-paperclip"></i>
         <span class="ml-5 text-primary " id="blog_countent_status_loading"><i class="fa fa-spinner  fa-spin"></i> Loading..</span>
@@ -65,8 +68,10 @@
                 <th scope="col">Content</th>
                 <th scope="col">Note</th>
                 <th scope="col">Visits</th>
-                <th scope="col" width="10%">Creation date</th>
-                <th scope="col" width="10%">Last updated date</th>
+                <th scope="col" width="auto">Creation date</th>
+                <th scope="col" width="auto">Last updated date</th>
+                <th scope="col" width="5%"></th>
+                <th scope="col" width="5%"></th>
                 <th scope="col" width="5%"></th>
                 <th scope="col" width="5%"></th>
             </tr>
@@ -74,6 +79,10 @@
         <tbody id="blogs_table_body_part"></tbody>
     </table>
 
+    <partial name="Components/DeleteConfirmationModal" model='new DeleteConfirmationModel() { Name = "title",DeleteCallbackFunctionName = "deleteBlog()" }' />
+
 </div>
+
+
 
 <script src="~/js/HealthControlPanel.js"></script>

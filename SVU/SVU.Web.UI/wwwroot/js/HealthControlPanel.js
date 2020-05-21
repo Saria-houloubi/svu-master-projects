@@ -4,6 +4,7 @@ var startBlogIndex = 0;
 var countBlogs = 5;
 //The base64 string encoding for the thumbnail
 var thumbnailBase64 = '';
+var thumbnailMimeType = '';
 //Get the blogs table body
 var blogsTableBody = document.getElementById('blogs_table_body_part');
 //The id of the blog that is locked for edit
@@ -15,14 +16,15 @@ $(function () {
     //Enable the tabs for the textareas
     var textAreas = document.getElementsByTagName('textarea');
     for (var i = 0; i < textAreas.length; i++) {
-        enableTab(textAreas[i].id)
+        enableTab(textAreas[i].id);
     }
 })
 //
 //Just a helper function to save the base64 string
 //
-function setImageEncoding(value) {
+function setImageEncoding(value,mimeType) {
     thumbnailBase64 = value;
+    thumbnailMimeType = mimeType;
 }
 //
 //Shortcut function to create a blog row
@@ -35,10 +37,11 @@ function createBlogTableRow(blog) {
     hiddenId.setAttribute('value', blog.id);
     hiddenId.classList.add('row-id');
     row.prepend(hiddenId);
-
-    //Add the edit and delete button
-    row.appendChild(createButtonIconTableCell('btn mt-1 text-primary', 'fa fa-edit', lockBlogForEdit));
-    row.appendChild(createButtonIconTableCell('btn mt-1 text-danger', 'fa fa-trash-alt', DeleteBlog));
+    row.appendChild(createButtonIconTableCell(`btn mt-1 text-white bg-${blog.hasThumbnail ? 'success' : 'danger'} disabled`, `fa fa-image text-white`));
+    //Add the edit ,delete  and preview button
+    row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-primary', 'fa fa-edit', lockBlogForEdit));
+    row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-danger', 'fa fa-trash-alt', showDeleteConfirmation));
+    row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-secondary', 'fa fa-eye', null,`/awphealth/blog/${blog.id}`));
 
     return row;
 }
@@ -76,16 +79,21 @@ function lockBlogForEdit() {
 //Adds or edits a blog
 //  isAdd : a flag to check if the operation is an add or edit
 //
-function AddEditBlog(isAdd) {
+function AddEditBlog(element,isAdd) {
+    //Disable the button
+    $(element).attr('disabled', true);
+    //Show the spinner
+    $(element).children('svg').removeClass('collapse');
     $.ajax('/AWPHealth/Blog',
         {
             method: 'POST',
             data: {
-                id: isAdd ? '' : editBlogId,
+                id: isAdd ? '00000000-0000-0000-0000-000000000000' : editBlogId,
                 Title: $('#blog_title').val(),
                 Content: $('#blog_content').val(),
                 Note: $('#blog_note').val(),
-                Thumbnail: thumbnailBase64
+                ThumbnailBase64 : thumbnailBase64,
+                ThumbnailMimeType: thumbnailMimeType,
             },
             success: function (blog) {
                 showAlert('success', "Blog added!");
@@ -115,7 +123,13 @@ function AddEditBlog(isAdd) {
             error: function (err) {
                 showAlert('error', err.responseJSON.message);
             }
-        })
+        }).always(function () {
+            //Enable the button
+            $(element).attr('disabled', false);
+            //hide the spinner
+            $(element).children('svg').addClass('collapse');
+
+        });
 }
 
 //
@@ -150,19 +164,32 @@ function loadBlogs(start, count) {
 
         });
 }
+var rowToDelete;
+//
+//Shows the delete confirmation modal
+//
+function showDeleteConfirmation() {
+    //Get the row of the button
+    rowToDelete = $(this).parentsUntil('tbody')[1];
+    
+    $("#delete_confirmation_modal input").val(rowToDelete.children[1].innerText);
+    $("#delete_confirmation_modal").modal('show');
 
+}
 //
 //Send a delete request for the blog 
 //  id : the id of the blog to delete
 //
-function DeleteBlog() {
+function deleteBlog() {
+    //Hide the modal
+    $("#delete_confirmation_modal").modal('hide');
     //Get the row of the button
-    var row = $(this).parentsUntil('tbody')[1];
+    var row = rowToDelete;
     //The first child is always the id
     var id = row.children[0].value;
     //TOOD: Add delete confirmation
     //sedn the delete request
-    $.ajax(`/AWPHealth/Blog/${id}`, {
+    $.ajax(`/AWPHealth/DeleteBlog/${id}`, {
         method: 'DELETE',
         success: function (res) {
             showAlert('success', 'Deleted!');

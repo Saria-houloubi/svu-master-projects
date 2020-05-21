@@ -32,11 +32,24 @@ namespace SVU.Database.Service.MSSQL
 
         #endregion
 
+
+        public async Task<Blog> GetBlog(Guid id)
+        {
+            try
+            {
+                return await DbContext.Blogs.SingleOrDefaultAsync(item => item.Id == id);
+            }
+            catch (System.Exception ex)
+            {
+                LogginService.LogException(ex);
+            }
+            return null;
+        }
         public async Task<IEnumerable<Blog>> GetBlogs(int start, int count)
         {
             try
             {
-                return await DbContext.Blogs.Skip(start).Take(count).ToListAsync();
+                return await DbContext.Blogs.OrderByDescending(item => item.CreationDate).Skip(start).Take(count).ToListAsync();
             }
             catch (System.Exception ex)
             {
@@ -62,7 +75,7 @@ namespace SVU.Database.Service.MSSQL
                     //Update the wanted values
                     blogDb.Title = blog.Title;
                     blogDb.Content = blog.Content;
-                    blogDb.Thumbnail = blog.Thumbnail;
+                    blogDb.ThumbnailBase64 = blog.ThumbnailBase64;
                     blogDb.Note = blog.Note;
                     blogDb.LastEditUserId = blog.LastEditUserId;
 

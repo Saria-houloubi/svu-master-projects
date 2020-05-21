@@ -1,0 +1,24 @@
+﻿@model SVU.Web.UI.ViewModels.Health.HealthBlogViewModel
+
+@{
+    ViewBag.title = Model.Blog.Title;
+}
+
+<div class="container">
+    <div class="text-center ">
+        <img src="data:image/@Model.Blog.ThumbnailMimeType;base64,@Model.Blog.ThumbnailBase64" class="w-100" />
+    </div>
+
+    <h1>@Model.Blog.Title</h1>
+    <hr />
+
+    <div>
+        @Html.Raw(Model.Blog.Content)
+    </div>
+
+    <hr />
+    <div>
+        @Html.Raw(Model.Blog.Note)
+    </div>
+
+</div>

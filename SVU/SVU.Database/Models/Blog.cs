@@ -18,7 +18,8 @@ namespace SVU.Database.Models
         /// <summary>
         /// The image will be saved as a base64 string
         /// </summary>
-        public string Thumbnail { get; set; }
+        public string ThumbnailBase64 { get; set; }
+        public string ThumbnailMimeType { get; set; }
         /// <summary>
         /// The content of the image which will be in html or .md type
         /// </summary>
@@ -29,7 +30,7 @@ namespace SVU.Database.Models
 
         [ForeignKey(nameof(LastEditUser))]
         public Guid LastEditUserId { get; set; }
-        [ForeignKey(nameof(AutherId))]
+        [ForeignKey(nameof(Auther))]
         public Guid AutherId { get; set; }
         #endregion
 

@@ -50,7 +50,7 @@ function hideAlert(type, message, time = 4000) {
 //  inputElement : the DOM input file type element
 //  loaderStatusId : a spinning loader to show to the user
 //
-function ReadOneImageFile(inputElement, acceptTags, loaderStatusId,setLoadValueCallBack) {
+function ReadOneImageFile(inputElement, acceptTags, loaderStatusId, setLoadValueCallBack) {
     //Try to get the loader
     var loader = document.getElementById(loaderStatusId);
 
@@ -64,19 +64,20 @@ function ReadOneImageFile(inputElement, acceptTags, loaderStatusId,setLoadValueC
 
     //Create the file reader
     var reader = new FileReader();
+    var splitedFileName;
     reader.onloadstart = function (event) {
         //Show the spinner
         conventionLoaderChange(loader, 0);
         //Get the name splited by the .
-        var splitedFileName = inputElement.files[0].name.split('.');
+        splitedFileName = inputElement.files[0].name.split('.');
         //check if the file type is from the accepted type
-        if (!acceptTags.includes(splitedFileName[splitedFileName.length - 1])) {
+        if (!acceptTags.includes(splitedFileName[splitedFileName.length - 1]) || inputElement.files[0].size > 100000) {
             //Show error
             conventionLoaderChange(loader, 2);
             //Clear out the valu
             $(inputElement).val('');
 
-            setLoadValueCallBack('');
+            setLoadValueCallBack('','');
             //Abort the loading
             this.abort();
         }
@@ -88,14 +89,14 @@ function ReadOneImageFile(inputElement, acceptTags, loaderStatusId,setLoadValueC
         conventionLoaderChange(loader, 1);
 
         //Return the base64 encoding
-        setLoadValueCallBack(btoa(reader.result));
+        setLoadValueCallBack(btoa(reader.result), splitedFileName[splitedFileName.length - 1]);
     };
 
     reader.error = function (event) {
         //Show error icon
         conventionLoaderChange(loader, 2);
 
-        setLoadValueCallBack('');
+        setLoadValueCallBack('','');
     };
 
     //read the file
@@ -154,26 +155,31 @@ function enableTab(id) {
 //
 //Creates a table cell based with an icon button
 //
-function createButtonIconTableCell(buttonClassList, iconClassList, onClickCallback) {
+function createButtonIconTableCell(buttonClassList, iconClassList, onClickCallback = null, href = null) {
 
     //Create the cell
     var cell = document.createElement('td');
     //Add the button to the cell
-    cell.appendChild(createButtonIconElement(buttonClassList, iconClassList, onClickCallback));
+    cell.appendChild(createButtonIconElement(buttonClassList, iconClassList, onClickCallback, href));
 
     return cell;
-
 }
+
+
 //
 //Creates a button icon element
 //  buttonClasslist : a string with the button class space seprated
 //  iconClassList : a string with the icon class space seprated
 //  onClickCallBack : the callback function to be binded with the button
+//  href : a refrence for the link
 //
 //
-function createButtonIconElement(buttonClassList, iconClassList, onClickCallback) {
+function createButtonIconElement(buttonClassList, iconClassList, onClickCallback, href) {
     //Create the button DOM element
     var button = document.createElement('a');
+    if (href)
+        //Set the link
+        button.href = href;
     //Add the needed class
     button.classList.add(...buttonClassList.split(' '));
     //create the element
@@ -199,6 +205,7 @@ function createTableRow(data) {
         var cell = document.createElement('td');
         //Fill the data
         cell.textContent = data[i];
+        cell.classList.add('table-cell-overflow');
         //Add it to the row
         row.appendChild(cell);
     }
