@@ -66,6 +66,8 @@ namespace SVU.Web.UI
                     options.LoginPath = "/homework/Awp";
                 });
 
+            services.AddApplicationInsightsTelemetry();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

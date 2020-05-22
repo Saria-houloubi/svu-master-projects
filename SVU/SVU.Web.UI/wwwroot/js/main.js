@@ -65,13 +65,14 @@ function ReadOneImageFile(inputElement, acceptTags, loaderStatusId, setLoadValue
     //Create the file reader
     var reader = new FileReader();
     var splitedFileName;
+    var maxSize = 1000 * 1000;
     reader.onloadstart = function (event) {
         //Show the spinner
         conventionLoaderChange(loader, 0);
         //Get the name splited by the .
         splitedFileName = inputElement.files[0].name.split('.');
         //check if the file type is from the accepted type
-        if (!acceptTags.includes(splitedFileName[splitedFileName.length - 1]) || inputElement.files[0].size > 100000) {
+        if (!acceptTags.includes(splitedFileName[splitedFileName.length - 1]) || inputElement.files[0].size >= maxSize) {
             //Show error
             conventionLoaderChange(loader, 2);
             //Clear out the valu

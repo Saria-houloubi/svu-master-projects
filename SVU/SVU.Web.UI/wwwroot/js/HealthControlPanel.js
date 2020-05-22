@@ -100,10 +100,10 @@ function AddEditBlog(element,isAdd) {
                 //Craete the  new blog row
                 var newRow = createBlogTableRow(blog);
                 //Mark the new row
-                newRow.classList.toggle('bg-success')
+                newRow.classList.toggle('bg-success');
                 //Remove the mark after 3 secondd
                 setTimeout(function myfunction() {
-                    newRow.classList.toggle('bg-success')
+                    newRow.classList.toggle('bg-success');
                 }, 3000);
                 //If the opeation is an edit
                 if (!isAdd) {

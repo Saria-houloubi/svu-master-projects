@@ -24,7 +24,7 @@
                 <span class="input-group-text">Thumnbnail image</span>
 
             </div>
-            <input class="form-control" type="file" id="blog_thumbnail_file" accept=".png, .jpg, .gif" onchange="ReadOneImageFile(this,'png,jpg,gif','thumbnail_loading_status',setImageEncoding)" />
+            <input class="form-control" type="file" id="blog_thumbnail_file" accept=".png, .jpg,.jpeg, .gif" onchange="ReadOneImageFile(this,'png,jpg,jpeg,gif','thumbnail_loading_status',setImageEncoding)" />
             <div class="ml-1" id="thumbnail_loading_status">
                 <partial name="Components/LoaderStatusComponent" />
             </div>
