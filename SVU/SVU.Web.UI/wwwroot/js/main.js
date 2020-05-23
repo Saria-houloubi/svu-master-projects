@@ -66,7 +66,7 @@ function ReadOneImageFile(inputElement, acceptTags, loaderStatusId, setLoadValue
     var reader = new FileReader();
     var splitedFileName;
     //Max to 20 kb
-    var maxSize = 10000 * 20;
+    var maxSize = 10000 * 2;
     reader.onloadstart = function (event) {
         //Show the spinner
         conventionLoaderChange(loader, 0);

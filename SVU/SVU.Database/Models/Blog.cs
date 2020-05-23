@@ -15,6 +15,8 @@ namespace SVU.Database.Models
         #region Properties
         [Required]
         public string Title { get; set; }
+        [StringLength(40, ErrorMessage = "Preview must be 40 charecters max")]
+        public string PreviewContent { get; set; }
         /// <summary>
         /// The image will be saved as a base64 string
         /// </summary>

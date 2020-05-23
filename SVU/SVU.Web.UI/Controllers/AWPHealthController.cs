@@ -45,13 +45,14 @@ namespace SVU.Web.UI.Controllers
         /// <param name="blog"></param>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Blog(string id)
         {
             //Try to read the blog id
             if (Guid.TryParse(id, out Guid blogId))
             {
                 //Try to get the blog from teh db
-                var blog = await HealthBlogService.GetBlog(blogId);
+                var blog = await HealthBlogService.GetBlog(blogId, !HttpContext.User.Identity.IsAuthenticated);
 
                 if (blog != null)
                 {
@@ -64,6 +65,28 @@ namespace SVU.Web.UI.Controllers
             return View(StaticViewNames.NOTFOUND);
         }
 
+        /// <summary>
+        /// Displays a blog to the user
+        /// </summary>
+        /// <param name="blog"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetBlog(string id)
+        {
+            //Try to read the blog id
+            if (Guid.TryParse(id, out Guid blogId))
+            {
+                //Try to get the blog from teh db
+                var blog = await HealthBlogService.GetBlog(blogId, !HttpContext.User.Identity.IsAuthenticated);
+
+                if (blog != null)
+                {
+                    return Ok(blog);
+                }
+            }
+            return NotFound($"Blog not found with the id of {id}");
+        }
 
         /// <summary>
         /// Gets a list of blogs
@@ -71,17 +94,29 @@ namespace SVU.Web.UI.Controllers
         /// <param name="start">The index to start taking blogs from for pagination</param>
         /// <param name="count">The count of blogs to get</param>
         /// <returns></returns>
-        public async Task<IActionResult> Blogs(int start, int count)
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetBlogs(int start, int count, bool loadImages = false)
         {
             //Try to get the list of saved blogs in the db
-            var blogs = await HealthBlogService.GetBlogs(start, count);
+            var blogs = await HealthBlogService.GetBlogs(start, count, loadImages);
 
             //Check if we got any data
             if (blogs != null)
             {
-                return Ok(blogs.Select(item => CreateResponseBlogJSON(item)));
+                return Ok(blogs.Select(item => CreateResponseBlogJSON(item, loadImages)));
             }
             return InternalServerError();
+        }
+        /// <summary>
+        /// Get the blogs page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Blogs()
+        {
+            return View();
         }
         #endregion
 
@@ -158,8 +193,10 @@ namespace SVU.Web.UI.Controllers
         {
             blog.Id,
             blog.Title,
-            ThumbnailBase64 = includeThumnail ? blog.ThumbnailBase64 : "",
+            blog.PreviewContent,
+            ThumbnailBase64 = includeThumnail ? $"data:image/{blog.ThumbnailMimeType};base64,{blog.ThumbnailBase64}" : "",
             HasThumbnail = !string.IsNullOrWhiteSpace(blog.ThumbnailBase64),
+            blog.ThumbnailMimeType,
             blog.Note,
             blog.VisitCout,
             blog.Content,

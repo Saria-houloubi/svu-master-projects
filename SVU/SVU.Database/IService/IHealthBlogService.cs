@@ -22,8 +22,8 @@ namespace SVU.Database.IService
         /// <param name="start"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        Task<IEnumerable<Blog>> GetBlogs(int start, int count);
-        Task<Blog> GetBlog(Guid id);
+        Task<IEnumerable<Blog>> GetBlogs(int start, int count,bool loadImages );
+        Task<Blog> GetBlog(Guid id, bool addVisit = true);
         /// <summary>
         /// Deletes the blog with the sent id
         /// </summary>

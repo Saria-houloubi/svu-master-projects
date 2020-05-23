@@ -22,7 +22,7 @@ $(function () {
 //
 //Just a helper function to save the base64 string
 //
-function setImageEncoding(value,mimeType) {
+function setImageEncoding(value, mimeType) {
     thumbnailBase64 = value;
     thumbnailMimeType = mimeType;
 }
@@ -30,7 +30,7 @@ function setImageEncoding(value,mimeType) {
 //Shortcut function to create a blog row
 //
 function createBlogTableRow(blog) {
-    var row = createTableRow([blog.title, blog.content, blog.note, blog.visitCout, blog.creationDate, blog.lastUpdatedDate]);
+    var row = createTableRow([blog.title, blog.previewContent, blog.visitCout, blog.creationDate, blog.lastUpdatedDate]);
     //Create the hidden id filed
     var hiddenId = document.createElement('input');
     hiddenId.hidden = true;
@@ -41,7 +41,7 @@ function createBlogTableRow(blog) {
     //Add the edit ,delete  and preview button
     row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-primary', 'fa fa-edit', lockBlogForEdit));
     row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-danger', 'fa fa-trash-alt', showDeleteConfirmation));
-    row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-secondary', 'fa fa-eye', null,`/awphealth/blog/${blog.id}`));
+    row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-secondary', 'fa fa-eye', null, `/awphealth/blog/${blog.id}`));
 
     return row;
 }
@@ -50,6 +50,7 @@ function createBlogTableRow(blog) {
 //Loads the row data and Locks it for edit
 //
 function lockBlogForEdit() {
+
     //Get the last editing row
     var oldEditLockedRow = blogsTableBody.querySelector('.bg-warning');
     //Free up the row background
@@ -61,13 +62,31 @@ function lockBlogForEdit() {
     if (row) {
         //Fill the values
         editBlogId = row.children[0].value;
-        $('#blog_title').val(row.children[1].innerText);
-        $('#blog_content').val(row.children[2].innerText);
-        $('#blog_note').val(row.children[3].innerText);
 
-        row.classList.add('bg-warning');
-        //Enable the edit button
-        document.getElementById('edit_blog_data_button').disabled = false;
+        $.ajax('/awphealth/getblog',
+            {
+                method: 'GET',
+                data: {
+                    id: editBlogId
+                },
+                success: function (data) {
+
+                    $('#blog_title').val(data.title);
+                    $('#blog_preview_text').val(data.previewContent);
+                    $('#blog_content').val(data.content);
+                    $('#blog_note').val(data.note);
+
+                    row.classList.add('bg-warning');
+                    //Enable the edit button
+                    document.getElementById('edit_blog_data_button').disabled = false;
+
+                    window.location = "#blog_create_part";
+                },
+                error: function (err) {
+                    showAlert('danger', err.responseJSON.message);
+                    scrollWindowToTheTop();
+                }
+            });
     }
     else {
         showAlert('error', 'something wrong happend while trying to parse the record');
@@ -79,7 +98,7 @@ function lockBlogForEdit() {
 //Adds or edits a blog
 //  isAdd : a flag to check if the operation is an add or edit
 //
-function AddEditBlog(element,isAdd) {
+function AddEditBlog(element, isAdd) {
     //Disable the button
     $(element).attr('disabled', true);
     //Show the spinner
@@ -92,11 +111,13 @@ function AddEditBlog(element,isAdd) {
                 Title: $('#blog_title').val(),
                 Content: $('#blog_content').val(),
                 Note: $('#blog_note').val(),
-                ThumbnailBase64 : thumbnailBase64,
-                ThumbnailMimeType: thumbnailMimeType,
+                PreviewContent: $('#blog_preview_text').val(),
+                ThumbnailBase64: thumbnailBase64,
+                ThumbnailMimeType: thumbnailMimeType
             },
             success: function (blog) {
-                showAlert('success', "Blog added!");
+
+                showAlert('success', "Operation Success!");
                 //Craete the  new blog row
                 var newRow = createBlogTableRow(blog);
                 //Mark the new row
@@ -128,7 +149,6 @@ function AddEditBlog(element,isAdd) {
             $(element).attr('disabled', false);
             //hide the spinner
             $(element).children('svg').addClass('collapse');
-
         });
 }
 
@@ -138,7 +158,7 @@ function AddEditBlog(element,isAdd) {
 //  count : get a count number of blogs after the start index
 //
 function loadBlogs(start, count) {
-    $.ajax('/AWPHealth/Blogs',
+    $.ajax('/AWPHealth/GetBlogs',
         {
             method: 'GET',
             data: {
@@ -171,7 +191,7 @@ var rowToDelete;
 function showDeleteConfirmation() {
     //Get the row of the button
     rowToDelete = $(this).parentsUntil('tbody')[1];
-    
+
     $("#delete_confirmation_modal input").val(rowToDelete.children[1].innerText);
     $("#delete_confirmation_modal").modal('show');
 

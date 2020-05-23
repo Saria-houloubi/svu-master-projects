@@ -33,11 +33,19 @@ namespace SVU.Database.Service.MSSQL
         #endregion
 
 
-        public async Task<Blog> GetBlog(Guid id)
+        public async Task<Blog> GetBlog(Guid id, bool addVisit = true)
         {
             try
             {
-                return await DbContext.Blogs.SingleOrDefaultAsync(item => item.Id == id);
+                var blog = await DbContext.Blogs.SingleOrDefaultAsync(item => item.Id == id);
+
+                if (addVisit)
+                {
+                    blog.VisitCout++;
+                    await DbContext.SaveChangesAsync();
+                }
+
+                return blog;
             }
             catch (System.Exception ex)
             {
@@ -45,11 +53,23 @@ namespace SVU.Database.Service.MSSQL
             }
             return null;
         }
-        public async Task<IEnumerable<Blog>> GetBlogs(int start, int count)
+        public async Task<IEnumerable<Blog>> GetBlogs(int start, int count, bool loadImages)
         {
             try
             {
-                return await DbContext.Blogs.OrderByDescending(item => item.CreationDate).Skip(start).Take(count).ToListAsync();
+                return await DbContext.Blogs.Select(blog => new Blog
+                {
+                    Id = blog.Id,
+                    AutherId = blog.AutherId,
+                    PreviewContent = blog.PreviewContent,
+                    Title = blog.Title,
+                    CreationDate = blog.CreationDate,
+                    LastUpdatedDate = blog.LastUpdatedDate,
+                    ThumbnailBase64 = loadImages ? blog.ThumbnailBase64 : string.IsNullOrEmpty(blog.ThumbnailBase64) ? string.Empty : "Data",
+                    ThumbnailMimeType = loadImages ? blog.ThumbnailMimeType : "",
+                    VisitCout = blog.VisitCout
+
+                }).OrderByDescending(item => item.CreationDate).Skip(start).Take(count).ToListAsync();
             }
             catch (System.Exception ex)
             {
@@ -75,9 +95,15 @@ namespace SVU.Database.Service.MSSQL
                     //Update the wanted values
                     blogDb.Title = blog.Title;
                     blogDb.Content = blog.Content;
-                    blogDb.ThumbnailBase64 = blog.ThumbnailBase64;
+                    //Only update the image if new value provided
+                    if (!string.IsNullOrEmpty(blog.ThumbnailMimeType))
+                    {
+                        blogDb.ThumbnailBase64 = blog.ThumbnailBase64;
+                        blogDb.ThumbnailMimeType = blog.ThumbnailMimeType;
+                    }
                     blogDb.Note = blog.Note;
                     blogDb.LastEditUserId = blog.LastEditUserId;
+                    blogDb.PreviewContent = blog.PreviewContent;
 
                     blog = blogDb;
                     //Mark it as modified

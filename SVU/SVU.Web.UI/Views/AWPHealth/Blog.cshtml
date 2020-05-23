@@ -6,7 +6,14 @@
 
 <div class="container">
     <div class="text-center ">
-        <img src="data:image/@Model.Blog.ThumbnailMimeType;base64,@Model.Blog.ThumbnailBase64" class="w-50" />
+        @if (!string.IsNullOrEmpty(Model.Blog.ThumbnailBase64))
+        {
+            <img src="data:image/@Model.Blog.ThumbnailMimeType;base64,@Model.Blog.ThumbnailBase64" class="w-50" />
+        }
+        else
+        {
+            <img src="~/img/_NoImage.svg" class="w-50" />
+        }
     </div>
 
     <h1>@Model.Blog.Title</h1>
