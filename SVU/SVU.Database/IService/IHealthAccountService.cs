@@ -1,7 +1,4 @@
 ﻿using SVU.Database.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SVU.Database.IService
@@ -20,5 +17,12 @@ namespace SVU.Database.IService
         /// <returns></returns>
         Task<HealthUser> AuthenticateUser(string username, string password);
 
+        /// <summary>
+        /// Checks if the username is in use
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        Task<bool> VerifyUsername(string username);
+        Task<bool> VerifyEmail(string email);
     }
 }

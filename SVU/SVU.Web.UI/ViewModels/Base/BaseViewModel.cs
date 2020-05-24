@@ -8,7 +8,7 @@ namespace SVU.Web.UI.ViewModels.Base
     public class BaseViewModel
     {
         #region Properties
-        public List<string> Erros { get; set; }
+        public List<string> Errors { get; set; }
         #endregion
 
         #region Constructer
@@ -17,7 +17,7 @@ namespace SVU.Web.UI.ViewModels.Base
         /// </summary>
         public BaseViewModel()
         {
-            Erros = new List<string>();
+            Errors = new List<string>();
         }
         #endregion
 

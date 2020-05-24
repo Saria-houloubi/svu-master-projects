@@ -21,11 +21,11 @@
             Do you have an account ?
         </span>
 
-        @if (Model != null && Model.Erros.Any())
+        @if (Model != null && Model.Errors.Any())
         {
             <div class="alert alert-danger my-4">
                 <ul>
-                    @foreach (var error in Model.Erros)
+                    @foreach (var error in Model.Errors)
                     {
                         <li>@error</li>
                     }

@@ -12,6 +12,9 @@
         public static string JavaScriptNotAllowed = "javascript is not allowed";
 
 
+        public static string EmailIsUsed(string email) => $"Email {email} is already in use";
+        public static string UsernameIsUsed(string username) => $"Username {username} is already in use";
+
 
 
     }

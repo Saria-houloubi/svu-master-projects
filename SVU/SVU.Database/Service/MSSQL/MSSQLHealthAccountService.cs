@@ -47,5 +47,15 @@ namespace SVU.Database.Service.MSSQL
 
             return null;
         }
+
+        public async Task<bool> VerifyEmail(string email)
+        {
+            return await DbContext.HealthUsers.AnyAsync(item => item.Email != email);
+        }
+
+        public async Task<bool> VerifyUsername(string username)
+        {
+            return await DbContext.HealthUsers.AnyAsync(item => item.Username != username);
+        }
     }
 }

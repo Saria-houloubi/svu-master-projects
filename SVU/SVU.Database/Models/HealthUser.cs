@@ -1,4 +1,5 @@
 ﻿using SVU.Database.Models.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SVU.Database.Models
@@ -10,7 +11,14 @@ namespace SVU.Database.Models
     public class HealthUser : BaseEntityModel
     {
         #region Properties
+        [Required]
+        [StringLength(20)]
         public string Username { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         #endregion
 

@@ -1,4 +1,5 @@
-﻿@import "animation/slide.css";
+﻿@import "custom/colors.css";
+@import "animation/slide.css";
 @import "animation/puls.css";
 @import "custom/container.css";
 @import "custom/menu.css";

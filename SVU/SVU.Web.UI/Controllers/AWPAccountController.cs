@@ -34,6 +34,39 @@ namespace SVU.Web.UI.Controllers
 
         #region GET Requests
         /// <summary>
+        /// Checks if the username is in use
+        /// </summary>
+        /// <param name="username">The usename to verify for</param>
+        /// <returns></returns>
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> VerifyUsername(string username)
+        {
+            //Check if we got any data
+            if (!string.IsNullOrEmpty(username) && await HealthAccountService.VerifyUsername(username))
+            {
+                return Json(true);
+            }
+            return Json(ErrorMessages.UsernameIsUsed(username));
+        }
+        /// <summary>
+        /// Checks if the email is in use
+        /// </summary>
+        /// <param name="email">The email to verify for</param>
+        /// <returns></returns>
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> VerifyEmail(string email)
+        {
+            //Check if we got any data
+            if (!string.IsNullOrEmpty(email))
+            {
+                return Ok(await HealthAccountService.VerifyEmail(email));
+            }
+            return Ok(ErrorMessages.EmailIsUsed(email));
+        }
+
+        #endregion
+        #region POST Requests
+        /// <summary>
         /// Trys to logs the user in
         /// </summary>
         /// <returns></returns>
@@ -61,7 +94,7 @@ namespace SVU.Web.UI.Controllers
                     return Redirect(returnUrl ?? "/homework/awp");
                 }
                 //Add the error message to the model
-                model.Erros.Add(ErrorMessages.InvaildLoginAttempt);
+                model.Errors.Add(ErrorMessages.InvaildLoginAttempt);
                 return View("/Views/homework/health.cshtml", model);
             }
             return CustomBadRequest();

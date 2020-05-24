@@ -1,0 +1,66 @@
+﻿@model SVU.Web.UI.ViewModels.Health.HealthUserViewModel
+@using SVU.Shared.Enums
+@using (Html.BeginForm("create", "awpaccount"))
+{
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <h4>User inforamtion <i class="fa fa-user"></i> </h4>
+    <span>Or <a href="/homework/AWP">Sign in <i class="fa fa-user-ninja"></i></a> in if you already have an account</span>
+    <hr />
+
+    <div class="form-group m-1">
+        @Html.LabelFor(item => item.Username)
+        @Html.TextBoxFor(item => item.Username, new { @class = "form-control" })
+        @Html.ValidationMessageFor(item => item.Username, "", new { @class = "text-danger text-monospace ml-2" })
+    </div>
+
+    <div class="form-group m-1">
+        @Html.LabelFor(item => item.Email)
+        @Html.TextBoxFor(item => item.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(item => item.Email, "", new { @class = "text-danger text-monospace ml-2" })
+    </div>
+
+    <div class="form-group m-1">
+        @Html.LabelFor(item => item.DOB)
+        @Html.TextBoxFor(item => item.DOB, new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(item => item.DOB, "", new { @class = "text-danger text-monospace ml-2" })
+    </div>
+
+    <div class="form-group m-1">
+        @Html.LabelFor(item => item.Gender)
+        <div class="m-2">
+            <i class="fa fa-chess-king"></i> @Html.RadioButtonFor(item => item.Gender, Gender.Male)
+            <i class="fa fa-chess-queen text-pink"></i> @Html.RadioButtonFor(item => item.Gender, Gender.Female)
+        </div>
+    </div>
+
+    <div class="form-group m-1">
+        @Html.LabelFor(item => item.PhoneNumber)
+        @Html.TextBoxFor(item => item.PhoneNumber, new { @class = "form-control" })
+        @Html.ValidationMessageFor(item => item.PhoneNumber, "", new { @class = "text-danger text-monospace ml-2" })
+    </div>
+
+    <div class="form-group m-1">
+        @Html.LabelFor(item => item.MedicalHistory)
+        @Html.TextAreaFor(item => item.MedicalHistory, new { @class = "form-control", style = "min-height : 200px;" })
+        @Html.ValidationMessageFor(item => item.MedicalHistory, "", new { @class = "text-danger text-monospace ml-2" })
+    </div>
+
+    <div class="form-group m-1">
+        @Html.LabelFor(item => item.Passoword)
+        @Html.PasswordFor(item => item.Passoword, new { @class = "form-control" })
+        @Html.ValidationMessageFor(item => item.Passoword, "", new { @class = "text-danger text-monospace ml-2" })
+    </div>
+
+    <div class="form-group m-1">
+        @Html.LabelFor(item => item.PasswordConfirmation)
+        @Html.PasswordFor(item => item.PasswordConfirmation, new { @class = "form-control" })
+        @Html.ValidationMessageFor(item => item.PasswordConfirmation, "", new { @class = "text-danger text-monospace ml-2" })
+    </div>
+
+    <div>
+        <button class="btn btn-primary" type="submit"> Sign up! <i class="fa fa-smile-beam"></i></button>
+
+        <span>Or <a href="/homework/AWP">Sign in <i class="fa fa-user-ninja"></i></a> in if you already have an account</span>
+    </div>
+}

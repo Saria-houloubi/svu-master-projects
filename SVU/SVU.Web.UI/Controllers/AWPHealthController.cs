@@ -40,6 +40,28 @@ namespace SVU.Web.UI.Controllers
 
         #region GET Requests
         /// <summary>
+        /// Get the blogs page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Blogs()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Get the blogs page
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult HealthRequest()
+        {
+            return View(new HealthUserViewModel());
+        }
+
+        /// <summary>
         /// Displays a blog to the user
         /// </summary>
         /// <param name="blog"></param>
@@ -108,16 +130,7 @@ namespace SVU.Web.UI.Controllers
             }
             return InternalServerError();
         }
-        /// <summary>
-        /// Get the blogs page
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Blogs()
-        {
-            return View();
-        }
+
         #endregion
 
         #region POST Requests
@@ -159,6 +172,8 @@ namespace SVU.Web.UI.Controllers
 
             return CustomBadRequest(ModelState.GetValidationErrors_LSV());
         }
+
+
         #endregion
 
         #region DELETE Requests
