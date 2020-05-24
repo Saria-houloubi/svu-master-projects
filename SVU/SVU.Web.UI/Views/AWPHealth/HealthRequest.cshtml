@@ -1,11 +1,12 @@
-﻿@{
+﻿@model HealthRequestViewModel
+@{
     ViewBag.title = "Health request";
 }
 
 <div class="container">
     @if (!User.Identity.IsAuthenticated)
     {
-        <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="new HealthUserViewModel()"></partial>
+        <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="Model.UserViewModel"></partial>
     }
     else
     {

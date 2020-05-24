@@ -2,6 +2,7 @@
 {
     public static class RequestHeaderNames
     {
-        public static readonly string Authorization = "authorization";
+        public const string Authorization = "authorization";
+        public const string Refere = "Referer";
     }
 }

@@ -5,7 +5,10 @@ using SVU.Database.IService;
 using SVU.Logging.IServices;
 using SVU.Shared.Messages;
 using SVU.Web.UI.Controllers.Base;
+using SVU.Web.UI.Extensions;
+using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels.Account;
+using SVU.Web.UI.ViewModels.Health;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -63,8 +66,8 @@ namespace SVU.Web.UI.Controllers
             }
             return Ok(ErrorMessages.EmailIsUsed(email));
         }
-
         #endregion
+
         #region POST Requests
         /// <summary>
         /// Trys to logs the user in
@@ -98,6 +101,64 @@ namespace SVU.Web.UI.Controllers
                 return View("/Views/homework/health.cshtml", model);
             }
             return CustomBadRequest();
+        }
+
+        /// <summary>
+        /// Registers a new basic users
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> RegisterUser(HealthUserViewModel model)
+        {
+            //Check if the model is valid
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //try to add the user
+                    var user = await HealthAccountService.AddOrUpdateUser(new Database.Models.HealthUser
+                    {
+                        Username = model.Username,
+                        Email = model.Email,
+                        PhoneNumber = model.PhoneNumber,
+                        Gender = model.Gender,
+                        MedicalHistory = model.MedicalHistory,
+                        Password = model.Passoword,
+                        DOB = model.DOB,
+                    }, "basic");
+                    //Check if we got the data right
+                    if (user != null)
+                    {
+                        model.Id = user.Id;
+
+                        return View(StaticViewNames.AWP_HEALTH, new HomeworkAWPAccountViewModel()
+                        {
+                            Usernmae = user.Username
+                        });
+                    }
+                    else
+                    {
+                        model.Errors.Add(ErrorMessages.SomthingWorngHappend);
+                    }
+
+                }
+                catch (System.Exception ex)
+                {
+                    LoggingService.LogException(ex);
+
+                    model.Errors.Add(ex.Message);
+                }
+            }
+            else
+            {
+                model.Errors.Add(ModelState.GetValidationErrors_LSV());
+            }
+
+            return View(StaticRouteNames.HEALTH_REQUEST, new HealthRequestViewModel()
+            {
+                UserViewModel = model
+            });
         }
         #endregion
     }

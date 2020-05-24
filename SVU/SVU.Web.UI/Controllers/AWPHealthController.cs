@@ -20,7 +20,6 @@ namespace SVU.Web.UI.Controllers
     /// The controller to work with the AWP health homework
     /// </summary>
     [Authorize(Roles = "admin")]
-
     public class AWPHealthController : BaseController
     {
         #region Properties
@@ -57,8 +56,9 @@ namespace SVU.Web.UI.Controllers
         [HttpGet]
         [AllowAnonymous]
         public IActionResult HealthRequest()
+
         {
-            return View(new HealthUserViewModel());
+            return View(new HealthRequestViewModel());
         }
 
         /// <summary>

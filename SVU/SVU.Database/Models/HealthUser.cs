@@ -1,4 +1,6 @@
 ﻿using SVU.Database.Models.Base;
+using SVU.Shared.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,6 +22,14 @@ namespace SVU.Database.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        public string PhoneNumber { get; set; }
+        public string MedicalHistory { get; set; }
+
+        [Required]
+        [DataType("DateTime2")]
+        public DateTime DOB { get; set; }
+
+        public Gender Gender { get; set; }
         #endregion
 
         #region Navigation Properties

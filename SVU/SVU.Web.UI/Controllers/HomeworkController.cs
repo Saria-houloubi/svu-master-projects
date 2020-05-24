@@ -81,7 +81,7 @@ namespace SVU.Web.UI.Controllers
         [HttpGet]
         public IActionResult AWP()
         {
-            return View("health", new HomeworkAWPAccountViewModel());
+            return View(StaticViewNames.AWP_HEALTH, new HomeworkAWPAccountViewModel());
         }
         #endregion
 

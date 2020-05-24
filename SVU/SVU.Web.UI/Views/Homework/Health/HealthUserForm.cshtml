@@ -1,6 +1,6 @@
 ﻿@model SVU.Web.UI.ViewModels.Health.HealthUserViewModel
 @using SVU.Shared.Enums
-@using (Html.BeginForm("create", "awpaccount"))
+@using (Html.BeginForm("RegisterUser", "awpaccount"))
 {
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })

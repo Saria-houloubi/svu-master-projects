@@ -8,6 +8,16 @@ namespace SVU.Database.IService
     /// </summary>
     public interface IHealthAccountService
     {
+
+
+        /// <summary>
+        /// Adds or updates user information 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
+        Task<HealthUser> AddOrUpdateUser(HealthUser user, string roleName);
+
         /// <summary>
         /// Tries to authenticate the user
         ///     if authenticated will return the user

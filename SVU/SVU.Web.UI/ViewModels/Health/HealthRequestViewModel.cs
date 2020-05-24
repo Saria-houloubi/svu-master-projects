@@ -1,16 +1,11 @@
 ﻿using SVU.Web.UI.ViewModels.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SVU.Web.UI.ViewModels.Health
 {
     public class HealthRequestViewModel : BaseViewModel
     {
         #region Properties
-        public string RequestSubject { get; set; }
-        public int MyProperty { get; set; }
+        public HealthUserViewModel UserViewModel { get; set; }
         #endregion
 
         #region Constructer
@@ -19,7 +14,7 @@ namespace SVU.Web.UI.ViewModels.Health
         /// </summary>
         public HealthRequestViewModel()
         {
-
+            UserViewModel = new HealthUserViewModel();
         }
         #endregion
     }

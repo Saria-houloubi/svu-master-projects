@@ -55,7 +55,10 @@
     }
     else
     {
-        <partial name="./Health/HealthControlPanel.cshtml" />
+        @if (User.IsInRole("admin"))
+        {
+            <partial name="./Health/HealthControlPanel.cshtml" />
+        }
     }
 
 

@@ -11,6 +11,7 @@ namespace SVU.Web.UI.ViewModels.Health
     {
         #region Properties
 
+        public Guid Id { get; set; }
         [Required]
         [StringLength(20)]
         [Display(Name = "Name")]
