@@ -11,14 +11,40 @@ var blogsTableBody = document.getElementById('blogs_table_body_part');
 var editBlogId = '';
 $(function () {
     //Start loading the first batch of the blogs
-    loadBlogs(startBlogIndex, countBlogs);
+    loadMoreBlogs(undefined);
 
     //Enable the tabs for the textareas
     var textAreas = document.getElementsByTagName('textarea');
     for (var i = 0; i < textAreas.length; i++) {
         enableTab(textAreas[i].id);
     }
-})
+});
+//
+//loads more blogs based on the sent variables
+//
+function loadMoreBlogs(element) {
+    if (element)
+        changeButtonStatus(element, 'loading');
+
+    loadBlogs(startBlogIndex, countBlogs, onLoadCallback);
+}
+
+//
+//Will be called once the load is done
+//  showLoadMore : a flag to check if we need to show the load more button
+//
+function onLoadCallback(showLoadMore) {
+    startBlogIndex = document.getElementsByClassName('blog-row').length;
+
+    if (showLoadMore) {
+        $('#load_More_btn')[0].classList.remove('collapse');
+    } else {
+        $('#load_More_btn')[0].classList.add('collapse');
+    }
+
+    changeButtonStatus($('#load_More_btn')[0], 'done');
+}
+
 //
 //Just a helper function to save the base64 string
 //
@@ -43,6 +69,7 @@ function createBlogTableRow(blog) {
     row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-danger', 'fa fa-trash-alt', showDeleteConfirmation));
     row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-secondary', 'fa fa-eye', null, `/awphealth/blog/${blog.id}`));
 
+    row.classList.add('blog-row');
     return row;
 }
 
@@ -99,10 +126,8 @@ function lockBlogForEdit() {
 //  isAdd : a flag to check if the operation is an add or edit
 //
 function AddEditBlog(element, isAdd) {
-    //Disable the button
-    $(element).attr('disabled', true);
-    //Show the spinner
-    $(element).children('svg').removeClass('collapse');
+
+    changeButtonStatus(element, 'loading');
     $.ajax('/AWPHealth/Blog',
         {
             method: 'POST',
@@ -116,7 +141,6 @@ function AddEditBlog(element, isAdd) {
                 ThumbnailMimeType: thumbnailMimeType
             },
             success: function (blog) {
-
                 showAlert('success', "Operation Success!");
                 //Craete the  new blog row
                 var newRow = createBlogTableRow(blog);
@@ -140,15 +164,14 @@ function AddEditBlog(element, isAdd) {
                     //Add it to the list
                     blogsTableBody.prepend(newRow);
                 }
+
+                clearUpForm();
             },
             error: function (err) {
                 showAlert('error', err.responseJSON.message);
             }
         }).always(function () {
-            //Enable the button
-            $(element).attr('disabled', false);
-            //hide the spinner
-            $(element).children('svg').addClass('collapse');
+            changeButtonStatus(element, 'done');
         });
 }
 
@@ -157,7 +180,7 @@ function AddEditBlog(element, isAdd) {
 //  start: used for pagination
 //  count : get a count number of blogs after the start index
 //
-function loadBlogs(start, count) {
+function loadBlogs(start, count, onLoadCallback) {
     $.ajax('/AWPHealth/GetBlogs',
         {
             method: 'GET',
@@ -167,17 +190,18 @@ function loadBlogs(start, count) {
             },
             success: function (data) {
                 //if no blogs found then show message
-                if (data.length === 0) {
+                if (data.length === 0 && start === 0) {
                     document.getElementById('blog_countent_status_noContent').classList.remove('collapse');
                 }
                 for (var i = 0; i < data.length; i++) {
                     blogsTableBody.appendChild(createBlogTableRow(data[i]));
                 }
-                //Just move the start to the end of the count
-                startBlogIndex += data.length;
+
+                onLoadCallback(data.length === count);
             },
             error: function (err) {
                 showAlert('error', err.responseJSON.message);
+                onLoadCallback(false);
             }
         }).done(function () {
             document.getElementById('blog_countent_status_loading').classList.add('collapse');
@@ -224,4 +248,17 @@ function deleteBlog() {
             showAlert('error', err.responseJSON.message);
         }
     });
+}
+//
+//Clears up the form filed
+//
+function clearUpForm() {
+    //Free up controles
+    $('#blog_title').val('');
+    $('#blog_content').val('');
+    $('#blog_note').val('');
+    $('#blog_preview_text').val('');
+    $('#blog_thumbnail_file').val('');
+
+    $(".thumbnail_status").addClass('collapse');
 }

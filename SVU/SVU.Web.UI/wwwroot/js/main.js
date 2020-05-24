@@ -79,7 +79,7 @@ function ReadOneImageFile(inputElement, acceptTags, loaderStatusId, setLoadValue
             //Clear out the valu
             $(inputElement).val('');
 
-            setLoadValueCallBack('','');
+            setLoadValueCallBack('', '');
             //Abort the loading
             this.abort();
         }
@@ -98,7 +98,7 @@ function ReadOneImageFile(inputElement, acceptTags, loaderStatusId, setLoadValue
         //Show error icon
         conventionLoaderChange(loader, 2);
 
-        setLoadValueCallBack('','');
+        setLoadValueCallBack('', '');
     };
 
     //read the file
@@ -213,4 +213,23 @@ function createTableRow(data) {
     }
 
     return row;
+}
+
+//
+//Disables the button and tries to show svg loader inside it
+//  element : the DOM element
+//  status : if loading will show the loading spinner
+//
+function changeButtonStatus(element, status) {
+    if (status === 'loading') {
+        //Disable the button
+        $(element).attr('disabled', true);
+        //Show the spinner
+        $(element).children('svg').removeClass('collapse');
+    } else if (status === 'done') {
+        //Enable the button
+        $(element).attr('disabled', false);
+        //hide the spinner
+        $(element).children('svg').addClass('collapse');
+    }
 }

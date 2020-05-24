@@ -85,10 +85,17 @@
         <tbody id="blogs_table_body_part"></tbody>
     </table>
 
+    <div class="text-center m-3">
+        <button class="btn btn-primary collapse" id="load_More_btn" onclick="loadMoreBlogs(this)">
+            <i class="fa fa-spinner fa-spin collapse"></i>
+            Load More
+        </button>
+    </div>
+
+
     <partial name="Components/DeleteConfirmationModal" model='new DeleteConfirmationModel() { Name = "title",DeleteCallbackFunctionName = "deleteBlog()" }' />
 
 </div>
-
 
 
 <script src="~/js/HealthControlPanel.js"></script>
