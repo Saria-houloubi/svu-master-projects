@@ -7,7 +7,7 @@
     @if (!User.Identity.IsAuthenticated)
     {
 
-        <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="Model.UserViewModel"></partial>
+        <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="new HealthUserViewModel()"></partial>
     }
     else
     {
