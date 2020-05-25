@@ -12,6 +12,7 @@ using SVU.Database.Service.MSSQL;
 using SVU.Logging.IServices;
 using SVU.Logging.Services;
 using SVU.Web.UI.Middlewares;
+using System;
 
 namespace SVU.Web.UI
 {
@@ -59,6 +60,11 @@ namespace SVU.Web.UI
                 options.UseSqlServer(Configuration.GetConnectionString(envName));
             });
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+
             //Add cookies to the request pipeline
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -88,6 +94,8 @@ namespace SVU.Web.UI
             initializeDatabaseService.InitailizeDatabase();
 
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseMiddleware<CustomLoggingMiddleware>();
 

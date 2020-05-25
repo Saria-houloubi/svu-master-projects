@@ -43,12 +43,15 @@ namespace SVU.Web.UI.ViewModels.Health
         [DataType(DataType.Date)]
         [Required]
         [Display(Name = "Date of birth")]
-        public DateTime DOB { get; set; }
+        public DateTime DOB { get; set; } = DateTime.Now;
         [Required]
         public Gender Gender { get; set; }
 
         [StringLength(200)]
+        [Display(Name = "Medical history")]
         public string MedicalHistory { get; set; }
+
+        public string Note { get; set; }
 
         #endregion
 

@@ -9,6 +9,7 @@ using SVU.Web.UI.Extensions;
 using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels.Account;
 using SVU.Web.UI.ViewModels.Health;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -109,16 +110,19 @@ namespace SVU.Web.UI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> RegisterUser(HealthUserViewModel model)
+        public async Task<IActionResult> AddOrUpdateUser(HealthUserViewModel model)
         {
             //Check if the model is valid
-            if (ModelState.IsValid)
+            if (ModelState.IsValid ||
+                //This one is when an update happens so the erros are for passwords , username and email that we can skip
+                (model.Id != Guid.Empty && ModelState.ErrorCount == 4))
             {
                 try
                 {
                     //try to add the user
                     var user = await HealthAccountService.AddOrUpdateUser(new Database.Models.HealthUser
                     {
+                        Id = model.Id,
                         Username = model.Username,
                         Email = model.Email,
                         PhoneNumber = model.PhoneNumber,
@@ -130,12 +134,13 @@ namespace SVU.Web.UI.Controllers
                     //Check if we got the data right
                     if (user != null)
                     {
+                        //Assign the id back
                         model.Id = user.Id;
+                        //Clear the password before sending it back
+                        model.Passoword = string.Empty;
+                        model.PasswordConfirmation = string.Empty;
 
-                        return View(StaticViewNames.AWP_HEALTH, new HomeworkAWPAccountViewModel()
-                        {
-                            Usernmae = user.Username
-                        });
+                        return RedirectToAction("awp", "homework");
                     }
                     else
                     {
@@ -152,10 +157,10 @@ namespace SVU.Web.UI.Controllers
             }
             else
             {
-                model.Errors.Add(ModelState.GetValidationErrors_LSV());
+                model.Errors.AddRange(ModelState.GetValidationErrors());
             }
 
-            return View(StaticRouteNames.HEALTH_REQUEST, new HealthRequestViewModel()
+            return View(StaticViewNames.AWP_HOMEWORK, new HomeworkAWPAccountViewModel()
             {
                 UserViewModel = model
             });

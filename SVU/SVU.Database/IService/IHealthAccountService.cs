@@ -1,4 +1,5 @@
 ﻿using SVU.Database.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace SVU.Database.IService
@@ -9,6 +10,13 @@ namespace SVU.Database.IService
     public interface IHealthAccountService
     {
 
+
+        /// <summary>
+        /// Gets a user by his/here id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<HealthUser> GetUser(Guid id);
 
         /// <summary>
         /// Adds or updates user information 

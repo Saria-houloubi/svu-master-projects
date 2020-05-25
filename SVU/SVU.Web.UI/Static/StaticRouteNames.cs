@@ -7,6 +7,5 @@
     {
         public const string VERIFY_EMAIL = "/AWPAccount/VerifyEmail";
         public const string VERIFY_USERNAME = "/AWPAccount/VerifyUsername";
-        public const string HEALTH_REQUEST = "/AWPHealth/HealthRequest";
     }
 }

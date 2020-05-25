@@ -3,13 +3,16 @@ using Microsoft.Extensions.Caching.Memory;
 using SVU.Database.IService;
 using SVU.Logging.IServices;
 using SVU.Web.UI.Controllers.Base;
+using SVU.Web.UI.Extensions;
 using SVU.Web.UI.Models.Homework;
 using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels;
 using SVU.Web.UI.ViewModels.Account;
+using SVU.Web.UI.ViewModels.Health;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SVU.Web.UI.Controllers
@@ -23,6 +26,7 @@ namespace SVU.Web.UI.Controllers
         #region Properties
         public IDataSetDatabaseService DataSetDatabaseService { get; private set; }
         public IMemoryCache MemoryCache { get; private set; }
+        public IHealthAccountService HealthAccountService { get; private set; }
 
         /// <summary>
         /// Constent keys
@@ -35,11 +39,12 @@ namespace SVU.Web.UI.Controllers
         /// <summary>
         /// Default constructer
         /// </summary>
-        public HomeworkController(IDataSetDatabaseService dataSetDatabaseService, ILoggingService loggingService, IMemoryCache memoryCache)
+        public HomeworkController(IDataSetDatabaseService dataSetDatabaseService, ILoggingService loggingService, IMemoryCache memoryCache, IHealthAccountService healthAccountService)
             : base(loggingService)
         {
             DataSetDatabaseService = dataSetDatabaseService;
             MemoryCache = memoryCache;
+            HealthAccountService = healthAccountService;
         }
         #endregion
 
@@ -79,9 +84,31 @@ namespace SVU.Web.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult AWP()
+        public async Task<IActionResult> AWP()
         {
-            return View(StaticViewNames.AWP_HEALTH, new HomeworkAWPAccountViewModel());
+            var viewModel = new HomeworkAWPAccountViewModel();
+            //Check if the user is authenitcated
+            if (User.Identity.IsAuthenticated)
+            {
+                //Try to parse the user id
+                if (Guid.TryParse(User.GetClaimValue(ClaimTypes.NameIdentifier), out Guid id))
+                {
+                    //Get the hole user information
+                    var user = await HealthAccountService.GetUser(id);
+                    //Fill up the values for the view model
+                    viewModel.UserViewModel = new HealthUserViewModel()
+                    {
+                        DOB = user.DOB,
+                        Email = user.Email,
+                        Gender = user.Gender,
+                        Id = user.Id,
+                        MedicalHistory = user.MedicalHistory,
+                        PhoneNumber = user.PhoneNumber,
+                        Username = user.Username,
+                    };
+                }
+            }
+            return View(StaticViewNames.AWP_HEALTH, viewModel);
         }
         #endregion
 

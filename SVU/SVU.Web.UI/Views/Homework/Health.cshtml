@@ -12,26 +12,16 @@
     <p>
         Welcome to our super health <i class="fa fa-heart text-danger puls"></i> website where we have <a href="/awphealth/blogs">Blogs</a> for all kind of health issues.
         <br />
-        You can also send us a <a href="#">Request</a> and with our team of best doctores will replay back to you. <i class="fa fa-smile text-primary"></i>
+        You can also send us a <a href="/awphealth/healthrequest">Request</a> and with our team of best doctores will replay back to you. <i class="fa fa-smile text-primary"></i>
     </p>
+
+    <partial name="_Errors" model="Model.Errors"></partial>
 
     @if (!User.Identity.IsAuthenticated)
     {
         <span class="display-4">
             Do you have an account ?
         </span>
-
-        @if (Model != null && Model.Errors.Any())
-        {
-            <div class="alert alert-danger my-4">
-                <ul>
-                    @foreach (var error in Model.Errors)
-                    {
-                        <li>@error</li>
-                    }
-                </ul>
-            </div>
-        }
 
         <form asp-action="login" asp-controller="AWPAccount" method="post">
 
@@ -55,12 +45,18 @@
     }
     else
     {
+        <h1>Welcome back!<span class="text-primary"> @User.Identity.Name,</span> </h1>
+        <span class="text-info"><i class="fa fa-calendar-alt"></i>  @DateTime.UtcNow.ToShortDateString()</span>
+
         @if (User.IsInRole("admin"))
         {
             <partial name="./Health/HealthControlPanel.cshtml" />
         }
+        else if (User.IsInRole("basic"))
+        {
+            <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="Model.UserViewModel"></partial>
+        }
     }
-
 
 </div>
 

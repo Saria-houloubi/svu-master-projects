@@ -1,28 +1,49 @@
 ﻿@model SVU.Web.UI.ViewModels.Health.HealthUserViewModel
 @using SVU.Shared.Enums
-@using (Html.BeginForm("RegisterUser", "awpaccount"))
+
+<partial name="_Errors" model="Model.Errors"></partial>
+
+@using (Html.BeginForm("AddOrUpdateUser", "awpaccount"))
 {
-
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <h4>User inforamtion <i class="fa fa-user"></i> </h4>
-    <span>Or <a href="/homework/AWP">Sign in <i class="fa fa-user-ninja"></i></a> in if you already have an account</span>
-    <hr />
 
+    <h4>User inforamtion <i class="fa fa-user"></i> </h4>
+
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <span>Or <a href="/homework/AWP">Sign in <i class="fa fa-user-ninja"></i></a> in if you already have an account</span>
+    }
+    <hr />
+    @Html.HiddenFor(item => item.Id, new { @readonly = true })
     <div class="form-group m-1">
         @Html.LabelFor(item => item.Username)
-        @Html.TextBoxFor(item => item.Username, new { @class = "form-control" })
-        @Html.ValidationMessageFor(item => item.Username, "", new { @class = "text-danger text-monospace ml-2" })
+        @if (User.Identity.IsAuthenticated)
+        {
+            @Html.LabelFor(item => item.Username, Model.Username, new { @class = "form-control", @readonly = true })
+        }
+        else
+        {
+            @Html.TextBoxFor(item => item.Username, new { @class = "form-control" })
+            @Html.ValidationMessageFor(item => item.Username, "", new { @class = "text-danger text-monospace ml-2" })
+        }
     </div>
 
     <div class="form-group m-1">
         @Html.LabelFor(item => item.Email)
-        @Html.TextBoxFor(item => item.Email, new { @class = "form-control" })
-        @Html.ValidationMessageFor(item => item.Email, "", new { @class = "text-danger text-monospace ml-2" })
+        @if (User.Identity.IsAuthenticated)
+        {
+            @Html.LabelFor(item => item.Email, Model.Email, new { @class = "form-control", @readonly = true })
+        }
+        else
+        {
+            @Html.TextBoxFor(item => item.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(item => item.Email, "", new { @class = "text-danger text-monospace ml-2" })
+        }
     </div>
 
     <div class="form-group m-1">
         @Html.LabelFor(item => item.DOB)
-        @Html.TextBoxFor(item => item.DOB, new { @class = "form-control", type = "date" })
+        @Html.EditorFor(item => item.DOB, new { htmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(item => item.DOB, "", new { @class = "text-danger text-monospace ml-2" })
     </div>
 
@@ -46,21 +67,41 @@
         @Html.ValidationMessageFor(item => item.MedicalHistory, "", new { @class = "text-danger text-monospace ml-2" })
     </div>
 
-    <div class="form-group m-1">
-        @Html.LabelFor(item => item.Passoword)
-        @Html.PasswordFor(item => item.Passoword, new { @class = "form-control" })
-        @Html.ValidationMessageFor(item => item.Passoword, "", new { @class = "text-danger text-monospace ml-2" })
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="form-group m-1">
+            @Html.LabelFor(item => item.Passoword)
+            @Html.PasswordFor(item => item.Passoword, new { @class = "form-control" })
+            @Html.ValidationMessageFor(item => item.Passoword, "", new { @class = "text-danger text-monospace ml-2" })
+        </div>
+
+        <div class="form-group m-1">
+            @Html.LabelFor(item => item.PasswordConfirmation)
+            @Html.PasswordFor(item => item.PasswordConfirmation, new { @class = "form-control" })
+            @Html.ValidationMessageFor(item => item.PasswordConfirmation, "", new { @class = "text-danger text-monospace ml-2" })
+        </div>
+    }
+    else
+    {
+        <div class="form-group m-1">
+            @Html.LabelFor(item => item.Note)
+            @Html.TextAreaFor(item => item.Note, new { @class = "form-control", @readonly = true, style = "min-height : 200px;" })
+        </div>
+
+    }
+
+
+    <div class="my-3">
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <button class="btn btn-primary" type="submit"> Sign up! <i class="fa fa-smile-beam"></i></button>
+
+            <span>Or <a href="/homework/AWP">Sign in <i class="fa fa-user-ninja"></i></a> in if you already have an account</span>
+        }
+        else
+        {
+            <button class="btn btn-primary" type="submit"> Edit <i class="fa fa-smile-beam"></i></button>
+        }
     </div>
 
-    <div class="form-group m-1">
-        @Html.LabelFor(item => item.PasswordConfirmation)
-        @Html.PasswordFor(item => item.PasswordConfirmation, new { @class = "form-control" })
-        @Html.ValidationMessageFor(item => item.PasswordConfirmation, "", new { @class = "text-danger text-monospace ml-2" })
-    </div>
-
-    <div>
-        <button class="btn btn-primary" type="submit"> Sign up! <i class="fa fa-smile-beam"></i></button>
-
-        <span>Or <a href="/homework/AWP">Sign in <i class="fa fa-user-ninja"></i></a> in if you already have an account</span>
-    </div>
 }

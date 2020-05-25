@@ -1,4 +1,6 @@
-﻿using SVU.Web.UI.ViewModels.Base;
+﻿using SVU.Database.Models;
+using SVU.Web.UI.ViewModels.Base;
+using SVU.Web.UI.ViewModels.Health;
 using System.ComponentModel.DataAnnotations;
 
 namespace SVU.Web.UI.ViewModels.Account
@@ -14,6 +16,8 @@ namespace SVU.Web.UI.ViewModels.Account
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public HealthUserViewModel UserViewModel { get; set; }
         #endregion
 
         #region Constructer

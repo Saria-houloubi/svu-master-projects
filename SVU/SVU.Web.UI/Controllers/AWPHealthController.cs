@@ -58,7 +58,10 @@ namespace SVU.Web.UI.Controllers
         public IActionResult HealthRequest()
 
         {
-            return View(new HealthRequestViewModel());
+            //Crate the view model object
+            var viewModel = new HealthRequestViewModel();
+
+            return View(viewModel);
         }
 
         /// <summary>
@@ -170,7 +173,7 @@ namespace SVU.Web.UI.Controllers
                 return InternalServerError();
             }
 
-            return CustomBadRequest(ModelState.GetValidationErrors_LSV());
+            return CustomBadRequest(ModelState.GetValidationErrors());
         }
 
 

@@ -5,7 +5,8 @@ namespace SVU.Web.UI.ViewModels.Health
     public class HealthRequestViewModel : BaseViewModel
     {
         #region Properties
-        public HealthUserViewModel UserViewModel { get; set; }
+        public string Content { get; set; }
+
         #endregion
 
         #region Constructer
@@ -14,7 +15,6 @@ namespace SVU.Web.UI.ViewModels.Health
         /// </summary>
         public HealthRequestViewModel()
         {
-            UserViewModel = new HealthUserViewModel();
         }
         #endregion
     }

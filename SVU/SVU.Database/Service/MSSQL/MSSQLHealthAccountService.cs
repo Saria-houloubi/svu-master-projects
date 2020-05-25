@@ -30,6 +30,22 @@ namespace SVU.Database.Service.MSSQL
         }
         #endregion
 
+        public async Task<HealthUser> GetUser(Guid id)
+        {
+            try
+            {
+                return await DbContext.HealthUsers
+                            .SingleOrDefaultAsync(item => item.Id == id);
+                            
+            }
+            catch (Exception ex)
+            {
+                LogginService.LogException(ex);
+            }
+
+            return null;
+        }
+
         public async Task<HealthUser> AddOrUpdateUser(HealthUser user, string roleName)
         {
             try
