@@ -12,6 +12,7 @@ using SVU.Database.Service.MSSQL;
 using SVU.Logging.IServices;
 using SVU.Logging.Services;
 using SVU.Web.UI.Middlewares;
+using SVU.Web.UI.Models.Configuration;
 using System;
 
 namespace SVU.Web.UI
@@ -43,6 +44,9 @@ namespace SVU.Web.UI
                 default:
                     break;
             }
+
+            services.Configure<LoggingRestrictionOptions>(Configuration.GetSection(LoggingRestrictionOptions.SectionName));
+
             services.AddSingleton<IMemoryCache, MemoryCache>();
 
 
