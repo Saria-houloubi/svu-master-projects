@@ -9,7 +9,13 @@
 }
 
 img {
-    width: 30vw;
-    border:1px solid white;
-    border-radius : 10px;
+    max-width: 30vw;
+    border: 1px solid white;
+    border-radius: 10px;
+}
+
+captcha img {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0px !important;
 }

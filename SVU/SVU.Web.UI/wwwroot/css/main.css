@@ -18,7 +18,7 @@ html, body {
 }
 /*
 	The top continer of the page
-	so to push put the footer in and push it to the bottom
+	so to push put the footer in and push it to the bottom.
 */
 .hole-page-container {
     min-height: 100vh;
@@ -37,3 +37,10 @@ footer {
     padding: 0px 10px;
 }
 
+/*
+    A workaround to hide the bot detector name for captcha
+*/
+.BDC_CaptchaImageDiv a {
+    opacity : 0;
+    width : 0px;
+}

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SVU.Database.IService;
 using SVU.Logging.IServices;
 using SVU.Shared.Messages;
+using SVU.Web.UI.Attribute;
 using SVU.Web.UI.Controllers.Base;
 using SVU.Web.UI.Extensions;
 using SVU.Web.UI.Static;
@@ -75,12 +76,13 @@ namespace SVU.Web.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [BotDetectorCaptcha]
         public async Task<IActionResult> Login(string returnUrl, [FromForm] HomeworkAWPAccountViewModel model)
         {
             if (ModelState.IsValid)
             {
                 //Check the sent data
-                var result = await HealthAccountService.AuthenticateUser(model.Usernmae, model.Password);
+                var result = await HealthAccountService.AuthenticateUser(model.Username, model.Password);
 
                 if (result != null)
                 {
@@ -99,9 +101,15 @@ namespace SVU.Web.UI.Controllers
                 }
                 //Add the error message to the model
                 model.Errors.Add(ErrorMessages.InvaildLoginAttempt);
-                return View("/Views/homework/health.cshtml", model);
             }
-            return CustomBadRequest();
+            else
+            {
+                model.Errors.AddRange(ModelState.GetValidationErrors());
+            }
+            //Reset captch value
+            model.Captcha.CaptchaCode = string.Empty;
+
+            return View(StaticViewNames.AWP_HEALTH, model);
         }
 
         /// <summary>
@@ -110,6 +118,7 @@ namespace SVU.Web.UI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [BotDetectorCaptcha]
         public async Task<IActionResult> AddOrUpdateUser(HealthUserViewModel model)
         {
             //Check if the model is valid
@@ -160,7 +169,7 @@ namespace SVU.Web.UI.Controllers
                 model.Errors.AddRange(ModelState.GetValidationErrors());
             }
 
-            return View(StaticViewNames.AWP_HOMEWORK, new HomeworkAWPAccountViewModel()
+            return View(StaticViewNames.AWP_HEALTH, new HomeworkAWPAccountViewModel()
             {
                 UserViewModel = model
             });

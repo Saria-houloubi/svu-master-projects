@@ -27,9 +27,9 @@
 
 
             <div class="form-group">
-                <label class="col-form-label" asp-for="Usernmae"></label>
-                <input class="form-control" asp-for="Usernmae" />
-                <span asp-validation-for="Usernmae" class="text-danger" />
+                <label class="col-form-label" asp-for="Username"></label>
+                <input class="form-control" asp-for="Username" />
+                <span asp-validation-for="Username" class="text-danger" />
 
             </div>
 
@@ -39,6 +39,10 @@
                 <span asp-validation-for="Password" class="text-danger" />
             </div>
 
+            <div class="mb-3">
+                <partial name="Components/BotDetectorCaptchaComponent" model="Model.Captcha" />
+                @Html.TextBoxFor(item => item.Captcha.CaptchaCode)
+            </div>
 
             <input type="submit" value="Login" class="btn btn-primary btn-lg" />
         </form>

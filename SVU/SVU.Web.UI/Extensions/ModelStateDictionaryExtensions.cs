@@ -12,7 +12,7 @@ namespace SVU.Web.UI.Extensions
     public static class ModelStateDictionaryExtensions
     {
         /// <summary>
-        /// Get the list of validation errors as Line seperated values(LSV)
+        /// Get the list of validation errors string values
         /// </summary>
         /// <param name="modelState"></param>
         /// <returns></returns>

@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using SVU.Web.UI.Models.Captcha;
+using System.Collections.Generic;
 
 namespace SVU.Web.UI.ViewModels.Base
 {
     /// <summary>
     /// A base viewmodel for cross functions and data
     /// </summary>
-    public class BaseViewModel
+    public abstract class BaseViewModel
     {
         #region Properties
         public List<string> Errors { get; set; }
+        public CaptchaModel Captcha { get; set; }
         #endregion
 
         #region Constructer
@@ -18,6 +20,7 @@ namespace SVU.Web.UI.ViewModels.Base
         public BaseViewModel()
         {
             Errors = new List<string>();
+            Captcha = new CaptchaModel();
         }
         #endregion
 

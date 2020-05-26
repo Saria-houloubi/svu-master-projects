@@ -1,4 +1,4 @@
-﻿using SVU.Database.Models;
+﻿using SVU.Web.UI.Models.Captcha;
 using SVU.Web.UI.ViewModels.Base;
 using SVU.Web.UI.ViewModels.Health;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +12,7 @@ namespace SVU.Web.UI.ViewModels.Account
     {
         #region Properties
         [Required]
-        public string Usernmae { get; set; }
+        public string Username { get; set; }
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
@@ -26,7 +26,6 @@ namespace SVU.Web.UI.ViewModels.Account
         /// </summary>
         public HomeworkAWPAccountViewModel()
         {
-
         }
         #endregion
     }
