@@ -89,11 +89,16 @@
         </div>
 
     }
+    <div class="mb-3">
+        <partial name="Components/BotDetectorCaptchaComponent" model="Model.Captcha" />
+        @Html.TextBoxFor(item => item.Captcha.CaptchaCode)
+    </div>
 
 
     <div class="my-3">
         @if (!User.Identity.IsAuthenticated)
         {
+
             <button class="btn btn-primary" type="submit"> Sign up! <i class="fa fa-smile-beam"></i></button>
 
             <span>Or <a href="/homework/AWP">Sign in <i class="fa fa-user-ninja"></i></a> in if you already have an account</span>
