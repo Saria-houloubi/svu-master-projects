@@ -85,6 +85,13 @@
         Made with <i class="fa fa-heart text-danger puls"></i> <span>&copy; @DateTime.Now.Year</span>
     </footer>
 
+    @*
+        only contain the modal for the two wanted pages
+    *@
+    @if (Context.Request.Path.Value.ToLower().Contains("/homework/awp") || Context.Request.Path.Value.ToLower().Contains("/awphealth/healthrequest"))
+    {
+        <partial name="~/Views/Homework/Health/Modals/HealthRequestRepliesModal.cshtml" />
+    }
 
 </body>
 

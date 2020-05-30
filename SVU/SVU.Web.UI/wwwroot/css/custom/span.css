@@ -1,0 +1,25 @@
+﻿/*
+    Custom span
+*/
+.request-reply-message {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: bold;
+    /*Spical properties for local*/
+    background-color: white;
+    color: black;
+    margin-left: 10%;
+    text-align: right;
+    width:auto;
+}
+
+    .request-reply-message.reply-away {
+        background-color: dodgerblue;
+        color: white;
+        margin-right: 10%;
+        margin-left: 0 !important;
+        text-align: left;
+    }

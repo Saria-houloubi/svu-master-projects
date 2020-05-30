@@ -2,6 +2,8 @@
 var startBlogIndex = 0;
 //The count of blogs to get at each load
 var countBlogs = 5;
+var loadStartReqeust = 0;
+var loadCountReqeust = 5;
 //The base64 string encoding for the thumbnail
 var thumbnailBase64 = '';
 var thumbnailMimeType = '';
@@ -9,9 +11,11 @@ var thumbnailMimeType = '';
 var blogsTableBody = document.getElementById('blogs_table_body_part');
 //The id of the blog that is locked for edit
 var editBlogId = '';
+var requestTableBody = $("#hr_table_body")[0];
 $(function () {
     //Start loading the first batch of the blogs
     loadMoreBlogs(undefined);
+    loadMoreRequests(undefined);
 
     //Enable the tabs for the textareas
     var textAreas = document.getElementsByTagName('textarea');
@@ -19,6 +23,18 @@ $(function () {
         enableTab(textAreas[i].id);
     }
 });
+
+//
+//Removes any highlighted rows in table
+//
+function removeRequestEditHighlight() {
+    //Remove higlight from any old filed
+    var oldEditLockedRow = requestTableBody.querySelector('.bg-warning');
+    //Free up the row background
+    if (oldEditLockedRow)
+        oldEditLockedRow.classList.remove('bg-warning');
+}
+
 //
 //loads more blogs based on the sent variables
 //
@@ -28,7 +44,32 @@ function loadMoreBlogs(element) {
 
     loadBlogs(startBlogIndex, countBlogs, onLoadCallback);
 }
+//
+//loads more blogs based on the sent variables
+//
+function loadMoreRequests(element) {
+    if (element)
+        changeButtonStatus(element, 'loading');
 
+    loadHealthRequest(loadStartReqeust, loadCountReqeust, onRequestsLoadCallBack);
+}
+
+
+//
+//Will be called once the load is done
+//  showLoadMore : a flag to check if we need to show the load more button
+//
+function onRequestsLoadCallBack(showLoadMore) {
+    loadStartReqeust = document.getElementsByClassName('hr-row').length;
+
+    if (showLoadMore) {
+        $('#load_more_request_btn')[0].classList.remove('collapse');
+    } else {
+        $('#load_more_request_btn')[0].classList.add('collapse');
+    }
+
+    changeButtonStatus($('#load_more_request_btn')[0], 'done');
+}
 //
 //Will be called once the load is done
 //  showLoadMore : a flag to check if we need to show the load more button
@@ -74,15 +115,41 @@ function createBlogTableRow(blog) {
 }
 
 //
+//Create a heath request table row DOM element
+//  healthRequest : the data to fill the row from
+//
+function CreateHealthRequestTableRow(healthRequest) {
+    //Create the table row
+    var row = createTableRow([healthRequest.subject, healthRequest.content, healthRequest.note, healthRequest.creationDate]);
+    //Create the hidden id filed
+    var hiddenId = document.createElement('input');
+    hiddenId.hidden = true;
+    hiddenId.setAttribute('value', healthRequest.id);
+    hiddenId.classList.add('row-id');
+    row.prepend(hiddenId);
+
+    //Add the edit and replies button
+    var replyCell = createButtonIconTableCell('btn mt-1 text-white bg-primary', 'fa fa-reply-all', null, "#request_replies_modal", 'modal', '#request_replies_modal');
+
+    //get the anchor and add the wanted "data" attributes
+    replyCell.getElementsByTagName('a')[0].setAttribute('data-requestId', healthRequest.id);
+
+    row.appendChild(replyCell);
+    //If the edit form is present
+    if ($("#health_request_form")[0]) {
+        //then add the edit button
+        row.appendChild(createButtonIconTableCell('btn mt-1 text-white bg-primary', 'fa fa-edit', lockRequestForEdit));
+    }
+
+    row.classList.add('hr-row');
+    return row;
+}
+
+//
 //Loads the row data and Locks it for edit
 //
 function lockBlogForEdit() {
-
-    //Get the last editing row
-    var oldEditLockedRow = blogsTableBody.querySelector('.bg-warning');
-    //Free up the row background
-    if (oldEditLockedRow)
-        oldEditLockedRow.classList.remove('bg-warning');
+    removeRequestEditHighlight();
     //Get the row data
     var row = $(this).parentsUntil('tbody')[1];
     //Check that we got the right data
@@ -206,6 +273,43 @@ function loadBlogs(start, count, onLoadCallback) {
         }).done(function () {
             document.getElementById('blog_countent_status_loading').classList.add('collapse');
 
+        });
+}
+
+//
+//starts loading the blog data
+//  start : the starting point to load from
+//  count : the count of blogs  to load
+//
+function loadHealthRequest(start, count, onLoadCallback) {
+    $.ajax('/AWPHealth/GetHealthRequests',
+        {
+            method: 'GET',
+            data: {
+                start,
+                count
+            },
+            success: function (data) {
+                if (data.length === 0 && start === 0) {
+                    document.getElementById('health_request_countent_status_noContent').classList.remove('collapse');
+                } else {
+
+                    //Check if we found the data
+                    if (requestTableBody) {
+                        //Loop through the items and add them
+                        for (var i = 0; i < data.length; i++) {
+                            requestTableBody.appendChild(CreateHealthRequestTableRow(data[i]));
+                        }
+                    }
+                }
+                onLoadCallback(data.length === count);
+            },
+            error: function (err) {
+                showAlert('danger', err.responseJSON.message);
+                onLoadCallback(false);
+            }
+        }).done(function () {
+            document.getElementById('health_request_countent_status_loading').classList.add('collapse');
         });
 }
 var rowToDelete;

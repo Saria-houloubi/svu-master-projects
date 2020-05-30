@@ -7,14 +7,14 @@
 @import "custom/boxHolder.css";
 @import "custom/image.css";
 @import "custom/table.css";
-
+@import "custom/span.css";
 nav {
-    z-index:10000;
+    z-index: 10000;
 }
 
 html, body {
     height: 100%;
-    font-size : 20px;
+    font-size: 20px;
 }
 /*
 	The top continer of the page
@@ -41,6 +41,6 @@ footer {
     A workaround to hide the bot detector name for captcha
 */
 .BDC_CaptchaImageDiv a {
-    opacity : 0;
-    width : 0px;
+    opacity: 0;
+    width: 0px;
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SVU.Database.DatabaseContext;
 
 namespace SVU.Database.Migrations
 {
     [DbContext(typeof(SVUDbContext))]
-    partial class SVUDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200530001740_RemovedExtraDataInHealthReplies")]
+    partial class RemovedExtraDataInHealthReplies
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,8 +167,6 @@ namespace SVU.Database.Migrations
 
                     b.Property<string>("Note");
 
-                    b.Property<int>("ReplyCount");
-
                     b.Property<string>("Subject");
 
                     b.HasKey("Id");
@@ -191,9 +191,9 @@ namespace SVU.Database.Migrations
 
                     b.Property<string>("Note");
 
-                    b.Property<Guid>("RequestId");
+                    b.Property<Guid?>("RequestId");
 
-                    b.Property<Guid?>("UserId");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
@@ -473,12 +473,12 @@ namespace SVU.Database.Migrations
                 {
                     b.HasOne("SVU.Database.Models.HealthRequest", "Request")
                         .WithMany("Replies")
-                        .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RequestId");
 
                     b.HasOne("SVU.Database.Models.HealthUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("SVU.Database.Models.HealthUser", b =>

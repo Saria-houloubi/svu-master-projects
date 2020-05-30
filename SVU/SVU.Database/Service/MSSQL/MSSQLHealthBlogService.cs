@@ -32,7 +32,6 @@ namespace SVU.Database.Service.MSSQL
 
         #endregion
 
-
         public async Task<Blog> GetBlog(Guid id, bool addVisit = true)
         {
             try
@@ -69,7 +68,7 @@ namespace SVU.Database.Service.MSSQL
                     ThumbnailMimeType = loadImages ? blog.ThumbnailMimeType : "",
                     VisitCout = blog.VisitCout
 
-                }).OrderByDescending(item => item.CreationDate).Skip(start).Take(count).ToListAsync();
+                }).OrderByDescending(item => item.VisitCout).Skip(start).Take(count).ToListAsync();
             }
             catch (System.Exception ex)
             {

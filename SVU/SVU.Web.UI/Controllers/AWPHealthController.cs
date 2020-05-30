@@ -5,6 +5,7 @@ using SVU.Database.Models;
 using SVU.Logging.IServices;
 using SVU.Shared.Messages;
 using SVU.Shared.Static;
+using SVU.Web.UI.Attribute;
 using SVU.Web.UI.Controllers.Base;
 using SVU.Web.UI.Extensions;
 using SVU.Web.UI.Static;
@@ -19,21 +20,23 @@ namespace SVU.Web.UI.Controllers
     /// <summary>
     /// The controller to work with the AWP health homework
     /// </summary>
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = UserRoles.ALL)]
     public class AWPHealthController : BaseController
     {
         #region Properties
         public IHealthBlogService HealthBlogService { get; private set; }
+        public IHealthRequestService HealthRequestService { get; private set; }
         #endregion
 
         #region Contructer
         /// <summary>
         /// Default constructer
         /// </summary>
-        public AWPHealthController(ILoggingService loggingService, IHealthBlogService healthBlogService)
+        public AWPHealthController(ILoggingService loggingService, IHealthBlogService healthBlogService, IHealthRequestService healthRequestService)
             : base(loggingService)
         {
             HealthBlogService = healthBlogService;
+            HealthRequestService = healthRequestService;
         }
         #endregion
 
@@ -56,14 +59,9 @@ namespace SVU.Web.UI.Controllers
         [HttpGet]
         [AllowAnonymous]
         public IActionResult HealthRequest()
-
         {
-            //Crate the view model object
-            var viewModel = new HealthRequestViewModel();
-
-            return View(viewModel);
+            return View(new HealthRequestViewModel());
         }
-
         /// <summary>
         /// Displays a blog to the user
         /// </summary>
@@ -77,7 +75,7 @@ namespace SVU.Web.UI.Controllers
             if (Guid.TryParse(id, out Guid blogId))
             {
                 //Try to get the blog from teh db
-                var blog = await HealthBlogService.GetBlog(blogId, !HttpContext.User.Identity.IsAuthenticated);
+                var blog = await HealthBlogService.GetBlog(blogId, (!User.IsInRole(UserRoles.ADMIN)));
 
                 if (blog != null)
                 {
@@ -133,7 +131,67 @@ namespace SVU.Web.UI.Controllers
             }
             return InternalServerError();
         }
+        /// <summary>
+        /// Displays a health request to the user
+        /// </summary>
+        /// <param name="blog"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetHealthRequest(string id)
+        {
+            //Try to read the healthRequest id
+            if (Guid.TryParse(id, out Guid requestId))
+            {
+                //Try to get the health request from the db
+                var healthRequest = await HealthRequestService.GetHealthRequest(requestId);
 
+                if (healthRequest != null)
+                {
+                    return Ok(new
+                    {
+                        healthRequest.Subject,
+                        healthRequest.Content,
+                        CreationDate = healthRequest.CreationDate.ToString(DateFormats.DefaultDate),
+                        Replies = healthRequest.Replies.Select(item => new
+                        {
+                            item.Content,
+                            item.Note,
+                            CreationDate = item.CreationDate.ToString(DateFormats.DefaultDate),
+                            IsAway = item.UserId.ToString() != User.GetClaimValue(ClaimTypes.NameIdentifier)
+                        }).ToList()
+                        ,
+                        id = healthRequest.Id
+                    });
+                }
+            }
+            return NotFound($"Blog not found with the id of {id}");
+        }
+        /// <summary>
+        /// Gets a list of health requests for the user
+        /// </summary>
+        /// <param name="start">The index to start taking blogs from for pagination</param>
+        /// <param name="count">The count of blogs to get</param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetHealthRequests(int start, int count)
+        {
+            //Try to get the list of saved health requests for that user in the db
+            var healthRequests = await HealthRequestService.GetHealthRequests(start, count, Guid.Parse(User.GetClaimValue(ClaimTypes.NameIdentifier)), User.IsInRole(UserRoles.ADMIN));
+
+            //Check if we got any data
+            if (healthRequests != null)
+            {
+                return Ok(healthRequests.Select(item => new
+                {
+                    item.Id,
+                    item.Subject,
+                    item.Content,
+                    item.Note,
+                    CreationDate = item.CreationDate.ToString(DateFormats.DefaultDate)
+                }).ToList());
+            }
+            return InternalServerError();
+        }
         #endregion
 
         #region POST Requests
@@ -143,6 +201,7 @@ namespace SVU.Web.UI.Controllers
         /// <param name="blog"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = UserRoles.ADMIN)]
         public async Task<IActionResult> Blog(Blog model)
         {
             //Check if the model is valid
@@ -176,6 +235,78 @@ namespace SVU.Web.UI.Controllers
             return CustomBadRequest(ModelState.GetValidationErrors());
         }
 
+        /// <summary>
+        /// Adds or updates a value for the requets
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [BotDetectorCaptcha]
+        public async Task<IActionResult> HealthRequest(HealthRequestViewModel model)
+        {
+            //Check if the model is valid
+            if (ModelState.IsValid)
+            {
+                //Try to add of update the blog
+                var request = await HealthRequestService.AddOrUpdateRequest(new Database.Models.HealthRequest
+                {
+                    Content = model.Content,
+                    Id = model.Id,
+                    Subject = model.Subject,
+                    Note = model.Note,
+                    HealthUserId = Guid.Parse(HttpContext.User.GetClaimValue(ClaimTypes.NameIdentifier))
+                });
+
+                //Check if the operation was not succesfull
+                if (request == null)
+                {
+                    model.Errors.Add(ErrorMessages.SomthingWorngHappend);
+                }
+
+                model.Id = request.Id;
+            }
+            else
+            {
+                model.Errors.AddRange(ModelState.GetValidationErrors());
+            }
+
+            return View(StaticViewNames.HEALTH_REQUEST, model.Errors.Any() ? model : new HealthRequestViewModel());
+        }
+
+
+        /// <summary>
+        /// Adds or updates a value for the request reply
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> HealthRequestReply([FromBody] HealthRequestReply model)
+        {
+            //Check if the model is valid
+            if (ModelState.IsValid)
+            {
+                //Set the user id
+                model.UserId = Guid.Parse(User.GetClaimValue(ClaimTypes.NameIdentifier));
+                //Try to add of update the blog
+                var reply = await HealthRequestService.AddOrUpdateRequestReply(model);
+
+                //Check if the operation was not succesfull
+                if (reply != null)
+                {
+                    return Ok(new
+                    {
+                        reply.Content,
+                        reply.Id,
+                        CreationDate =  reply.CreationDate.ToString(DateFormats.DefaultDate),
+                        reply.RequestId,
+                    });
+                }
+                return InternalServerError();
+            }
+
+            return CustomBadRequest(ModelState.GetValidationErrors());
+        }
+
 
         #endregion
 
@@ -187,6 +318,7 @@ namespace SVU.Web.UI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
+        [Authorize(Roles = UserRoles.ADMIN)]
         public async Task<IActionResult> DeleteBlog(string id)
         {
             //Check if we got an id

@@ -157,12 +157,12 @@ function enableTab(id) {
 //
 //Creates a table cell based with an icon button
 //
-function createButtonIconTableCell(buttonClassList, iconClassList, onClickCallback = null, href = null) {
+function createButtonIconTableCell(buttonClassList, iconClassList, onClickCallback = null, href = null, data_toggle = null, data_target = null) {
 
     //Create the cell
     var cell = document.createElement('td');
     //Add the button to the cell
-    cell.appendChild(createButtonIconElement(buttonClassList, iconClassList, onClickCallback, href));
+    cell.appendChild(createButtonIconElement(buttonClassList, iconClassList, onClickCallback, href, data_toggle, data_target));
 
     return cell;
 }
@@ -176,12 +176,17 @@ function createButtonIconTableCell(buttonClassList, iconClassList, onClickCallba
 //  href : a refrence for the link
 //
 //
-function createButtonIconElement(buttonClassList, iconClassList, onClickCallback, href) {
+function createButtonIconElement(buttonClassList, iconClassList, onClickCallback, href, data_toggle, data_target) {
     //Create the button DOM element
     var button = document.createElement('a');
     if (href)
         //Set the link
         button.href = href;
+    //Check if the values were provided
+    if (data_toggle !== null && data_target !== null) {
+        button.setAttribute('data-toggle', data_toggle);
+        button.setAttribute('data-target', data_target);
+    }
     //Add the needed class
     button.classList.add(...buttonClassList.split(' '));
     //create the element

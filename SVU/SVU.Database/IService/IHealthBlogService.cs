@@ -16,6 +16,7 @@ namespace SVU.Database.IService
         /// <param name="blog"></param>
         /// <returns></returns>
         Task<Blog> AddOrUpdateBlog(Blog blog);
+
         /// <summary>
         /// Get the list of blogs based on the start and the count to get
         /// </summary>

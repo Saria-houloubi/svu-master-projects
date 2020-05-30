@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SVU.Database.IService;
 using SVU.Logging.IServices;
 using SVU.Shared.Messages;
+using SVU.Shared.Static;
 using SVU.Web.UI.Attribute;
 using SVU.Web.UI.Controllers.Base;
 using SVU.Web.UI.Extensions;
@@ -67,6 +68,16 @@ namespace SVU.Web.UI.Controllers
                 return Ok(await HealthAccountService.VerifyEmail(email));
             }
             return Ok(ErrorMessages.EmailIsUsed(email));
+        }
+        /// <summary>
+        /// Gets a page showing that the user dose not have access to do the operation
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult AccessDenied(string returnUrl)
+        {
+            return View(StaticViewNames.ACCESSDENIED);
         }
         #endregion
 
@@ -139,7 +150,7 @@ namespace SVU.Web.UI.Controllers
                         MedicalHistory = model.MedicalHistory,
                         Password = model.Passoword,
                         DOB = model.DOB,
-                    }, "basic");
+                    }, UserRoles.BASIC);
                     //Check if we got the data right
                     if (user != null)
                     {

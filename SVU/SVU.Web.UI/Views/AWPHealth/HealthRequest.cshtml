@@ -7,10 +7,37 @@
     @if (!User.Identity.IsAuthenticated)
     {
 
-        <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="new HealthUserViewModel()"></partial>
+        <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="new HealthUserViewModel()" />
     }
     else
     {
-        <partial name="~/Views/Homework/Health/HealthRequestFrom.cshtml"></partial>
+        if (User.IsInRole(UserRoles.ADMIN))
+        {
+            <h4>Admin can not create requests</h4>
+        }
+        else
+        {
+            <div>
+                <h4 class="slide-in-right">Health request information <i class="fa fa-hand-holding-heart"></i></h4>
+                <hr />
+                <ul class="nav justify-content-center">
+                    <li class="nav-item">
+                        <button class="btn btn-primary mx-2" data-toggle="collapse" data-target="#health_request_form">Form</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-primary mx-2" data-toggle="collapse" data-target="#heath_request_history_table">History</button>
+                    </li>
+                </ul>
+                <hr />
+                <partial name="~/Views/Homework/Health/HealthRequestFrom.cshtml" />
+                <hr />
+
+                <partial name="~/Views/Homework/Health/HealthRequestsTable.cshtml" />
+
+            </div>
+        }
+
     }
 </div>
+<script src="~/js/AWPHealthRequest.js"></script>
+

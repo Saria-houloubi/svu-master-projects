@@ -2,8 +2,7 @@
     <div class="m-2 text-center">
         <a href="#blog_create_part" class="btn btn-primary m-1">Create Blog</a>
         <a href="#blog_list_part" class="btn btn-primary m-1">Blog List</a>
-        <button class="btn btn-primary m-1  ">Health Request</button>
-        <button class="btn btn-primary m-1  ">Reply Health Request</button>
+        <a href="#hearth_requests_part" class="btn btn-primary m-1">Health Request</a>
     </div>
 </div>
 
@@ -95,5 +94,17 @@
 
 </div>
 
+<div id="hearth_requests_part">
+    <h4>
+        Health Requests <i class="fa fa-hand-holding-heart"></i>
+        <span class="ml-5 text-primary " id="health_request_countent_status_loading"><i class="fa fa-spinner  fa-spin"></i> Loading..</span>
+        <span class="ml-5 text-warning collapse" id="health_request_countent_status_noContent">Nothing found <i class="fa fa-sad-tear"></i>, no one sent any requests yet!</span>
+    </h4>
+    <hr />
+    <partial name="~/Views/Homework/Health/HealthRequestsTable.cshtml" />
+</div>
+
 
 <script src="~/js/HealthControlPanel.js"></script>
+
+

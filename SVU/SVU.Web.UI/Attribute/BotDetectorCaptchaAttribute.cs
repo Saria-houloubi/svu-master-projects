@@ -47,6 +47,9 @@ namespace SVU.Web.UI.Attribute
             //If not vaild then add the error to the model state
             if (!validCaptcha)
             {
+                //Clear the erros
+                filterContext.ModelState.Clear();
+                //Add only the captcha
                 filterContext.ModelState.TryAddModelError("Capatcha", ErrorMessage);
             }
 

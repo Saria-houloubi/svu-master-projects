@@ -15,7 +15,7 @@
         You can also send us a <a href="/awphealth/healthrequest">Request</a> and with our team of best doctores will replay back to you. <i class="fa fa-smile text-primary"></i>
     </p>
 
-    <partial name="_Errors" model="Model.Errors"></partial>
+    <partial name="_Errors" model="Model.Errors"/>
 
     @if (!User.Identity.IsAuthenticated)
     {
@@ -58,7 +58,7 @@
         }
         else if (User.IsInRole("basic"))
         {
-            <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="Model.UserViewModel"></partial>
+            <partial name="~/Views/Homework/Health/HealthUserForm.cshtml" model="Model.UserViewModel"/>
         }
     }
 
@@ -74,3 +74,4 @@
     <hr />
 
 </div>
+

@@ -61,6 +61,7 @@ namespace SVU.Web.UI
             services.AddScoped<IDataSetDatabaseService, MSSQLDataSetDatabaseService>();
             services.AddScoped<IHealthAccountService, MSSQLHealthAccountService>();
             services.AddScoped<IHealthBlogService, MSSQLHealthBlogService>();
+            services.AddScoped<IHealthRequestService, MSSQLHealthRequestService>();
 
             //Add the database context to DI piplline
             services.AddDbContext<SVUDbContext>(options =>
@@ -74,6 +75,7 @@ namespace SVU.Web.UI
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/homework/Awp";
+                    options.AccessDeniedPath = "/AwpAccount/AccessDenied";
                 });
 
             services.AddApplicationInsightsTelemetry();

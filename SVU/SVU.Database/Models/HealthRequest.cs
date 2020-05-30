@@ -1,5 +1,7 @@
 ﻿using SVU.Database.Models.Base;
-using SVU.Shared.Enums;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SVU.Database.Models
@@ -11,19 +13,23 @@ namespace SVU.Database.Models
     public class HealthRequest : BaseEntityModel
     {
         #region Properties
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Address { get; set; }
-        public string PhoneNumber { get; set; }
-        public int Age { get; set; }
-        public Gender Gender { get; set; }
-        public string MedicalHistory { get; set; }
+        public string Subject { get; set; }
         public string Content { get; set; }
-
+        [ForeignKey(nameof(User))]
+        public Guid HealthUserId { get; set; }
+        /// <summary>
+        /// For fast order 
+        /// the count of replies this request has
+        /// </summary>
+        public int ReplyCount { get; set; }
         #endregion
+
 
         #region Navigation Properties
 
+        public HealthUser User { get; set; }
+
+        public IEnumerable<HealthRequestReply> Replies { get; set; }
         #endregion
 
         #region Constructer
@@ -32,6 +38,7 @@ namespace SVU.Database.Models
         /// </summary>
         public HealthRequest()
         {
+            Replies = new Collection<HealthRequestReply>();
 
         }
         #endregion

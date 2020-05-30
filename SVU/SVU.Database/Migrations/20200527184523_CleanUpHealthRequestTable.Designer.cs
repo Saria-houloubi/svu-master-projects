@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SVU.Database.DatabaseContext;
 
 namespace SVU.Database.Migrations
 {
     [DbContext(typeof(SVUDbContext))]
-    partial class SVUDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200527184523_CleanUpHealthRequestTable")]
+    partial class CleanUpHealthRequestTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,19 +161,13 @@ namespace SVU.Database.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<Guid>("HealthUserId");
-
                     b.Property<DateTime>("LastUpdatedDate");
 
                     b.Property<string>("Note");
 
-                    b.Property<int>("ReplyCount");
-
                     b.Property<string>("Subject");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HealthUserId");
 
                     b.ToTable("Requests","Health");
                 });
@@ -181,17 +177,17 @@ namespace SVU.Database.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(400);
+                    b.Property<string>("Content");
 
                     b.Property<DateTime>("CreationDate");
+
+                    b.Property<bool>("IsRequesterSide");
 
                     b.Property<DateTime>("LastUpdatedDate");
 
                     b.Property<string>("Note");
 
-                    b.Property<Guid>("RequestId");
+                    b.Property<Guid?>("RequestId");
 
                     b.Property<Guid?>("UserId");
 
@@ -461,20 +457,11 @@ namespace SVU.Database.Migrations
                         .HasForeignKey("SessionId");
                 });
 
-            modelBuilder.Entity("SVU.Database.Models.HealthRequest", b =>
-                {
-                    b.HasOne("SVU.Database.Models.HealthUser", "User")
-                        .WithMany("HealthRequests")
-                        .HasForeignKey("HealthUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("SVU.Database.Models.HealthRequestReply", b =>
                 {
                     b.HasOne("SVU.Database.Models.HealthRequest", "Request")
-                        .WithMany("Replies")
-                        .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("RequestId");
 
                     b.HasOne("SVU.Database.Models.HealthUser", "User")
                         .WithMany()

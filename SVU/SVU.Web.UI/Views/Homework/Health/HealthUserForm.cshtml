@@ -1,7 +1,7 @@
 ﻿@model SVU.Web.UI.ViewModels.Health.HealthUserViewModel
 @using SVU.Shared.Enums
 
-<partial name="_Errors" model="Model.Errors"></partial>
+<partial name="_Errors" model="Model.Errors"/>
 
 @using (Html.BeginForm("AddOrUpdateUser", "awpaccount"))
 {
@@ -15,7 +15,7 @@
     }
     <hr />
     @Html.HiddenFor(item => item.Id, new { @readonly = true })
-    <div class="form-group m-1">
+    <div class="form-group mb-1">
         @Html.LabelFor(item => item.Username)
         @if (User.Identity.IsAuthenticated)
         {
@@ -28,7 +28,7 @@
         }
     </div>
 
-    <div class="form-group m-1">
+    <div class="form-group mb-1">
         @Html.LabelFor(item => item.Email)
         @if (User.Identity.IsAuthenticated)
         {
@@ -41,13 +41,13 @@
         }
     </div>
 
-    <div class="form-group m-1">
+    <div class="form-group mb-1">
         @Html.LabelFor(item => item.DOB)
         @Html.EditorFor(item => item.DOB, new { htmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(item => item.DOB, "", new { @class = "text-danger text-monospace ml-2" })
     </div>
 
-    <div class="form-group m-1">
+    <div class="form-group mb-1">
         @Html.LabelFor(item => item.Gender)
         <div class="m-2">
             <i class="fa fa-chess-king"></i> @Html.RadioButtonFor(item => item.Gender, Gender.Male)
@@ -55,13 +55,13 @@
         </div>
     </div>
 
-    <div class="form-group m-1">
+    <div class="form-group mb-1">
         @Html.LabelFor(item => item.PhoneNumber)
         @Html.TextBoxFor(item => item.PhoneNumber, new { @class = "form-control" })
         @Html.ValidationMessageFor(item => item.PhoneNumber, "", new { @class = "text-danger text-monospace ml-2" })
     </div>
 
-    <div class="form-group m-1">
+    <div class="form-group mb-1">
         @Html.LabelFor(item => item.MedicalHistory)
         @Html.TextAreaFor(item => item.MedicalHistory, new { @class = "form-control", style = "min-height : 200px;" })
         @Html.ValidationMessageFor(item => item.MedicalHistory, "", new { @class = "text-danger text-monospace ml-2" })
@@ -69,13 +69,13 @@
 
     @if (!User.Identity.IsAuthenticated)
     {
-        <div class="form-group m-1">
+        <div class="form-group mb-1">
             @Html.LabelFor(item => item.Passoword)
             @Html.PasswordFor(item => item.Passoword, new { @class = "form-control" })
             @Html.ValidationMessageFor(item => item.Passoword, "", new { @class = "text-danger text-monospace ml-2" })
         </div>
 
-        <div class="form-group m-1">
+        <div class="form-group mb-1">
             @Html.LabelFor(item => item.PasswordConfirmation)
             @Html.PasswordFor(item => item.PasswordConfirmation, new { @class = "form-control" })
             @Html.ValidationMessageFor(item => item.PasswordConfirmation, "", new { @class = "text-danger text-monospace ml-2" })
@@ -83,16 +83,17 @@
     }
     else
     {
-        <div class="form-group m-1">
+        <div class="form-group mb-1">
             @Html.LabelFor(item => item.Note)
             @Html.TextAreaFor(item => item.Note, new { @class = "form-control", @readonly = true, style = "min-height : 200px;" })
         </div>
 
     }
-    <div class="mb-3">
+    <div class="my-3">
         <partial name="Components/BotDetectorCaptchaComponent" model="Model.Captcha" />
         @Html.TextBoxFor(item => item.Captcha.CaptchaCode)
     </div>
+
 
 
     <div class="my-3">
