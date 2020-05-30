@@ -41,7 +41,10 @@ namespace SVU.Web.UI
                     services.AddSingleton<ILoggingService, DefaultLoggingSservice>();
                     break;
                 case "production":
-                    services.AddSingleton<ILoggingService, SaveMyDataLoggingService>();
+                    services.AddSingleton<ILoggingService, DefaultLoggingSservice>();
+                    //Stoped logging due some erros in Azure app service 30 / 05 / 2020 
+                    //  TODO: needs to be fixed throughing 	System.InvalidOperationException
+                    //services.AddSingleton<ILoggingService, SaveMyDataLoggingService>();
                     break;
                 default:
                     break;
