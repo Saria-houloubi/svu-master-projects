@@ -179,9 +179,12 @@ function createButtonIconTableCell(buttonClassList, iconClassList, onClickCallba
 function createButtonIconElement(buttonClassList, iconClassList, onClickCallback, href, data_toggle, data_target) {
     //Create the button DOM element
     var button = document.createElement('a');
-    if (href)
+    //Check if the a link was provided
+    if (href) {
         //Set the link
         button.href = href;
+        button.setAttribute('target', '_blank');
+    }
     //Check if the values were provided
     if (data_toggle !== null && data_target !== null) {
         button.setAttribute('data-toggle', data_toggle);
