@@ -27,9 +27,9 @@ $(function () {
 //
 //Removes any highlighted rows in table
 //
-function removeRequestEditHighlight() {
+function removeBlogEditHighlight() {
     //Remove higlight from any old filed
-    var oldEditLockedRow = requestTableBody.querySelector('.bg-warning');
+    var oldEditLockedRow = blogsTableBody.querySelector('.bg-warning');
     //Free up the row background
     if (oldEditLockedRow)
         oldEditLockedRow.classList.remove('bg-warning');
@@ -149,7 +149,7 @@ function CreateHealthRequestTableRow(healthRequest) {
 //Loads the row data and Locks it for edit
 //
 function lockBlogForEdit() {
-    removeRequestEditHighlight();
+    removeBlogEditHighlight();
     //Get the row data
     var row = $(this).parentsUntil('tbody')[1];
     //Check that we got the right data

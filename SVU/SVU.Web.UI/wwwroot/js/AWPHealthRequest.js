@@ -9,7 +9,7 @@ $(function () {
 //
 //Removes any highlighted rows in table
 //
-function removeRequestEditHighlight() {
+function removeBlogEditHighlight() {
     //Remove higlight from any old filed
     var oldEditLockedRow = requestTableBody.querySelector('.bg-warning');
     //Free up the row background
@@ -21,7 +21,7 @@ function removeRequestEditHighlight() {
 // clears the request form filed
 //
 function clearFormFields() {
-    removeRequestEditHighlight();
+    removeBlogEditHighlight();
     //Get the input fileds
     var inputFields = document.getElementById('health_request_form').querySelectorAll('.form-control');
     //Hide the edit button
@@ -94,7 +94,7 @@ function onLoadCallBack(showLoadMore) {
 function lockRequestForEdit() {
     document.getElementById('edit_hr_btn').classList.remove('collapse');
 
-    removeRequestEditHighlight();
+    removeBlogEditHighlight();
     //Get the row data
     var row = $(this).parentsUntil('tbody')[1];
     //Check that we got the right data
