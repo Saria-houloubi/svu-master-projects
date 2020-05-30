@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SVU.Database.IService;
 using SVU.Logging.IServices;
@@ -78,6 +79,28 @@ namespace SVU.Web.UI.Controllers
         public IActionResult AccessDenied(string returnUrl)
         {
             return View(StaticViewNames.ACCESSDENIED);
+        }
+
+        /// <summary>
+        /// Logs the user out
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(Roles = UserRoles.ALL)]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await HttpContext.SignOutAsync();
+
+                return RedirectToAction("AWP", "homework");
+            }
+            catch (Exception ex)
+            {
+                LoggingService.LogException(ex);
+
+                return InternalServerError(ex);
+            }
         }
         #endregion
 
