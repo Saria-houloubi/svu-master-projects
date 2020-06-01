@@ -48,7 +48,7 @@
                                 {
                                     <td><a href="@link.Url" class="btn btn-info">@link.Title</a></td>
                                 }
-                                <td>@lecture.CreationDate.ToShortDateString()</td>
+                                <td>@lecture.CreationDate.ToString(DateFormats.DefaultDate)</td>
                             </tr>
                         }
                     }
