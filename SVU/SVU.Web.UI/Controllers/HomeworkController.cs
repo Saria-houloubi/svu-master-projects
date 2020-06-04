@@ -4,6 +4,7 @@ using SVU.Database.IService;
 using SVU.Logging.IServices;
 using SVU.Web.UI.Controllers.Base;
 using SVU.Web.UI.Extensions;
+using SVU.Web.UI.Models;
 using SVU.Web.UI.Models.Homework;
 using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels;
@@ -12,6 +13,7 @@ using SVU.Web.UI.ViewModels.Health;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -119,7 +121,7 @@ namespace SVU.Web.UI.Controllers
         /// <param name="id">The name of the alog to execute</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CalculateBayes([FromBody] CalculateBayesModel model)
+        public async Task<IActionResult> CalculateBayes([FromBody] CalculateTargetModel model)
         {
             //Check if the data is send correctly
             if (ModelState.IsValid)
@@ -334,6 +336,51 @@ namespace SVU.Web.UI.Controllers
             }
         }
 
+        public async Task<IActionResult> CalculateID3([FromBody] CalculateTargetModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //Check that we got any data
+                var id3Tree = await MemoryCache.GetOrCreate(string.Join('-', "ID3", model.DbSet, model.Target, model.IgnoreProperties), async options =>
+                {
+                    //Get the records from the db
+                    var dbSet = await DataSetDatabaseService.GetDbSet(model.DbSet);
+                    try
+                    {
+                        //Keep it in cache for one week only
+                        options.AbsoluteExpiration = DateTimeOffset.UtcNow.AddDays(7);
+                        return CreateID3Tree(dbSet, new List<string>(), model.IgnoreProperties, model.Target);
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggingService.LogException(ex);
+                        //Clear it right away
+                        options.AbsoluteExpiration = DateTimeOffset.UtcNow.AddMilliseconds(1);
+                        return null;
+                    }
+                });
+                var currentNode = id3Tree;
+                //While we still have nodes
+                while (currentNode != null && !currentNode.IsLeaf)
+                {
+                    //Get the value fo the property
+                    var value = model.TestExample.GetValue(currentNode.PropertyInfo.Name);
+
+                    currentNode = currentNode.Next.SingleOrDefault(item => item.ToCondition == value.ToString());
+                }
+
+                return Ok(new
+                {
+                    results = currentNode.Value,
+                    id3Tree
+                });
+            }
+            else
+            {
+                return BadRequest("Some data were not provided plase check and try again");
+            }
+        }
+
         /// <summary>
         /// Dose the calculation for the sent alog name as the id paramter
         /// </summary>
@@ -372,6 +419,145 @@ namespace SVU.Web.UI.Controllers
         private double CalculateNormalDistribution(float avg, float std, float value)
         {
             return (1 / (Math.Sqrt(2 * Math.PI) * std) * Math.Exp(-(Math.Pow((value - avg), 2)) / (2 * Math.Pow(std, 2))));
+        }
+
+        /// <summary>
+        /// Calculates the probiblity of each target
+        /// </summary>
+        /// <param name="targetArray"></param>
+        /// <returns></returns>
+        private Dictionary<string, double> CalculateProbiblties(IEnumerable<string> targetArray)
+        {
+            //The array to store the probiblity of each target 
+            var targetProbabilty = new Dictionary<string, double>();
+            //Get the distinct values in the target array
+            foreach (var item in targetArray.Distinct())
+            {
+                targetProbabilty.Add(item, (targetArray.Count(t => t == item) / (1.0 * targetArray.Count())));
+            }
+
+            return targetProbabilty;
+        }
+
+        /// <summary>
+        /// Calcuatels the entropy for the targets
+        /// </summary>
+        /// <param name="attributeTarget"></param>
+        /// <returns></returns>
+        private double CalcutlateEntropy(IEnumerable<KeyValuePair<string, string>> attributeTarget)
+        {
+            var targetEntropy = 0.0;
+            //Get the probiblites for the target
+            var probiblities = CalculateProbiblties(attributeTarget.Select(item => item.Value));
+            //Loop at each target
+            foreach (var item in probiblities)
+            {
+                targetEntropy -= (item.Value * Math.Log(item.Value, 2));
+            }
+            return targetEntropy;
+        }
+
+        /// <summary>
+        /// Calcuates the gain for an attribute for the targets sent
+        /// </summary>
+        /// <param name="attributeTarget"></param>
+        /// <returns></returns>
+        private double CalcuateGain(IEnumerable<KeyValuePair<string, string>> attributeTarget)
+        {
+            //find the distinct values for the attribute
+            var distinctValues = attributeTarget.Select(item => item.Key).Distinct();
+            //Get the total entropy for the hole dataset
+            var totalEntropy = CalcutlateEntropy(attributeTarget);
+            //Start the gain as its
+            var gain = totalEntropy;
+            //Calculate the entropy (the disorder of values for the target) for each value
+            foreach (var item in distinctValues)
+            {
+                var currentAttribute = attributeTarget.Where(att => att.Key == item);
+                gain -= (currentAttribute.Count() / ((1.0) * attributeTarget.Count())) * CalcutlateEntropy(currentAttribute);
+            }
+            return gain;
+        }
+        /// <summary>
+        /// Finds the best attribute to branch on for a given dataset
+        /// </summary>
+        /// <param name="dbset"></param>
+        /// <param name="roots"></param>
+        /// <param name="ignoredProperties"></param>
+        /// <returns></returns>
+        private PropertyInfo FindBestAttribute(IEnumerable<object> dbset, IEnumerable<string> roots, IEnumerable<string> ignoredProperties, string target, out double mostGainAttributeValue)
+        {
+            mostGainAttributeValue = 0.0;
+
+            PropertyInfo bestProperty = null;
+            foreach (var item in dbset.First().GetType().GetProperties())
+            {
+                //If the property was not already used
+                if (!roots.Contains(item.Name) && !ignoredProperties.Contains(item.Name))
+                {
+                    var gain = CalcuateGain(dbset.Select(att => new KeyValuePair<string, string>(item.GetValue(att).ToString(), att.GetType().GetProperty(target).GetValue(att).ToString())).ToList());
+                    Console.WriteLine($"{item.Name} : {gain}");
+
+                    //Check if we got a bigger gain
+                    if (gain > mostGainAttributeValue)
+                    {
+                        mostGainAttributeValue = gain;
+                        bestProperty = item;
+                    }
+
+                }
+            }
+
+            return bestProperty;
+        }
+        /// <summary>
+        /// Creates the the ID3 nodes
+        /// </summary>
+        /// <param name="dbset"></param>
+        /// <param name="roots"></param>
+        /// <param name="ignoredProperties"></param>
+        /// <param name="pastBest"></param>
+        /// <param name="branchReason"></param>
+        /// <returns></returns>
+        private NodeID3Model CreateID3Tree(IEnumerable<object> dbset, List<string> roots, IEnumerable<string> ignoredProperties, string target, PropertyInfo pastBest = null, string branchReason = "root")
+        {
+            //In here that means I reached a leaf node
+            if ((dbset.Count() == (roots.Count + ignoredProperties.Count())) || dbset.Select(item => item.GetType().GetProperty(target).GetValue(item)).Distinct().Count() == 1)
+            {
+                return new NodeID3Model()
+                {
+                    Name = "leaf",
+                    IsLeaf = true,
+                    ToCondition = pastBest.GetValue(dbset.First()).ToString(),
+                    Value = dbset.First().GetType().GetProperty(target).GetValue(dbset.First()).ToString()
+
+                };
+            }
+            //Find the best property to branch on
+            var bestAtt = FindBestAttribute(dbset, roots, ignoredProperties, target, out double gain);
+
+            //Add the best attribute to the root
+            roots.Add(bestAtt.Name);
+            //Get the branches that the property has
+            var branches = dbset.Select(att => bestAtt.GetValue(att)).Distinct();
+            //Create the node
+            var node = new NodeID3Model()
+            {
+                ToCondition = branchReason,
+                Name = bestAtt.Name,
+                BranchGain = gain,
+                IsLeaf = false,
+                PropertyInfo = bestAtt
+            };
+            //Loop through the branchs
+            foreach (var branch in branches)
+            {
+                //Do a greedy look until we reach the leaf
+                node.Next.Add(CreateID3Tree(dbset.Where(val => bestAtt.GetValue(val).ToString() == branch.ToString()).ToList(), roots, ignoredProperties, target, bestAtt, branch.ToString()));
+            }
+            //If there  is no more branches
+            return node;
+
         }
         #endregion
     }

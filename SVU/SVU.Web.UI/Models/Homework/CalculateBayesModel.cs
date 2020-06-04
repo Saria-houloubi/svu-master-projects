@@ -7,7 +7,7 @@ namespace SVU.Web.UI.Models.Homework
     /// <summary>
     /// The model for a calculating bayes algo
     /// </summary>
-    public class CalculateBayesModel
+    public class CalculateTargetModel
     {
         #region Properties
         [Required]
@@ -25,7 +25,7 @@ namespace SVU.Web.UI.Models.Homework
         /// <summary>
         /// Default constructer
         /// </summary>
-        public CalculateBayesModel()
+        public CalculateTargetModel()
         {
 
         }

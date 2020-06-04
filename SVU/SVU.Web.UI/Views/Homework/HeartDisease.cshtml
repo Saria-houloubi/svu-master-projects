@@ -133,7 +133,7 @@
             showAlert("error", "Some values are missing")
             return;
         }
-        
+
         getCodedClassifcation(type);
         getSSASClassification(type);
     }
@@ -142,6 +142,7 @@
     //  type : the type of algorithm we are working with
     //
     function getCodedClassifcation(type) {
+        var endPoint = type == 'id3' ? 'CalculateID3' : 'CalculateBayes';
         //Get the form data
         var age = $('#age').val();
         var chestPainType = $('#chestPainType')[0].value;
@@ -151,8 +152,8 @@
         var maxHeartRate = $('#maxHeartRate').val();
         var exerciceAngina = $('#exerciceAngina').prop("checked");
 
-        
-        $.ajax(`/homework/CalculateBayes`, {
+
+        $.ajax(`/homework/${endPoint}`, {
             method: 'post',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -182,7 +183,7 @@
                     $("#coded_bayes")[0].innerText = values;
                 }
                 else
-                    $("#coded_id3")[0].innerText = data[0].play;
+                    $("#coded_id3")[0].innerText = data.results;
 
             },
             error: function (err) {

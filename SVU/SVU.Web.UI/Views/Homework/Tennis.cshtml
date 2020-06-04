@@ -121,12 +121,13 @@
     //  type : the type of algorithm we are working with
     //
     function getCodedClassifcation(type) {
+        var endPoint = type == 'id3' ? 'CalculateID3' : 'CalculateBayes';
         //Get the form data
         var outlook = $('#outlook')[0].value;
         var temperature = $('#temperature')[0].value;
         var humidty = $('#humidty')[0].value;
         var wind = $('#wind')[0].value;
-        $.ajax(`/homework/CalculateBayes`, {
+        $.ajax(`/homework/${endPoint}`, {
             method: 'post',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -150,7 +151,7 @@
                     $("#coded_bayes")[0].innerText = values;
                 }
                 else
-                    $("#coded_id3")[0].innerText = data[0].play;
+                    $("#coded_id3")[0].innerText = data.results;
 
             },
             error: function (err) {
