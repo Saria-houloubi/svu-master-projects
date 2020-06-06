@@ -349,7 +349,7 @@ namespace SVU.Web.UI.Controllers
                     {
                         //Keep it in cache for one week only
                         options.AbsoluteExpiration = DateTimeOffset.UtcNow.AddDays(7);
-                        return CreateID3Tree(dbSet, new List<string>(), model.IgnoreProperties, model.Target);
+                        return CreateID3Tree(dbSet, new List<string>(), model.IgnoreProperties, dbSet.First().GetType().GetProperty(model.Target));
                     }
                     catch (Exception ex)
                     {
@@ -366,7 +366,7 @@ namespace SVU.Web.UI.Controllers
                     //Get the value fo the property
                     var value = model.TestExample.GetValue(currentNode.PropertyInfo.Name);
 
-                    currentNode = currentNode.Next.SingleOrDefault(item => item.ToCondition == value.ToString());
+                    currentNode = currentNode.Next.SingleOrDefault(item => item.CheckCondition(value));
                 }
 
                 return Ok(new
@@ -485,18 +485,17 @@ namespace SVU.Web.UI.Controllers
         /// <param name="roots"></param>
         /// <param name="ignoredProperties"></param>
         /// <returns></returns>
-        private PropertyInfo FindBestAttribute(IEnumerable<object> dbset, IEnumerable<string> roots, IEnumerable<string> ignoredProperties, string target, out double mostGainAttributeValue)
+        private PropertyInfo FindBestAttribute(IEnumerable<object> dbset, IEnumerable<string> roots, IEnumerable<string> ignoredProperties, PropertyInfo target, out double mostGainAttributeValue)
         {
-            mostGainAttributeValue = 0.0;
-
+            mostGainAttributeValue = int.MinValue;
             PropertyInfo bestProperty = null;
+
             foreach (var item in dbset.First().GetType().GetProperties())
             {
                 //If the property was not already used
                 if (!roots.Contains(item.Name) && !ignoredProperties.Contains(item.Name))
                 {
-                    var gain = CalcuateGain(dbset.Select(att => new KeyValuePair<string, string>(item.GetValue(att).ToString(), att.GetType().GetProperty(target).GetValue(att).ToString())).ToList());
-                    Console.WriteLine($"{item.Name} : {gain}");
+                    var gain = CalcuateGain(dbset.Select(att => new KeyValuePair<string, string>(item.GetValue(att).ToString(), target.GetValue(att).ToString())).ToList());
 
                     //Check if we got a bigger gain
                     if (gain > mostGainAttributeValue)
@@ -504,11 +503,25 @@ namespace SVU.Web.UI.Controllers
                         mostGainAttributeValue = gain;
                         bestProperty = item;
                     }
-
                 }
             }
 
             return bestProperty;
+        }
+        private void FindBestSplit(IEnumerable<KeyValuePair<double, string>> attributes)
+        {
+            var orderedValues = attributes.OrderBy(item => item.Key);
+            var x = orderedValues.Select(item => item.Key).Distinct();
+            var list = new List<string>();
+            foreach (var value in x)
+            {
+                foreach (var item in attributes.Select(item => item.Value).Distinct())
+                {
+                    list.Add($"{value} {item} {orderedValues.Where(val => val.Value == item && val.Key >= value).Count()} {orderedValues.Count() - orderedValues.Where(val => val.Value == item && val.Key >= value).Count()}");
+                }
+
+            }
+
         }
         /// <summary>
         /// Creates the the ID3 nodes
@@ -519,45 +532,95 @@ namespace SVU.Web.UI.Controllers
         /// <param name="pastBest"></param>
         /// <param name="branchReason"></param>
         /// <returns></returns>
-        private NodeID3Model CreateID3Tree(IEnumerable<object> dbset, List<string> roots, IEnumerable<string> ignoredProperties, string target, PropertyInfo pastBest = null, string branchReason = "root")
+        private NodeID3Model CreateID3Tree(IEnumerable<object> dbset, List<string> roots, IEnumerable<string> ignoredProperties, PropertyInfo target, PropertyInfo pastBest = null, string branchReason = "root")
         {
             //In here that means I reached a leaf node
-            if ((dbset.Count() == (roots.Count + ignoredProperties.Count())) || dbset.Select(item => item.GetType().GetProperty(target).GetValue(item)).Distinct().Count() == 1)
+            if ((dbset.First().GetType().GetProperties().Count() == (roots.Count + ignoredProperties.Count())) || dbset.Select(item => target.GetValue(item)).Distinct().Count() == 1)
             {
                 return new NodeID3Model()
                 {
                     Name = "leaf",
                     IsLeaf = true,
+                    CheckCondition = new IsToCondition((object value) => value.ToString() == branchReason),
                     ToCondition = pastBest.GetValue(dbset.First()).ToString(),
-                    Value = dbset.First().GetType().GetProperty(target).GetValue(dbset.First()).ToString()
+                    Value = target.GetValue(dbset.First()).ToString()
 
                 };
             }
             //Find the best property to branch on
             var bestAtt = FindBestAttribute(dbset, roots, ignoredProperties, target, out double gain);
-
             //Add the best attribute to the root
             roots.Add(bestAtt.Name);
-            //Get the branches that the property has
-            var branches = dbset.Select(att => bestAtt.GetValue(att)).Distinct();
-            //Create the node
-            var node = new NodeID3Model()
+
+            var branches = new List<object>();
+            var node = new NodeID3Model();
+            if (bestAtt.PropertyType == typeof(int) || bestAtt.PropertyType == typeof(double))
             {
-                ToCondition = branchReason,
-                Name = bestAtt.Name,
-                BranchGain = gain,
-                IsLeaf = false,
-                PropertyInfo = bestAtt
-            };
-            //Loop through the branchs
-            foreach (var branch in branches)
-            {
+
+                var valueGain = new List<KeyValuePair<double, double>>();
+                foreach (var item in dbset)
+                {
+                    var value = double.Parse(bestAtt.GetValue(item).ToString());
+                    if (!valueGain.Any(x => x.Key == value))
+                    {
+                        valueGain.Add(new KeyValuePair<double, double>(value, CalcuateGain(dbset.Select(att => new KeyValuePair<string, string>(double.Parse(bestAtt.GetValue(att).ToString()) >= value ? value.ToString() : "Other", target.GetValue(att).ToString())))));
+                    }
+                }
+                var maxGainNode = valueGain.Max(item => item.Value);
+                var branchValue = valueGain.FirstOrDefault(item => item.Value == maxGainNode);
+
+                node = new NodeID3Model()
+                {
+                    ToCondition = branchReason,
+                    CheckCondition  = new IsToCondition((object value) =>
+                    value.ToString() == branchReason),
+                    Name = bestAtt.Name,
+                    BranchGain = branchValue.Value,
+                    IsLeaf = false,
+                    PropertyInfo = bestAtt
+                };
+                var xNode = CreateID3Tree(dbset.Where(val => double.Parse(bestAtt.GetValue(val).ToString()) >= branchValue.Key).ToList(), roots, ignoredProperties, target, bestAtt, $">={branchValue.Key.ToString()}");
+                xNode.ToCondition = $">={branchValue.Key.ToString()}";
+                xNode.CheckCondition = new IsToCondition((object value) =>
+                double.Parse(value.ToString()) >= branchValue.Key);
                 //Do a greedy look until we reach the leaf
-                node.Next.Add(CreateID3Tree(dbset.Where(val => bestAtt.GetValue(val).ToString() == branch.ToString()).ToList(), roots, ignoredProperties, target, bestAtt, branch.ToString()));
+                node.Next.Add(xNode);
+                //Do a greedy look until we reach the leaf
+                xNode = CreateID3Tree(dbset.Where(val => double.Parse(bestAtt.GetValue(val).ToString()) < branchValue.Key).ToList(), roots, ignoredProperties, target, bestAtt, $"<{branchValue.Key.ToString()}");
+
+                xNode.CheckCondition = new IsToCondition((object value) => 
+                double.Parse(value.ToString()) < branchValue.Key);
+                xNode.ToCondition = $"<{branchValue.Key.ToString()}";
+
+                node.Next.Add(xNode);
+
             }
+            else
+            {
+                //Get the branches that the property has
+                branches = dbset.Select(att => bestAtt.GetValue(att)).Distinct().ToList();
+
+                //Create the node
+                node = new NodeID3Model()
+                {
+                    ToCondition = branchReason,
+                    CheckCondition = new IsToCondition((object value) => 
+                    value.ToString() == branchReason),
+                    Name = bestAtt.Name,
+                    BranchGain = gain,
+                    IsLeaf = false,
+                    PropertyInfo = bestAtt
+                };
+                //Loop through the branchs
+                foreach (var branch in branches)
+                {
+                    //Do a greedy look until we reach the leaf
+                    node.Next.Add(CreateID3Tree(dbset.Where(val => bestAtt.GetValue(val).ToString() == branch.ToString()).ToList(), roots, ignoredProperties, target, bestAtt, branch.ToString()));
+                }
+            }
+
             //If there  is no more branches
             return node;
-
         }
         #endregion
     }
