@@ -12,6 +12,7 @@ namespace SVU.Web.UI.ViewModels.Shared
         public string Title { get; set; }
         public string VideoSrc { get; set; }
         public string ContentType { get; set; }
+        public string Description { get; set; }
         #endregion
 
         #region Constructer

@@ -134,6 +134,7 @@ namespace SVU.Web.UI.Controllers
                     {
                         ContentType = video.ContentType,
                         Title = video.Title,
+                        Description = video.Description,
                         VideoSrc = $"/videos/{video.Title}.{video.ContentType.Split('/')[1]}"
                     });
                 }

@@ -4,7 +4,13 @@
 }
 
 <div class="container text-center">
+    <h4>@Model.Title</h4>
+    <hr />
     <video controls="controls" width="100%">
         <source src="@Model.VideoSrc" type="@Model.ContentType" />
     </video>
+    <hr />
+    <p>
+        @Model.Description
+    </p>
 </div>
