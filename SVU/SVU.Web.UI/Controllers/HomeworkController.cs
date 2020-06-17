@@ -10,6 +10,7 @@ using SVU.Web.UI.Static;
 using SVU.Web.UI.ViewModels;
 using SVU.Web.UI.ViewModels.Account;
 using SVU.Web.UI.ViewModels.Health;
+using SVU.Web.UI.ViewModels.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace SVU.Web.UI.Controllers
         public IDataSetDatabaseService DataSetDatabaseService { get; private set; }
         public IMemoryCache MemoryCache { get; private set; }
         public IHealthAccountService HealthAccountService { get; private set; }
+        public IApplicationLinksService ApplicationLinksService { get; private set; }
 
         /// <summary>
         /// Constent keys
@@ -41,12 +43,14 @@ namespace SVU.Web.UI.Controllers
         /// <summary>
         /// Default constructer
         /// </summary>
-        public HomeworkController(IDataSetDatabaseService dataSetDatabaseService, ILoggingService loggingService, IMemoryCache memoryCache, IHealthAccountService healthAccountService)
+        public HomeworkController(IDataSetDatabaseService dataSetDatabaseService, ILoggingService loggingService,
+            IMemoryCache memoryCache, IHealthAccountService healthAccountService, IApplicationLinksService applicationLinksService)
             : base(loggingService)
         {
             DataSetDatabaseService = dataSetDatabaseService;
             MemoryCache = memoryCache;
             HealthAccountService = healthAccountService;
+            ApplicationLinksService = applicationLinksService;
         }
         #endregion
 
@@ -111,6 +115,30 @@ namespace SVU.Web.UI.Controllers
                 }
             }
             return View(StaticViewNames.AWP_HEALTH, viewModel);
+        }
+        /// <summary>
+        /// Plays the video with the sent Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Video(Guid id)
+        {
+            if (Guid.Empty != id)
+            {
+                //Get the video link
+                var video = await ApplicationLinksService.GetLink(id);
+                //Check if we got any and the right data type
+                if (video != null && video.ContentType.Contains("video"))
+                {
+                    return View(StaticViewNames.VIDEOPLAYER, new VideoPlayerViewModel()
+                    {
+                        ContentType = video.ContentType,
+                        Title = video.Title,
+                        VideoSrc = $"/videos/{video.Title}.{video.ContentType.Split('/')[1]}"
+                    });
+                }
+            }
+            return View(StaticViewNames.NOTFOUND);
         }
         #endregion
 
@@ -572,8 +600,8 @@ namespace SVU.Web.UI.Controllers
                 node = new NodeID3Model()
                 {
                     ToCondition = branchReason,
-                    CheckCondition  = new IsToCondition((object value) =>
-                    value.ToString() == branchReason),
+                    CheckCondition = new IsToCondition((object value) =>
+                   value.ToString() == branchReason),
                     Name = bestAtt.Name,
                     BranchGain = branchValue.Value,
                     IsLeaf = false,
@@ -588,7 +616,7 @@ namespace SVU.Web.UI.Controllers
                 //Do a greedy look until we reach the leaf
                 xNode = CreateID3Tree(dbset.Where(val => double.Parse(bestAtt.GetValue(val).ToString()) < branchValue.Key).ToList(), roots, ignoredProperties, target, bestAtt, $"<{branchValue.Key.ToString()}");
 
-                xNode.CheckCondition = new IsToCondition((object value) => 
+                xNode.CheckCondition = new IsToCondition((object value) =>
                 double.Parse(value.ToString()) < branchValue.Key);
                 xNode.ToCondition = $"<{branchValue.Key.ToString()}";
 
@@ -604,7 +632,7 @@ namespace SVU.Web.UI.Controllers
                 node = new NodeID3Model()
                 {
                     ToCondition = branchReason,
-                    CheckCondition = new IsToCondition((object value) => 
+                    CheckCondition = new IsToCondition((object value) =>
                     value.ToString() == branchReason),
                     Name = bestAtt.Name,
                     BranchGain = gain,

@@ -65,6 +65,7 @@ namespace SVU.Web.UI
             services.AddScoped<IHealthAccountService, MSSQLHealthAccountService>();
             services.AddScoped<IHealthBlogService, MSSQLHealthBlogService>();
             services.AddScoped<IHealthRequestService, MSSQLHealthRequestService>();
+            services.AddScoped<IApplicationLinksService, MSSQLApplicationLinksService>();
 
             //Add the database context to DI piplline
             services.AddDbContext<SVUDbContext>(options =>

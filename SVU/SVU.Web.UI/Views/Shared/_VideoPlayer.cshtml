@@ -1,0 +1,10 @@
+﻿@model VideoPlayerViewModel
+@{ 
+    ViewBag.Title = Model.Title;
+}
+
+<div class="container text-center">
+    <video controls="controls" width="100%">
+        <source src="@Model.VideoSrc" type="@Model.ContentType" />
+    </video>
+</div>

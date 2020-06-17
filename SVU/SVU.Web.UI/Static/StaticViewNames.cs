@@ -12,5 +12,8 @@
         public const string BLOGLIST= "/Views/Homework/Health/BlogList.cshtml";
         public const string HEALTH_REQUEST = "/Views/AWPHealth/HealthRequest.cshtml";
 
+
+        public const string VIDEOPLAYER= "_VideoPlayer";
+
     }
 }
