@@ -14,13 +14,13 @@ namespace SVU.Logging.IServices
         /// </summary>
         /// <param name="ex"></param>
         /// <returns></returns>
-        Task LogException(Exception ex);
+        void LogException(Exception ex);
         /// <summary>
         /// Logs a request data
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        Task LogRequest(HttpRequest data);
+        void LogRequest(HttpRequest data);
 
     }
 }

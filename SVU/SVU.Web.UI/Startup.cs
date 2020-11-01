@@ -16,6 +16,7 @@ using SVU.Logging.Services;
 using SVU.Web.UI.Middlewares;
 using SVU.Web.UI.Models.Configuration;
 using System;
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
 
 namespace SVU.Web.UI
 {
@@ -41,7 +42,7 @@ namespace SVU.Web.UI
                     services.AddSingleton<ILoggingService, DefaultLoggingSservice>();
                     break;
                 case "production":
-                    services.AddSingleton<ILoggingService, DefaultLoggingSservice>();
+                    services.AddSingleton<ILoggingService, Log4netLogginService>();
                     //Stoped logging due some erros in Azure app service 30 / 05 / 2020 
                     //  TODO: needs to be fixed throughing 	System.InvalidOperationException
                     //services.AddSingleton<ILoggingService, SaveMyDataLoggingService>();

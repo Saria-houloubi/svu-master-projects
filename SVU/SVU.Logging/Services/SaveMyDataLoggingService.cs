@@ -45,7 +45,7 @@ namespace SVU.Logging.Services
         }
         #endregion
 
-        public async Task LogRequest(HttpRequest httpRequest)
+        public void LogRequest(HttpRequest httpRequest)
         {
 
             #region Read the request body if any
@@ -56,7 +56,7 @@ namespace SVU.Logging.Services
                 var injectedRequestStream = new MemoryStream();
                 using (StreamReader reader = new StreamReader(httpRequest.Body))
                 {
-                    requestBody = await reader.ReadToEndAsync();
+                    requestBody = reader.ReadToEndAsync().Result;
                     //Rewrite the body back to the request
                     var bytesToWrite = Encoding.UTF8.GetBytes(requestBody);
                     injectedRequestStream.Write(bytesToWrite, 0, bytesToWrite.Length);
@@ -65,31 +65,39 @@ namespace SVU.Logging.Services
                 }
             }
             #endregion
-            await CreateRecord(SaveMyDataConfiguration.DbName, SaveMyDataConfiguration.RequestsTableName, new
+            Task.Run(async () =>
             {
-                httpRequest.Method,
-                Host = httpRequest.Host.HasValue ? httpRequest.Host.Host : "No host found",
-                httpRequest.IsHttps,
-                QueryString = httpRequest.QueryString.HasValue ? httpRequest.QueryString.Value : "No Query string values",
-                httpRequest.Path,
-                httpRequest.PathBase,
-                ContentType = httpRequest.ContentType ?? "No ContentType",
-                Content = requestBody,
-                IP4 = httpRequest.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
-                DataTime = DateTime.UtcNow.ToString()
+                await CreateRecord(SaveMyDataConfiguration.DbName, SaveMyDataConfiguration.RequestsTableName, new
+                {
+                    httpRequest.Method,
+                    Host = httpRequest.Host.HasValue ? httpRequest.Host.Host : "No host found",
+                    httpRequest.IsHttps,
+                    QueryString = httpRequest.QueryString.HasValue ? httpRequest.QueryString.Value : "No Query string values",
+                    httpRequest.Path,
+                    httpRequest.PathBase,
+                    ContentType = httpRequest.ContentType ?? "No ContentType",
+                    Content = requestBody,
+                    IP4 = httpRequest.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
+                    DataTime = DateTime.UtcNow.ToString()
+                });
             });
+
         }
 
-        public async Task LogException(Exception ex)
+        public void LogException(Exception ex)
         {
-            await CreateRecord(SaveMyDataConfiguration.DbName, SaveMyDataConfiguration.ExceptionTableName, new
+            Task.Run(async () =>
             {
-                ex.Message,
-                BaseMessage = ex.GetBaseException().Message,
-                Source = ex.Source ?? "Unkown Source",
-                StackTrace = ex.StackTrace ?? "Unkown stacktrace",
-                DataTime = DateTime.UtcNow.ToString()
+                await CreateRecord(SaveMyDataConfiguration.DbName, SaveMyDataConfiguration.ExceptionTableName, new
+                {
+                    ex.Message,
+                    BaseMessage = ex.GetBaseException().Message,
+                    Source = ex.Source ?? "Unkown Source",
+                    StackTrace = ex.StackTrace ?? "Unkown stacktrace",
+                    DataTime = DateTime.UtcNow.ToString()
+                });
             });
+
         }
 
         #region Helpers

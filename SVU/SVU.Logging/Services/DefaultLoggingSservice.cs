@@ -19,18 +19,14 @@ namespace SVU.Logging.Services
 
         }
         #endregion
-        public Task LogException(Exception ex)
+        public void LogException(Exception ex)
         {
             Console.WriteLine(ex.GetBaseException().Message);
-
-            return Task.CompletedTask;
         }
 
-        public Task LogRequest(HttpRequest data)
+        public void LogRequest(HttpRequest data)
         {
             Console.WriteLine(data.ToString());
-
-            return Task.CompletedTask;
         }
     }
 }
