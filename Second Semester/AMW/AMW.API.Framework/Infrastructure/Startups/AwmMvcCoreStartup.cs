@@ -8,7 +8,7 @@ namespace AMW.API.Framework.Infrastructure.Startups
 {
     public class AmwMvcCoreStartup : IAmwStartUp
     {
-        public int Order => 1;
+        public int Order => 1000;
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IConfiguration configuration)
         {
@@ -31,6 +31,8 @@ namespace AMW.API.Framework.Infrastructure.Startups
                 .AddApiExplorer();
 
             builder.AddFormatterMappings();
+
+            builder.AddDataAnnotations();
 
             builder.AddJsonFormatters();
         }
