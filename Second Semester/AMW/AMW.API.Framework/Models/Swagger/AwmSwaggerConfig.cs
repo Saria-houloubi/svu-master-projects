@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AMW.API.Models.Swagger
+namespace AMW.API.Framework.Models.Swagger
 {
     public class AwmSwaggerConfig
     {

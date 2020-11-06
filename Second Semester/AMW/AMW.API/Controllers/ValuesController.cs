@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AMW.API.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AMW.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : BaseController
     {
+        public ValuesController()
+        {
+
+        }
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
