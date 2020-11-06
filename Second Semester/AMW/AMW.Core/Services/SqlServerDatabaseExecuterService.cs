@@ -85,11 +85,8 @@ namespace AMW.Core.Services
 
                         using (var reader = await cmd.ExecuteReaderAsync())
                         {
-                            //Check if an erro happened
-                            if (reader.RecordsAffected == -1)
-                            {
-                                reader.Read();
-                            }
+                            reader.Read();
+
                             return converter(new AwmSqlDataReaderWrapper(reader, cmd.CommandText));
                         }
                     }

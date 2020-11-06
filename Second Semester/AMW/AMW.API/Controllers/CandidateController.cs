@@ -39,7 +39,7 @@ namespace AMW.API.Controllers
             {
                 var result = await candidateService.InsertOrUpdateAsync(model);
 
-                return Ok(GetResponse(result, System.Net.HttpStatusCode.Created));
+                return Ok(GetResponse(result, model.Id > 0 ? System.Net.HttpStatusCode.OK : System.Net.HttpStatusCode.Created));
             }
             catch (System.Exception ex)
             {
