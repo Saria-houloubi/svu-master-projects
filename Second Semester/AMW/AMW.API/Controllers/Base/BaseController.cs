@@ -59,7 +59,6 @@ namespace AMW.API.Controllers.Base
         {
             var res = new AmwResponse<T>
             {
-                Errors = new List<ErrorModel>(),
                 HasErrors = true,
                 Status = System.Net.HttpStatusCode.InternalServerError
             };
@@ -80,35 +79,24 @@ namespace AMW.API.Controllers.Base
 
         protected AmwResponse<object> GetResponse(object data, HttpStatusCode status = HttpStatusCode.OK)
         {
-            if (data == null)
-            {
-                return new AmwResponse<object>()
-                {
-                    HasErrors = true,
-                    Data = new
-                    {
-                        Message = "Unkown error"
-                    },
-                    Status = HttpStatusCode.InternalServerError
-                };
-            }
-
-            if (data is IEnumerable<object> dataList)
-            {
-                return new AmwResponse<object>()
-                {
-                    Data = data,
-                    Count = dataList.Count(),
-                    Status = status
-                };
-            }
-
-            return new AmwResponse<object>()
+            var response = new AmwResponse<object>()
             {
                 Data = data,
                 Count = 1,
                 Status = status
             };
+
+            if (data == null)
+            {
+                response.HasErrors = true;
+                response.Count = 0;
+            }
+            else if (data is IEnumerable<object> dataList)
+            {
+                response.Count = dataList.Count();
+            }
+
+            return response;
         }
     }
     #endregion

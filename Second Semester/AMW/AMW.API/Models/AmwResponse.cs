@@ -14,5 +14,13 @@ namespace AMW.API.Models
         public bool HasErrors { get; set; }
         public List<ErrorModel> Errors { get; set; }
         #endregion
+
+        #region Constructer
+
+        public AmwResponse()
+        {
+            Errors = new List<ErrorModel>();
+        }
+        #endregion
     }
 }

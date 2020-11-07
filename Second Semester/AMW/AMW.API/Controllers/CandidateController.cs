@@ -1,5 +1,6 @@
 ﻿using AMW.API.Controllers.Base;
 using AMW.Core.IServices;
+using AMW.Data.Models.Amw;
 using AMW.Data.Models.Candidates;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -11,15 +12,17 @@ namespace AMW.API.Controllers
 
         #region Properties
         private readonly IRepositoryService<Candidate> candidateService;
+        private readonly IAuthService<Candidate, AmwSecure> authCandidateService;
         #endregion
 
         #region Constructer
         /// <summary>
         /// Default constructer
         /// </summary>
-        public CandidateController(IRepositoryService<Candidate> candidateService)
+        public CandidateController(IRepositoryService<Candidate> candidateService, IAuthService<Candidate, AmwSecure> authCandidateService)
         {
             this.candidateService = candidateService;
+            this.authCandidateService = authCandidateService;
         }
         #endregion
 
@@ -29,7 +32,7 @@ namespace AMW.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]CandidateSecure model)
+        public async Task<IActionResult> Post([FromBody]CandidateRegister model)
         {
             if (!ModelState.IsValid)
             {
@@ -55,8 +58,8 @@ namespace AMW.API.Controllers
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpPost("Filter")]
-        public async Task<IActionResult> PostFilter([FromBody] CandidateFilter filter)
+        [HttpPost(nameof(Filter))]
+        public async Task<IActionResult> Filter([FromBody] CandidateFilter filter)
         {
             if (!ModelState.IsValid)
             {
@@ -68,6 +71,41 @@ namespace AMW.API.Controllers
                 var result = await candidateService.GetByFilterAsync(filter);
 
                 return Ok(GetResponse(result));
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(ex.Message, ex);
+
+                return Ok(GetExceptionResponse<object>(ex));
+            }
+        }
+
+        /// <summary>
+        /// Tries to authenticate a candidate
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost(nameof(Auth))]
+        public async Task<IActionResult> Auth([FromBody] AmwSecure model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Ok(GetModelValidationResponse<object>());
+            }
+
+            try
+            {
+                var result = await authCandidateService.TryAuthenticateAsync(model);
+
+                var response = GetResponse(result, result != null ? System.Net.HttpStatusCode.OK : System.Net.HttpStatusCode.Unauthorized);
+
+                if (response.Status == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    response.HasErrors = true;
+                    response.Errors.Add(new Models.ErrorModel("Username or password is incorrect please try again"));
+                }
+
+                return Ok(response);
             }
             catch (System.Exception ex)
             {

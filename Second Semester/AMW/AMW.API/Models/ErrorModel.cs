@@ -9,5 +9,22 @@ namespace AMW.API.Models
 
         public Exception Exception { get; set; }
         #endregion
+
+        #region Constructers
+        /// <summary>
+        /// Default constructer
+        /// </summary>
+        public ErrorModel()
+        {
+
+        }
+        /// <summary>
+        /// Error constructer
+        /// </summary>
+        public ErrorModel(string error)
+        {
+            this.Error = error;
+        }
+        #endregion
     }
 }

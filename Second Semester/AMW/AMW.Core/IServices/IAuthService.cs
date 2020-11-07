@@ -1,7 +1,14 @@
-﻿namespace AMW.Core.IServices
+﻿using System.Threading.Tasks;
+
+namespace AMW.Core.IServices
 {
-    public interface IAuthService
+    /// <summary>
+    /// Authenticaion abstract 
+    /// </summary>
+    /// <typeparam name="TFor">The authorizsd return model</typeparam>
+    /// <typeparam name="TSecure">the model to get information based on</typeparam>
+    public interface IAuthService<TFor, TSecure>
     {
-        bool TryLogin(string username, string password, out int id);
+        Task<TFor> TryAuthenticateAsync(TSecure entity);
     }
 }

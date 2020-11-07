@@ -2,6 +2,7 @@
 using AMW.Core.IServices;
 using AMW.Core.Services;
 using AMW.Core.Services.Candidates;
+using AMW.Data.Models.Amw;
 using AMW.Data.Models.Candidates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,7 @@ namespace AMW.API.Framework.Infrastructure.Startups
         {
             services.AddSingleton<IDatabaseExecuterService, SqlServerDatabaseExecuterService>();
             services.AddSingleton<IRepositoryService<Candidate>, CandidateService>();
+            services.AddSingleton<IAuthService<Candidate,AmwSecure>, CandidateAuthService>();
         }
     }
 }
