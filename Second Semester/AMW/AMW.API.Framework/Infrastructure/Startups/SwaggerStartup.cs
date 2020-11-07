@@ -1,5 +1,4 @@
 ﻿using AMW.API.Framework.Abstracion;
-using AMW.API.Framework.Filters.Swagger;
 using AMW.API.Framework.Models.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
