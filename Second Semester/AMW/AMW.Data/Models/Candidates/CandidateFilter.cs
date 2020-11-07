@@ -1,5 +1,6 @@
 ﻿using AMW.Data.Attributes;
 using AMW.Data.Models.Base;
+using Newtonsoft.Json;
 
 namespace AMW.Data.Models.Candidates
 {
@@ -8,6 +9,7 @@ namespace AMW.Data.Models.Candidates
         #region Properties
         [SqlParam]
         public string Login { get; set; }
+        [JsonIgnore]
         public string Password { get; set; }
         #endregion
     }

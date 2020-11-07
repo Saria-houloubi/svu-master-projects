@@ -28,7 +28,8 @@ namespace AMW.API.Framework.Infrastructure.Startups
         {
             var builder = services.AddMvcCore()
                 //This is added for swagger to get find api endpoints
-                .AddApiExplorer();
+                .AddApiExplorer()
+                .AddAuthorization();
 
             builder.AddFormatterMappings();
 

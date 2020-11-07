@@ -2,6 +2,7 @@
 using AMW.Core.IServices;
 using AMW.Data.Models.Amw;
 using AMW.Data.Models.Candidates;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -32,6 +33,7 @@ namespace AMW.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody]CandidateRegister model)
         {
             if (!ModelState.IsValid)
@@ -41,6 +43,11 @@ namespace AMW.API.Controllers
 
             try
             {
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+                    model.Id = int.Parse(User.Identity.Name);
+                }
+
                 var result = await candidateService.InsertOrUpdateAsync(model);
 
                 return Ok(GetResponse(result, model.Id > 0 ? System.Net.HttpStatusCode.OK : System.Net.HttpStatusCode.Created));
@@ -86,6 +93,7 @@ namespace AMW.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost(nameof(Auth))]
+        [AllowAnonymous]
         public async Task<IActionResult> Auth([FromBody] AmwSecure model)
         {
             if (!ModelState.IsValid)
