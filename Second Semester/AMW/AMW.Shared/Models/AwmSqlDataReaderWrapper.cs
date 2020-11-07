@@ -8,6 +8,8 @@ namespace AMW.Shared.Models
         public SqlDataReader Reader { get; private set; }
 
         public string QueryText { get; private set; }
+
+        public bool HasRows => Reader != null && Reader.HasRows;
         #endregion
 
         #region Constructer

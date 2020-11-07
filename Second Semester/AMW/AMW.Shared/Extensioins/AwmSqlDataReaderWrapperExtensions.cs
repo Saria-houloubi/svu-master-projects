@@ -21,7 +21,6 @@ namespace AMW.Shared.Extensions
                 {
                     try
                     {
-
                         return (T)reader.Reader[column];
                     }
                     catch (System.Exception ex)

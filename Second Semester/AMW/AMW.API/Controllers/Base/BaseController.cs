@@ -78,7 +78,7 @@ namespace AMW.API.Controllers.Base
             return res;
         }
 
-        protected AmwResponse<object> GetResponse(object data, HttpStatusCode status)
+        protected AmwResponse<object> GetResponse(object data, HttpStatusCode status = HttpStatusCode.OK)
         {
             if (data == null)
             {

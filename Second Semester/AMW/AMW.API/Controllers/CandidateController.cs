@@ -22,6 +22,7 @@ namespace AMW.API.Controllers
             this.candidateService = candidateService;
         }
         #endregion
+
         /// <summary>
         /// Creates a new candidate
         /// </summary>
@@ -40,6 +41,33 @@ namespace AMW.API.Controllers
                 var result = await candidateService.InsertOrUpdateAsync(model);
 
                 return Ok(GetResponse(result, model.Id > 0 ? System.Net.HttpStatusCode.OK : System.Net.HttpStatusCode.Created));
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(ex.Message, ex);
+
+                return Ok(GetExceptionResponse<object>(ex));
+            }
+        }
+
+        /// <summary>
+        /// Gets candidate based on sent filters
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpPost("Filter")]
+        public async Task<IActionResult> PostFilter([FromBody] CandidateFilter filter)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Ok(GetModelValidationResponse<object>());
+            }
+
+            try
+            {
+                var result = await candidateService.GetByFilterAsync(filter);
+
+                return Ok(GetResponse(result));
             }
             catch (System.Exception ex)
             {

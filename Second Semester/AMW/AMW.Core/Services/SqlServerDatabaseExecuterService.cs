@@ -75,7 +75,10 @@ namespace AMW.Core.Services
                     {
                         foreach (var param in paramters)
                         {
-                            cmd.Parameters.Add(new SqlParameter(param.Key, param.Value));
+                            if (param.Value != null)
+                            {
+                                cmd.Parameters.Add(new SqlParameter(param.Key, param.Value));
+                            }
                         }
                     }
 

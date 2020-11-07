@@ -7,10 +7,9 @@ namespace AMW.Core.IServices
     public interface IRepositoryService<TEntity>
         where TEntity : BaseEntity
     {
-
-        TEntity GetById(int id);
-
         Task<TEntity> GetByIdAsync(int id);
+
+        Task<IEnumerable<TEntity>> GetByFilterAsync(BaseEntityFilter filter);
 
         Task<TEntity> InsertOrUpdateAsync(TEntity entity);
 
