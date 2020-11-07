@@ -15,10 +15,10 @@ namespace AMW.API.Controllers.Base
     [Route("api/[controller]")]
     public abstract partial class BaseController : Controller
     {
-
         #region Properties
         public ILog log { get; protected set; }
         #endregion
+
         #region Constructer
         /// <summary>
         /// Default constroller
@@ -31,7 +31,7 @@ namespace AMW.API.Controllers.Base
 
         #region Methods
 
-        protected AmwResponse<T> GetModelValidationResponse<T>()
+        protected virtual AmwResponse<T> GetModelValidationResponse<T>()
         {
             var res = new AmwResponse<T>
             {
@@ -55,7 +55,7 @@ namespace AMW.API.Controllers.Base
             return res;
         }
 
-        protected AmwResponse<T> GetExceptionResponse<T>(Exception ex)
+        protected virtual AmwResponse<T> GetExceptionResponse<T>(Exception ex)
         {
             var res = new AmwResponse<T>
             {
@@ -77,7 +77,7 @@ namespace AMW.API.Controllers.Base
             return res;
         }
 
-        protected AmwResponse<object> GetResponse(object data, HttpStatusCode status = HttpStatusCode.OK)
+        protected virtual AmwResponse<object> GetResponse(object data, HttpStatusCode status = HttpStatusCode.OK)
         {
             var response = new AmwResponse<object>()
             {
@@ -98,6 +98,13 @@ namespace AMW.API.Controllers.Base
 
             return response;
         }
+
+        protected virtual string GetJWTToken(object data)
+        {
+
+
+            return string.Empty;
+        }
+        #endregion
     }
-    #endregion
 }

@@ -2,6 +2,7 @@
 using AMW.Shared.Extensions;
 using AMW.Shared.Models;
 using System;
+using System.Collections.Generic;
 
 namespace AMW.Data.Models.Base
 {
@@ -12,6 +13,11 @@ namespace AMW.Data.Models.Base
         public int Id { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime LastUpdatedDate { get; set; }
+
+        /// <summary>
+        /// Holds any runtime extra properties that could be assigns to the entit
+        /// </summary>
+        public Dictionary<string, object> Extra { get; set; }
         #endregion
 
         #region Constructers
@@ -20,7 +26,7 @@ namespace AMW.Data.Models.Base
         /// </summary>
         public BaseEntity()
         {
-
+            Extra = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -28,6 +34,7 @@ namespace AMW.Data.Models.Base
         /// </summary>
         /// <param name="reader"></param>
         public BaseEntity(AwmSqlDataReaderWrapper reader)
+            : this()
         {
             if (reader == null)
             {
