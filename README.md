@@ -1,6 +1,4 @@
 # svu-master-projects
-Web science MS degree for SVU.
-
 Includes any university projects regarding my Computer Science Master degree
 
 ## Main
