@@ -37,9 +37,10 @@ namespace AMW.Core.Services.Candidates
             if (candidate != null && candidate is CandidateRegister fullInfo && fullInfo.Password.VertifyPassword(entity.Password))
             {
                 candidate.Extra.Add("token", CreateJwtToken(candidate));
+                return candidate;
             }
 
-            return candidate;
+            return null;
         }
     }
 }
