@@ -1,5 +1,6 @@
 ﻿using AMW.Data.Attributes;
 using AMW.Shared.Extensioins;
+using AMW.Shared.Extensioins.String;
 using AMW.Shared.Extensions;
 using AMW.Shared.Models;
 using System.ComponentModel.DataAnnotations;

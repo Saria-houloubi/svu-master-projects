@@ -1,4 +1,5 @@
 ﻿using AMW.API.Framework.Abstracion;
+using AMW.API.Framework.Filter.Swagger;
 using AMW.API.Framework.Models.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -63,9 +64,11 @@ namespace AMW.API.Framework.Infrastructure.Startups
 
                 });
 
+                options.SchemaFilter<SwaggerSchemaFilter>();
             });
 
             services.AddSwaggerGenNewtonsoftSupport();
+
         }
     }
 }

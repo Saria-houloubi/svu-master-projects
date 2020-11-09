@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace AMW.Shared.Extensioins
+namespace AMW.Shared.Extensioins.String
 {
     /// <summary>
     /// Extensions methods to encrpt strings
     /// </summary>
-    public static class StringEncryptionExtensions
+    public static partial class StringExtensions
     {
 
         #region Properties
@@ -15,6 +15,7 @@ namespace AMW.Shared.Extensioins
         /// </summary>
         public static int HashIteration { get; private set; } = 500;
         #endregion
+
         /// <summary>
         /// Hashes the password with a salt
         /// </summary>

@@ -1,4 +1,5 @@
 ﻿using AMW.Data.Attributes;
+using AMW.Data.Attributes.Swagger;
 using AMW.Shared.Extensions;
 using AMW.Shared.Models;
 using System;
@@ -10,13 +11,17 @@ namespace AMW.Data.Models.Base
     {
         #region Properties
         [SqlParam]
+        [SwaggerIgnore]
         public int Id { get; set; }
+        [SwaggerIgnore]
         public DateTime CreationDate { get; set; }
+        [SwaggerIgnore]
         public DateTime LastUpdatedDate { get; set; }
 
         /// <summary>
         /// Holds any runtime extra properties that could be assigns to the entit
         /// </summary>
+        [SwaggerIgnore]
         public Dictionary<string, object> Extra { get; set; }
         #endregion
 

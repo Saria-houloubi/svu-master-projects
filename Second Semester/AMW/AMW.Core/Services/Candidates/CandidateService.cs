@@ -2,7 +2,6 @@
 using AMW.Core.Services.Base;
 using AMW.Data.Models.Base;
 using AMW.Data.Models.Candidates;
-using AMW.Shared.Extensioins;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,11 +46,6 @@ namespace AMW.Core.Services.Candidates
                         filteredList.Add(new CandidateRegister(reader));
                     }
                 } while (reader.Reader.Read()); //we activate the read after as the first one is done in the base DB class
-                //if a password was provided then vertify ti
-                if (filter is CandidateFilter candidateFilter && !string.IsNullOrEmpty(candidateFilter.Password))
-                {
-                    filteredList = filteredList.Where(item => item.Password.VertifyPassword(candidateFilter.Password)).ToList();
-                }
                 return filteredList;
 
             }, GetEntityProperties(filter));
