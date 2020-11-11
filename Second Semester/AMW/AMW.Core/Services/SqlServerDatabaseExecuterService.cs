@@ -62,7 +62,7 @@ namespace AMW.Core.Services
             }
         }
 
-        public async Task<T> RunStoredProcedureAsync<T>(string name, Func<AwmSqlDataReaderWrapper, T> converter, Dictionary<string, object> paramters = null)
+        public async Task<T> RunStoredProcedureAsync<T>(string name, Func<AmwSqlDataReaderWrapper, T> converter, Dictionary<string, object> paramters = null)
         {
             using (var connection = new SqlConnection(GetConnectionString()))
             {
@@ -75,7 +75,7 @@ namespace AMW.Core.Services
                     {
                         foreach (var param in paramters)
                         {
-                            if (param.Value != null)
+                            if (param.Value != null && !string.IsNullOrEmpty(param.Value.ToString()))
                             {
                                 cmd.Parameters.Add(new SqlParameter(param.Key, param.Value));
                             }
@@ -90,7 +90,7 @@ namespace AMW.Core.Services
                         {
                             reader.Read();
 
-                            return converter(new AwmSqlDataReaderWrapper(reader, cmd.CommandText));
+                            return converter(new AmwSqlDataReaderWrapper(reader, cmd.CommandText));
                         }
                     }
                     catch (Exception ex)

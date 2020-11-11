@@ -12,7 +12,7 @@ namespace AMW.Core.IServices
     public interface IDatabaseExecuterService
     {
         Task<int> RunStoredProcedureAsync(string name, Dictionary<string, object> paramters = null);
-        Task<T> RunStoredProcedureAsync<T>(string name, Func<AwmSqlDataReaderWrapper, T> converter, Dictionary<string, object> paramters = null);
+        Task<T> RunStoredProcedureAsync<T>(string name, Func<AmwSqlDataReaderWrapper, T> converter, Dictionary<string, object> paramters = null);
 
     }
 }

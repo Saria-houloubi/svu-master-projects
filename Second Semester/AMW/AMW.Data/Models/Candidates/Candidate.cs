@@ -1,4 +1,5 @@
-﻿using AMW.Data.Attributes;
+﻿using AMW.Data.Abstraction.Parsing;
+using AMW.Data.Attributes;
 using AMW.Data.Models.Base;
 using AMW.Shared.Extensions;
 using AMW.Shared.Models;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AMW.Data.Models.Candidates
 {
-    public class Candidate : BaseEntity
+    public class Candidate : BaseEntity, IDataParse<AmwSqlDataReaderWrapper>
     {
         #region Properties
         [Required]
@@ -26,17 +27,15 @@ namespace AMW.Data.Models.Candidates
         {
 
         }
+        #endregion
 
-        /// <summary>
-        /// Sqldata reader
-        /// </summary>
-        public Candidate(AwmSqlDataReaderWrapper reader)
-            : base(reader)
+        public override void ParseData(AmwSqlDataReaderWrapper reader)
         {
+            base.ParseData(reader);
+
             FullName = reader.GetValueIfExisits<string>(nameof(FullName));
             Tel = reader.GetValueIfExisits<string>(nameof(Tel));
             Experince = reader.GetValueIfExisits<int>(nameof(Experince));
         }
-        #endregion
     }
 }

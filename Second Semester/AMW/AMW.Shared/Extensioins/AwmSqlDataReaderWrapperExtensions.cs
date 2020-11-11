@@ -12,7 +12,7 @@ namespace AMW.Shared.Extensions
         /// </summary>
         private static Dictionary<string, List<string>> queryColumns = new Dictionary<string, List<string>>();
         private static readonly ILog log = LogManager.GetLogger(nameof(AwmSqlDataReaderWrapperExtensions));
-        public static T GetValueIfExisits<T>(this AwmSqlDataReaderWrapper reader, string column)
+        public static T GetValueIfExisits<T>(this AmwSqlDataReaderWrapper reader, string column)
         {
             //Check if the query has been run before
             if (queryColumns.ContainsKey(reader.QueryText))

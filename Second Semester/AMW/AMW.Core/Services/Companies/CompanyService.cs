@@ -1,31 +1,33 @@
 ﻿using AMW.Core.IServices;
 using AMW.Core.Services.Base;
 using AMW.Data.Models.Base;
-using AMW.Data.Models.Candidates;
+using AMW.Data.Models.Companies;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AMW.Core.Services.Candidates
+namespace AMW.Core.Services.Companies
 {
-    public partial class CandidateService : BaseAmwRepositoryService, IRepositoryService<Candidate>
+    public partial class CompanyService : BaseAmwRepositoryService, IRepositoryService<Company>
     {
-
-        #region Properties
+        #region Poperties
         private readonly IDatabaseExecuterService databaseExecuterService;
         #endregion
 
         #region Constructer
-        public CandidateService(IDatabaseExecuterService databaseExecuterService)
+        /// <summary>
+        /// Default constructer
+        /// </summary>
+        public CompanyService(IDatabaseExecuterService databaseExecuterService)
         {
             this.databaseExecuterService = databaseExecuterService;
         }
         #endregion
-
-        public async Task<Candidate> GetByIdAsync(int id)
+        public async Task<Company> GetByIdAsync(int id)
         {
             return await databaseExecuterService.RunStoredProcedureAsync(GetByIdProc, (reader) =>
             {
-                var candidate = new Candidate();
+                var candidate = new Company();
 
                 candidate.ParseData(reader);
 
@@ -36,17 +38,17 @@ namespace AMW.Core.Services.Candidates
             });
         }
 
-        public async Task<IEnumerable<Candidate>> GetByFilterAsync(BaseEntityFilter filter)
+        public async Task<IEnumerable<Company>> GetByFilterAsync(BaseEntityFilter filter)
         {
             return await databaseExecuterService.RunStoredProcedureAsync(GetByFilterProc, (reader) =>
             {
-                var filteredList = new List<CandidateRegister>();
+                var filteredList = new List<CompanyRegister>();
 
                 do
                 {
                     if (reader.HasRows)
                     {
-                        var candidate = new CandidateRegister();
+                        var candidate = new CompanyRegister();
 
                         candidate.ParseData(reader);
 
@@ -58,21 +60,21 @@ namespace AMW.Core.Services.Candidates
             }, GetEntityProperties(filter));
         }
 
-        public async Task<Candidate> InsertOrUpdateAsync(Candidate entity)
+        public async Task<Company> InsertOrUpdateAsync(Company entity)
         {
             return await databaseExecuterService.RunStoredProcedureAsync(InsertOrUpdateCandiateProc, (reader) =>
-              {
-                  var candidate = new Candidate();
+            {
+                var candidate = new Company();
 
-                  candidate.ParseData(reader);
+                candidate.ParseData(reader);
 
-                  return candidate;
-              }, GetEntityProperties(entity));
+                return candidate;
+            }, GetEntityProperties(entity));
         }
 
-        public async Task<IEnumerable<Candidate>> InsertOrUpdateAsync(IEnumerable<Candidate> entities)
+        public async Task<IEnumerable<Company>> InsertOrUpdateAsync(IEnumerable<Company> entities)
         {
-            var candidates = new List<Candidate>();
+            var candidates = new List<Company>();
 
             foreach (var item in entities)
             {

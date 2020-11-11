@@ -2,7 +2,7 @@
 
 namespace AMW.Shared.Models
 {
-    public class AwmSqlDataReaderWrapper
+    public class AmwSqlDataReaderWrapper
     {
         #region Properties
         public SqlDataReader Reader { get; private set; }
@@ -16,7 +16,7 @@ namespace AMW.Shared.Models
         /// <summary>
         /// 
         /// </summary>
-        public AwmSqlDataReaderWrapper(SqlDataReader reader, string query)
+        public AmwSqlDataReaderWrapper(SqlDataReader reader, string query)
         {
             this.Reader = reader;
             this.QueryText = query;

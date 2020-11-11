@@ -5,13 +5,14 @@ using AMW.Shared.Extensions;
 using AMW.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace AMW.Data.Models.Candidates
+namespace AMW.Data.Models.Companies
 {
-    public class CandidateRegister : Candidate, IDataParse<AmwSqlDataReaderWrapper>
+    public class CompanyRegister : Company, IDataParse<AmwSqlDataReaderWrapper>
     {
         #region Properties
-        [Required]
         [SqlParam]
+        [Required]
+
         public string Login { get; set; }
 
         private string password;
@@ -33,15 +34,6 @@ namespace AMW.Data.Models.Candidates
         private bool noHash;
         #endregion
 
-        #region Constructer
-        /// <summary>
-        /// Default constructer
-        /// </summary>
-        public CandidateRegister()
-        {
-
-        }
-        #endregion
 
         public override void ParseData(AmwSqlDataReaderWrapper reader)
         {

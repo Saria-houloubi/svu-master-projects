@@ -1,4 +1,5 @@
-﻿using AMW.Data.Attributes;
+﻿using AMW.Data.Abstraction.Parsing;
+using AMW.Data.Attributes;
 using AMW.Data.Attributes.Swagger;
 using AMW.Shared.Extensions;
 using AMW.Shared.Models;
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 
 namespace AMW.Data.Models.Base
 {
-    public abstract class BaseEntity
+    public abstract class BaseEntity: IDataParse<AmwSqlDataReaderWrapper>
     {
         #region Properties
         [SqlParam]
@@ -33,13 +34,10 @@ namespace AMW.Data.Models.Base
         {
             Extra = new Dictionary<string, object>();
         }
+        #endregion
 
-        /// <summary>
-        /// Sql reader constructer
-        /// </summary>
-        /// <param name="reader"></param>
-        public BaseEntity(AwmSqlDataReaderWrapper reader)
-            : this()
+
+        public virtual void ParseData(AmwSqlDataReaderWrapper reader)
         {
             if (reader == null)
             {
@@ -53,6 +51,5 @@ namespace AMW.Data.Models.Base
                 LastUpdatedDate = reader.GetValueIfExisits<DateTime>(nameof(LastUpdatedDate));
             }
         }
-        #endregion
     }
 }
