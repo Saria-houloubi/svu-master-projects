@@ -40,6 +40,7 @@ namespace AMW.Core.Services.Base
                 //Set a unique key for the clam
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name,model.Id.ToString()),
+                new Claim(ClaimTypes.Role,typeof(TFor).Name)
             };
             //Create the credentials that are used for the token
             var credentials = new SigningCredentials(

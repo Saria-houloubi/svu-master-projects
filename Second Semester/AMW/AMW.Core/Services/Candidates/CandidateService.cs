@@ -1,42 +1,22 @@
-﻿using AMW.Core.IServices;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AMW.Core.IServices;
 using AMW.Core.Services.Base;
 using AMW.Data.Models.Base;
 using AMW.Data.Models.Candidates;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace AMW.Core.Services.Candidates
 {
-    public partial class CandidateService : BaseAmwRepositoryService, IRepositoryService<Candidate>
+    public partial class CandidateService : BaseAmwRepositoryService<Candidate>
     {
-
-        #region Properties
-        private readonly IDatabaseExecuterService databaseExecuterService;
-        #endregion
-
         #region Constructer
         public CandidateService(IDatabaseExecuterService databaseExecuterService)
+            : base(databaseExecuterService)
         {
-            this.databaseExecuterService = databaseExecuterService;
         }
         #endregion
 
-        public async Task<Candidate> GetByIdAsync(int id)
-        {
-            return await databaseExecuterService.RunStoredProcedureAsync(GetByIdProc, (reader) =>
-            {
-                var candidate = new Candidate();
-
-                candidate.ParseData(reader);
-
-                return candidate;
-            }, new Dictionary<string, object>()
-            {
-                {nameof(id),id }
-            });
-        }
-
-        public async Task<IEnumerable<Candidate>> GetByFilterAsync(BaseEntityFilter filter)
+        public override async Task<IEnumerable<Candidate>> GetByFilterAsync(BaseEntityFilter filter)
         {
             return await databaseExecuterService.RunStoredProcedureAsync(GetByFilterProc, (reader) =>
             {
@@ -46,40 +26,16 @@ namespace AMW.Core.Services.Candidates
                 {
                     if (reader.HasRows)
                     {
-                        var candidate = new CandidateRegister();
+                        var entity = new CandidateRegister();
 
-                        candidate.ParseData(reader);
+                        entity.ParseData(reader);
 
-                        filteredList.Add(candidate);
+                        filteredList.Add(entity);
                     }
                 } while (reader.Reader.Read()); //we activate the read after as the first one is done in the base DB class
                 return filteredList;
 
             }, GetEntityProperties(filter));
-        }
-
-        public async Task<Candidate> InsertOrUpdateAsync(Candidate entity)
-        {
-            return await databaseExecuterService.RunStoredProcedureAsync(InsertOrUpdateCandiateProc, (reader) =>
-              {
-                  var candidate = new Candidate();
-
-                  candidate.ParseData(reader);
-
-                  return candidate;
-              }, GetEntityProperties(entity));
-        }
-
-        public async Task<IEnumerable<Candidate>> InsertOrUpdateAsync(IEnumerable<Candidate> entities)
-        {
-            var candidates = new List<Candidate>();
-
-            foreach (var item in entities)
-            {
-                candidates.Add(await InsertOrUpdateAsync(item));
-            }
-
-            return candidates;
         }
     }
 }

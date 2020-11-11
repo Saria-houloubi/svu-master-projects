@@ -1,7 +1,6 @@
 ﻿using AMW.API.Attributes;
 using AMW.API.Models;
 using log4net;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

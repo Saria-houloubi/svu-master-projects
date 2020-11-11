@@ -1,7 +1,10 @@
-﻿using AMW.Data.Attributes;
+﻿using AMW.Core.IServices;
+using AMW.Data.Attributes;
+using AMW.Data.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AMW.Core.Services.Base
 {
@@ -20,4 +23,5 @@ namespace AMW.Core.Services.Base
                ?.ToDictionary(prop => prop.Name, prop => prop.GetValue(entity));
         }
     }
+   
 }

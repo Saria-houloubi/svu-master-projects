@@ -27,7 +27,7 @@ namespace AMW.API.Controllers
         #endregion
 
         /// <summary>
-        /// Creates a new candidate
+        /// Creates a new company
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -60,7 +60,7 @@ namespace AMW.API.Controllers
         }
 
         /// <summary>
-        /// Gets candidate based on sent filters
+        /// Gets company based on sent filters
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
@@ -87,7 +87,7 @@ namespace AMW.API.Controllers
         }
 
         /// <summary>
-        /// Tries to authenticate a candidate
+        /// Tries to authenticate a company
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
