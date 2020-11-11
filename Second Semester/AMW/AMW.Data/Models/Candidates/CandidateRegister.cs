@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AMW.Data.Models.Candidates
 {
-    public class CandidateRegister : Candidate, IDataParse<AmwSqlDataReaderWrapper>
+    public class CandidateRegister : Candidate
     {
         #region Properties
         [Required]

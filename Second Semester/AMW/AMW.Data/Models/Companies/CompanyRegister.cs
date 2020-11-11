@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AMW.Data.Models.Companies
 {
-    public class CompanyRegister : Company, IDataParse<AmwSqlDataReaderWrapper>
+    public class CompanyRegister : Company
     {
         #region Properties
         [SqlParam]
