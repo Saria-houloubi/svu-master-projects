@@ -17,6 +17,8 @@ namespace AMW.Data.Models.Candidates
         public string Tel { get; set; }
         [SqlParam]
         public int Experince { get; set; }
+        [SqlParam]
+        public string EducationLevel { get; set; }
         #endregion
 
         #region Constructer
@@ -36,6 +38,7 @@ namespace AMW.Data.Models.Candidates
             FullName = reader.GetValueIfExisits<string>(nameof(FullName));
             Tel = reader.GetValueIfExisits<string>(nameof(Tel));
             Experince = reader.GetValueIfExisits<int>(nameof(Experince));
+            EducationLevel = reader.GetValueIfExisits<string>(nameof(EducationLevel));
         }
     }
 }

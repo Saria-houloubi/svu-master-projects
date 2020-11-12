@@ -8,6 +8,8 @@ namespace AMW.Data.Models.Candidates
         #region Properties
         [SqlParam]
         public string Login { get; set; }
+        [SqlParam]
+        public string EducationLevel { get; set; }
         #endregion
     }
 }
