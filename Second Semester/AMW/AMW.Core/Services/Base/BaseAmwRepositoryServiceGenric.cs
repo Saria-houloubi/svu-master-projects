@@ -29,6 +29,12 @@ namespace AMW.Core.Services.Base
         #endregion
         public virtual async Task<T> GetByIdAsync(int id)
         {
+
+            if (string.IsNullOrEmpty(GetByIdProc))
+            {
+                throw new NotImplementedException("Could not get record by Id as no function was provided");
+            }
+
             return await databaseExecuterService.RunStoredProcedureAsync(GetByIdProc, (reader) =>
             {
                 var entity = new T();
@@ -44,6 +50,11 @@ namespace AMW.Core.Services.Base
 
         public virtual async Task<IEnumerable<T>> GetByFilterAsync(BaseEntityFilter filter)
         {
+            if (string.IsNullOrEmpty(GetByFilterProc))
+            {
+                throw new NotImplementedException("Could not get record by filter as no function was provided");
+            }
+
             return await databaseExecuterService.RunStoredProcedureAsync(GetByFilterProc, (reader) =>
             {
                 var filteredList = new List<T>();
@@ -66,6 +77,11 @@ namespace AMW.Core.Services.Base
 
         public virtual async Task<T> InsertOrUpdateAsync(T entity)
         {
+            if (string.IsNullOrEmpty(InsertOrUpdateProc))
+            {
+                throw new NotImplementedException("Could not add/update record as no function was provided");
+            }
+
             return await databaseExecuterService.RunStoredProcedureAsync(InsertOrUpdateProc, (reader) =>
             {
                 var entityObj = new T();
