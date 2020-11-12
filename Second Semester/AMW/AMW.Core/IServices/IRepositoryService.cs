@@ -15,5 +15,7 @@ namespace AMW.Core.IServices
 
         Task<IEnumerable<TEntity>> InsertOrUpdateAsync(IEnumerable<TEntity> entities);
 
+        Task<bool> DeleteAsync(TEntity entity);
+
     }
 }

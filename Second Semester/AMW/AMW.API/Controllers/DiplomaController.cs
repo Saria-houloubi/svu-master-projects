@@ -110,5 +110,45 @@ namespace AMW.API.Controllers
                 return Ok(GetExceptionResponse<object>(ex));
             }
         }
+
+        /// <summary>
+        /// Delete a diploma for 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id <= 0)
+            {
+                ModelState.AddModelError("Bad request", "Id must be over 0");
+                return Ok(GetModelValidationResponse<object>());
+            }
+            try
+            {
+
+                var result = await diplomaService.DeleteAsync(new Diploma()
+                {
+                    CandidateId = int.Parse(User.Identity.Name),
+                    Id = id
+                });
+
+                var response = GetResponse(result);
+
+                if (!result)
+                {
+                    //We just mark the count as 0 as nothing was changed
+                    response.Count = 0;
+                }
+
+                return Ok(response);
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(ex.Message, ex);
+
+                return Ok(GetExceptionResponse<object>(ex));
+            }
+        }
     }
 }

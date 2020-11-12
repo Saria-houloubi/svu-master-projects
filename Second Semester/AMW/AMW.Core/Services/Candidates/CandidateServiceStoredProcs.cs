@@ -4,6 +4,6 @@
     {
         public override string GetByFilterProc => "Amw.Candidate_GetByFilter";
         public override string GetByIdProc => "Amw.Candidate_GetById";
-        public override string InsertOrUpdateCandiateProc => "Amw.Candidate_InsertOrUpdate";
+        public override string InsertOrUpdateProc => "Amw.Candidate_InsertOrUpdate";
     }
 }
