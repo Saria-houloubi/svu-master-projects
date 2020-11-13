@@ -25,8 +25,6 @@ namespace AMW.API.Controllers
         }
         #endregion
 
-
-
         /// <summary>
         /// Creates a new job
         /// </summary>
@@ -57,33 +55,6 @@ namespace AMW.API.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets the list of jobs for a user
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Ok(GetModelValidationResponse<object>());
-            }
-            try
-            {
-                var result = await jobService.GetByFilterAsync(new JobFilter()
-                {
-                });
-
-                return Ok(GetResponse(result));
-            }
-            catch (System.Exception ex)
-            {
-                log.Error(ex.Message, ex);
-
-                return Ok(GetExceptionResponse<object>(ex));
-            }
-        }
         /// <summary>
         /// Gets diplomas based on sent filters
         /// </summary>

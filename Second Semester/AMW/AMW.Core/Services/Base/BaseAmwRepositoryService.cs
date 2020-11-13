@@ -10,6 +10,21 @@ namespace AMW.Core.Services.Base
 {
     public abstract class BaseAmwRepositoryService
     {
+        #region Properties
+        protected readonly IDatabaseExecuterService databaseExecuterService;
+        #endregion
+
+        #region Constructer
+        /// <summary>
+        /// Default constructer
+        /// </summary>
+        /// <param name="databaseExecuterService"></param>
+        public BaseAmwRepositoryService(IDatabaseExecuterService databaseExecuterService)
+        {
+            this.databaseExecuterService = databaseExecuterService;
+        }
+        #endregion
+
         protected virtual Dictionary<string, object> GetEntityProperties(object entity)
         {
             if (entity == null)

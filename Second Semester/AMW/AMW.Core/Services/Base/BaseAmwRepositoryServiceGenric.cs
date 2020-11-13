@@ -6,14 +6,11 @@ using System.Threading.Tasks;
 
 namespace AMW.Core.Services.Base
 {
-    public abstract class BaseAmwRepositoryService<T> : BaseAmwRepositoryService, IRepositoryService<T>
+    public abstract class BaseAmwRepositoryService<T> : BaseAmwLookupRepositoryService<T>, IRepositoryService<T>
         where T : BaseEntity, new()
     {
         #region Poperties
-        protected readonly IDatabaseExecuterService databaseExecuterService;
-
-        public virtual string GetByIdProc { get; }
-        public virtual string GetByFilterProc { get; }
+        
         public virtual string InsertOrUpdateProc { get; }
         public virtual string DeleteEntityProc { get; }
         #endregion
@@ -23,57 +20,11 @@ namespace AMW.Core.Services.Base
         /// Default constructer
         /// </summary>
         public BaseAmwRepositoryService(IDatabaseExecuterService databaseExecuterService)
+            : base(databaseExecuterService)
         {
-            this.databaseExecuterService = databaseExecuterService;
         }
         #endregion
-        public virtual async Task<T> GetByIdAsync(int id)
-        {
 
-            if (string.IsNullOrEmpty(GetByIdProc))
-            {
-                throw new NotImplementedException("Could not get record by Id as no function was provided");
-            }
-
-            return await databaseExecuterService.RunStoredProcedureAsync(GetByIdProc, (reader) =>
-            {
-                var entity = new T();
-
-                entity.ParseData(reader);
-
-                return entity;
-            }, new Dictionary<string, object>()
-            {
-                {nameof(id),id }
-            });
-        }
-
-        public virtual async Task<IEnumerable<T>> GetByFilterAsync(BaseEntityFilter filter)
-        {
-            if (string.IsNullOrEmpty(GetByFilterProc))
-            {
-                throw new NotImplementedException("Could not get record by filter as no function was provided");
-            }
-
-            return await databaseExecuterService.RunStoredProcedureAsync(GetByFilterProc, (reader) =>
-            {
-                var filteredList = new List<T>();
-
-                do
-                {
-                    if (reader.HasRows)
-                    {
-                        var entity = new T();
-
-                        entity.ParseData(reader);
-
-                        filteredList.Add(entity);
-                    }
-                } while (reader.Reader.Read()); //we activate the read after as the first one is done in the base DB class
-                return filteredList;
-
-            }, GetEntityProperties(filter));
-        }
 
         public virtual async Task<T> InsertOrUpdateAsync(T entity)
         {

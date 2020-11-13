@@ -4,13 +4,9 @@ using System.Threading.Tasks;
 
 namespace AMW.Core.IServices
 {
-    public interface IRepositoryService<TEntity>
+    public interface IRepositoryService<TEntity> : ILookUpRepository<TEntity>
         where TEntity : BaseEntity
     {
-        Task<TEntity> GetByIdAsync(int id);
-
-        Task<IEnumerable<TEntity>> GetByFilterAsync(BaseEntityFilter filter);
-
         Task<TEntity> InsertOrUpdateAsync(TEntity entity);
 
         Task<IEnumerable<TEntity>> InsertOrUpdateAsync(IEnumerable<TEntity> entities);
