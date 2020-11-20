@@ -51,5 +51,13 @@ namespace AMW.Data.Models.Candidates
             Login = reader.GetValueIfExisits<string>(nameof(Login));
             Password = reader.GetValueIfExisits<string>(nameof(Password));
         }
+
+        #region Serialize Methods
+
+        public bool ShouldSerializePassword()
+        {
+            return false;
+        }
+        #endregion
     }
 }

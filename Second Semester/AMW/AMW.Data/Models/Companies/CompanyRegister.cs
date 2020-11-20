@@ -43,5 +43,14 @@ namespace AMW.Data.Models.Companies
             Login = reader.GetValueIfExisits<string>(nameof(Login));
             Password = reader.GetValueIfExisits<string>(nameof(Password));
         }
+
+
+        #region Serialize Methods
+
+        public bool ShouldSerializePassword()
+        {
+            return false;
+        }
+        #endregion
     }
 }
