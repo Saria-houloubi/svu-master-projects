@@ -4,6 +4,7 @@ using AMW.Data.Models.Amw;
 using AMW.Data.Models.Candidates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AMW.API.Controllers
@@ -27,6 +28,33 @@ namespace AMW.API.Controllers
         }
         #endregion
 
+        /// <summary>
+        /// Gets the candidate information
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                object result = null;
+                if (int.TryParse(User.Identity.Name, out var id))
+                {
+                    result = (await candidateService.GetByFilterAsync(new CandidateFilter()
+                    {
+                        Id = id
+                    })).FirstOrDefault();
+                }
+
+                return Ok(GetResponse(result));
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(ex.Message, ex);
+
+                return Ok(GetExceptionResponse<object>(ex));
+            }
+        }
         /// <summary>
         /// Creates a new candidate
         /// </summary>
