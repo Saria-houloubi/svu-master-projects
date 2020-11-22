@@ -1,7 +1,7 @@
 import React from 'react';
 import Register from '../Register/RegisterComponent';
 import { Form,Button } from 'react-bootstrap';
-import {Candidate} from '../../Api';
+import {Auth} from '../../Api';
 
 class LoginComponent extends React.Component{
 
@@ -25,7 +25,7 @@ class LoginComponent extends React.Component{
 
     getRegister(){
         if(this.state.withRegister){
-            return(<Register registerFormInputs={this.props.registerFromInputs}/>)
+            return(<Register registerFor={this.props.loginType} registerFormInputs={this.props.registerFromInputs} showAlert={this.props.showAlert}/>)
         }else{
             return;
         }
@@ -41,9 +41,9 @@ class LoginComponent extends React.Component{
     }
 
     handelLoginSubmit=(event)=>{
-        
         event.preventDefault();
-        Candidate.postLoginCandidate(this.state.login,this.state.password).then(data=>{
+
+        Auth.postLogin(this.props.loginType,this.state.login,this.state.password).then(data=>{
             if(data.status === 200){
                 this.props.onSuccessLogin(data.data)
             }else{

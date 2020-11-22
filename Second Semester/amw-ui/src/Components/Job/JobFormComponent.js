@@ -1,26 +1,26 @@
 import React from 'react';
 import { InputGroup,Form,Col, Button, Collapse } from 'react-bootstrap';
 import {Entity} from '../../Api';
-class RegisterCompnonet extends React.Component{
+class JobFormCompnonet extends React.Component{
 
     constructor(props){
         super(props);
 
         this.state = {
-            showRegisterInfo : false,
+            showFromPart : false,
             registerFor : this.props.registerFor
         }
 
     }
-    toggleLRegisterInfo=()=>{
+    toggleFromPart=()=>{
         this.setState({
-            showRegisterInfo : !this.state.showRegisterInfo
+            showFromPart : !this.state.showFromPart
         })
     }
     handelOnRegisterSubmit= (e)=>{
         e.preventDefault();
 
-        Entity.registerInfo(this.props.registerFor, this.props.registerFormInputs.reduce((acc,curr)=>{
+        Entity.registerInfo('job', this.props.formInputs.reduce((acc,curr)=>{
             console.log('acc',acc);
             console.log('curr',curr);
             return Object.assign({},acc,{
@@ -29,7 +29,8 @@ class RegisterCompnonet extends React.Component{
         },0))
         .then(data=>{
             if(data.status === 201){
-                this.props.showAlert(`Almost there ${data.data.fullName}, try to login with the register login and password`,'success');
+                this.props.showAlert(`A new job has been added`,'success');
+                this.props.onSuccessCreate(data.data);
             }else{
                 var errors = data.errors.map(item=>item.error).reduce((acc,curr) => {
                     return `${acc}, ${curr}`;
@@ -54,11 +55,11 @@ class RegisterCompnonet extends React.Component{
     render(){
         return(
             <div>
-                <p>Do not have an account yet! <Button variant='outline-primary' size='sm' onClick={this.toggleLRegisterInfo} > Register Now!</Button></p>
-                <Collapse in={this.state.showRegisterInfo}>
+                <p>Need a new hero <Button variant='outline-primary' size='sm' onClick={this.toggleFromPart} > Spread the word!</Button></p>
+                <Collapse in={this.state.showFromPart}>
                     <Form >
                         {
-                            this.props.registerFormInputs.map(item=>
+                            this.props.formInputs.map(item=>
                                 <Form.Row className='mb-3' key={item.order}>
                                     <Col >
                                         <Form.Label htmlFor={`inlineFormInput_${item.label}`} srOnly>
@@ -86,4 +87,4 @@ class RegisterCompnonet extends React.Component{
 }
 
 
-export default RegisterCompnonet;
+export default JobFormCompnonet;

@@ -39,6 +39,7 @@ class UserInformationComponents extends React.Component{
                         <ListGroup.Item variant='info'><b>Login:</b> {user.login}</ListGroup.Item>
                         <ListGroup.Item variant='info'><b>Tel:</b> {user.tel}</ListGroup.Item>
                         <ListGroup.Item variant='info'><b>Education Level:</b> {user.educationLevel}</ListGroup.Item>
+                        <ListGroup.Item variant='info'><b>Experince:</b> {user.experince}</ListGroup.Item>
                         <ListGroup.Item variant='info'><b>Diplomas:</b> 
                             {
                                 (()=>{

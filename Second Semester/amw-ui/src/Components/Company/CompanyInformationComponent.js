@@ -25,7 +25,7 @@ class CompanyInformationComponents extends React.Component{
         return(
             <Alert variant='info'>
                 <Alert.Heading>
-                    Welcome back <b>{user.fullName}</b> Lets find your next Job!
+                    Welcome back <b>{user.name}</b> Lets find your next hero!
                     <div className="d-flex justify-content-end">
                         <Button variant="outline-info" onClick={this.toggleLAccountInfoListGroup}>
                             My Info
@@ -35,7 +35,7 @@ class CompanyInformationComponents extends React.Component{
                 <hr/>
                 <Collapse in={this.state.showAccountInfo}>
                     <ListGroup variant='flush'>
-                        <ListGroup.Item disabled={false} variant='info'><b>Name:</b> {user.Name}</ListGroup.Item>
+                        <ListGroup.Item disabled={false} variant='info'><b>Name:</b> {user.name}</ListGroup.Item>
                         <ListGroup.Item variant='info'><b>Login:</b> {user.login}</ListGroup.Item>
                         <ListGroup.Item variant='info'><b>Tel:</b> {user.tel}</ListGroup.Item>
                         <ListGroup.Item variant='info'><b>Joind Date:</b> {user.creationDate}</ListGroup.Item>

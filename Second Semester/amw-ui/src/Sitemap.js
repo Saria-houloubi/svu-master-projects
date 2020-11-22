@@ -2,11 +2,11 @@
 const navigationBarLinks = 
 {
     all : [
-        {
-            id :1,
-            link: '/#Jobs',
-            title :'Jobs'
-        }
+        // {
+        //     id :1,
+        //     link: '/#Jobs',
+        //     title :'Jobs'
+        // }
     ],
     nonAuthorizedLinks : [
        
@@ -14,7 +14,6 @@ const navigationBarLinks =
 };
 
 const cookieDefaults = {
-    userInfo : '.Amw.user',
     token : '.Amw.token'
 }
 
@@ -22,46 +21,58 @@ const registerFrom = {
     candidate : [
         {
             order : 1,
+            name : 'fullName',
             label :'Full Name',
             srOnly : 'Full name',
             placeHolder : 'Full Name',
+            value :'name',
             required : true,
             type : 'text'
         },
         {
             order : 2,
+            name : 'login',
             label :'Login',
             srOnly : 'Login',
             placeHolder : 'Login',
+            value :'login',
             required : true,
             type : 'text'
         },
         {
             order : 3,
+            name : 'password',
             label :'Password',
             srOnly : 'Password',
             placeHolder : 'Password',
+            value :'password',
             required : true,
             type : 'password'
         },
         {
             order : 4,
+            name : 'educationLevel',
             label :'Education level',
             srOnly : 'Education level',
+            value :'levle',
             placeHolder : 'Education level',
             type : 'text'
         },
         {
             order : 5,
+            name : 'experince',
             label :'Experince',
             srOnly : 'Experince',
+            value :1,
             placeHolder : 'Experince',
             type : 'number'
         },
         {
             order : 6,
+            name : 'tel',
             label :'Tel',
             srOnly : 'Tel',
+            value :1,
             placeHolder : 'Tel',
             type : 'text'
         }
@@ -69,6 +80,7 @@ const registerFrom = {
     company : [
         {
             order : 1,
+            name : 'name',
             label :'Name',
             srOnly : 'Name',
             placeHolder : 'Name',
@@ -77,6 +89,7 @@ const registerFrom = {
         },
         {
             order : 2,
+            name : 'login',
             label :'Login',
             srOnly : 'Login',
             placeHolder : 'Login',
@@ -85,6 +98,7 @@ const registerFrom = {
         },
         {
             order : 3,
+            name : 'password',
             label :'Password',
             srOnly : 'Password',
             placeHolder : 'Password',
@@ -93,6 +107,7 @@ const registerFrom = {
         },
         {
             order : 4,
+            name : 'tel',
             label :'Tel',
             srOnly : 'Tel',
             placeHolder : 'Tel',

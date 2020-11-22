@@ -1,8 +1,15 @@
 import Lookup from './Controllers/LookupController';
-import Candidate from './Controllers/CandidateController';
+import Entity from './Controllers/EntityController';
+import Auth from './Controllers/AuthController';
+import {client} from './Controllers/BaseController';
 
+const setHeaderAuthToken=(token)=>{
+    client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
 
 export  {
     Lookup,
-    Candidate
+    Entity,
+    Auth,
+    setHeaderAuthToken
 }

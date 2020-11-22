@@ -6,6 +6,7 @@ import Navbar from './Components/Navigation/CustomNavbarCompnent';
 import UserInformation from './Components/User/UserInformationComponent';
 import CompanyInformation from './Components/Company/CompanyInformationComponent';
 import { Alert, Container } from 'react-bootstrap';
+import { Entity,setHeaderAuthToken } from './Api';
 
 class App extends React.Component{
 
@@ -25,34 +26,31 @@ class App extends React.Component{
 
     componentDidMount(){
         const cookies = new Cookies();
-        var cookieValue = cookies.get(cookieDefaults.userInfo);
+        var cookieValue = cookies.get(cookieDefaults.token);
+
         if(cookieValue){
+
             this.setState(
                 {
                     isLogedIn : true,
-                    userInfo : cookieValue
-                })
-        }
-        else{
-            // cookies.set(cookieName,JSON.stringify(
-            //     {
-            //         fullName:'saria',
-            //         tel: '000000',
-            //         educationLevel : 'leve',
-            //         creationDate : new Date(),
-            //         login : 'login',
-            //         diplomas:[{
-            //             id : 1,
-            //             title : 'diploma 1',
-            //             creationDate : new Date()
-            //         },
-            //         {
-            //             id : 1,
-            //             title : 'diploma 2',
-            //             creationDate : new Date()
-            //         }]
-            //     }
-            // ));
+                    viewType : cookieValue.type
+                });
+
+            //Setup the authentication
+            setHeaderAuthToken(cookieValue.token);
+            //Get current informatoin information
+            Entity.getInfo(cookieValue.type).then(res=>{
+                console.log(res)
+                if(res && res.status === 200 && res.count === 1){
+                    this.setState(
+                        {
+                            userInfo : res.data
+                        })
+                }
+                else if(res){
+                    this.handelSuccessLogout();
+                }
+            })
         }
     }
 
@@ -82,8 +80,10 @@ class App extends React.Component{
 
     handelSuccessLogin = (userInfo) => {
         const cookies = new Cookies();
-        cookies.set(cookieDefaults.token,userInfo.extra['token']);
-        cookies.set(cookieDefaults.userInfo,userInfo);
+        cookies.set(cookieDefaults.token,{
+            token : userInfo.extra['token'],
+            type :this.state.viewType
+        });
      
         this.setState(
             {
@@ -96,6 +96,8 @@ class App extends React.Component{
         const cookies = new Cookies();
         cookies.remove(cookieDefaults.token);
         cookies.remove(cookieDefaults.userInfo);
+        setHeaderAuthToken('');
+
         this.setState(
             {
                 isLogedIn : false,
@@ -115,7 +117,7 @@ class App extends React.Component{
             }   
         }else{
             return(
-                <Login withRegister={true} registerFromInputs={registerFrom[this.state.viewType]} showAlert={this.handelShowTopAlert} onSuccessLogin={this.handelSuccessLogin}/>
+                <Login withRegister={true} registerFromInputs={registerFrom[this.state.viewType]} loginType={this.state.viewType} showAlert={this.handelShowTopAlert} onSuccessLogin={this.handelSuccessLogin}/>
             )
         }
     }
