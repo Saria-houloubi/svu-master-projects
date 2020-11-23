@@ -5,6 +5,8 @@ import Login from './Components/Login/LoginComponent';
 import Navbar from './Components/Navigation/CustomNavbarCompnent';
 import UserInformation from './Components/User/UserInformationComponent';
 import CompanyInformation from './Components/Company/CompanyInformationComponent';
+import JobForm from './Components/Job/JobFormComponent';
+import JobList from './Components/Job/JobListComponent';
 import { Alert, Container } from 'react-bootstrap';
 import { Entity,setHeaderAuthToken } from './Api';
 
@@ -105,13 +107,20 @@ class App extends React.Component{
             })
     }
     
+    handelSuccessJobFomr(job){
+        console.log(job);
+        this.setState({
+            newJob : job
+        })
+    }
+
     getAccountInformation= ()=>{
         if(this.state.isLogedIn){
             switch(this.state.viewType){
                 case 'candidate':
                     return(<UserInformation user={this.state.userInfo} />)
                 case 'company':
-                    return(<CompanyInformation user={this.state.userInfo}/>)
+                    return this.getCompanyComponents()
                 default:
                     return;
             }   
@@ -122,6 +131,15 @@ class App extends React.Component{
         }
     }
 
+    getCompanyComponents=()=>{
+        return(
+            <div>
+                <CompanyInformation user={this.state.userInfo}/>
+                <JobForm formInputs={registerFrom['job']}  showAlert={this.handelShowTopAlert} onSuccessCreate={this.handelSuccessJobFomr} />
+                <JobList newJob={this.state.newJob}/>
+            </div>
+        )
+    }
     getTopAlert= ()=>{
         if(this.state.showHeaderAlert)
             return (<Alert className="m-3" variant={this.state.alertType}>{this.state.alertMessage}</Alert>);

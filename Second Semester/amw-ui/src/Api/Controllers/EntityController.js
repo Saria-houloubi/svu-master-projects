@@ -18,8 +18,17 @@ const registerInfo= (type,info)=>
     .then(res=>res.data)
     .catch(err=>onErrorRequest(err))
 
+//
+//Gets entity information based on a filter
+//
+const getByFilter= (type,filterData)=>
+    client.post(`${type}/filter`,filterData)
+    .then(res=>res.data)
+    .catch(err=>onErrorRequest(err))
+
 
 export default {
     getInfo,
-    registerInfo
+    registerInfo,
+    getByFilter
 }

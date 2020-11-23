@@ -113,8 +113,46 @@ const registerFrom = {
             placeHolder : 'Tel',
             type : 'text'
         }
-    ]
-
+    ],
+    job : [
+        {
+            order : 1,
+            name : 'title',
+            label :'Title',
+            srOnly : 'title',
+            placeHolder : 'Title',
+            value :'title',
+            required : true,
+            type : 'text'
+        },
+        {
+            order : 2,
+            name : 'educationLevel',
+            label :'Education level',
+            srOnly : 'Education level',
+            value :'levle',
+            placeHolder : 'Education level',
+            type : 'text'
+        },
+        {
+            order : 3,
+            name : 'experienceYears',
+            label :'Experience Years',
+            srOnly : 'Experience Years',
+            value :1,
+            placeHolder : 'Experience Years',
+            type : 'number'
+        },
+        {
+            order : 4,
+            name : 'salery',
+            label :'Salery',
+            srOnly : 'salery',
+            value :0,
+            placeHolder : 'Salery',
+            type : 'number'
+        }
+    ],
 };
 
 const account = 

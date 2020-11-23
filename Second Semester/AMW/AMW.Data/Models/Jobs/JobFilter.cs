@@ -10,7 +10,7 @@ namespace AMW.Data.Models.Jobs
         [SqlParam]
         public string Title { get; set; }
         [SqlParam]
-        public Nullable<int> Company { get; set; }
+        public string Company { get; set; }
         [SqlParam]
         public string EducationLevel { get; set; }
         [SqlParam]

@@ -4,13 +4,13 @@ const apiEndPoint = 'lookup';
 
 
 //
-//Gets all the education levels for user to choose from
+//Gets lookup data based on a type
 //
-const getEducationLevels = () => 
-     client.get(`${apiEndPoint}/EducationLevels`)
+const getLookupData = (type) => 
+     client.get(`${apiEndPoint}/${type}`)
     .then(res => {return res.data})
     .catch(err=>onErrorRequest(err))
 
 export default{
-    getEducationLevels
+    getLookupData
 }

@@ -8,7 +8,6 @@ class JobFormCompnonet extends React.Component{
 
         this.state = {
             showFromPart : false,
-            registerFor : this.props.registerFor
         }
 
     }
@@ -21,8 +20,6 @@ class JobFormCompnonet extends React.Component{
         e.preventDefault();
 
         Entity.registerInfo('job', this.props.formInputs.reduce((acc,curr)=>{
-            console.log('acc',acc);
-            console.log('curr',curr);
             return Object.assign({},acc,{
                [curr.name] : this.state[curr.name] 
             })
