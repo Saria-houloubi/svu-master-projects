@@ -1,5 +1,6 @@
 ﻿using AMW.Data.Attributes;
 using AMW.Data.Models.Base;
+using System;
 
 namespace AMW.Data.Models.Jobs
 {
@@ -9,13 +10,13 @@ namespace AMW.Data.Models.Jobs
         [SqlParam]
         public string Title { get; set; }
         [SqlParam]
-        public int Company { get; set; }
+        public Nullable<int> Company { get; set; }
         [SqlParam]
         public string EducationLevel { get; set; }
         [SqlParam]
-        public int ExperienceYears { get; set; }
+        public Nullable<int> ExperienceYears { get; set; }
         [SqlParam]
-        public int Salery { get; set; }
+        public Nullable<int> Salery { get; set; }
         #endregion
     }
 }

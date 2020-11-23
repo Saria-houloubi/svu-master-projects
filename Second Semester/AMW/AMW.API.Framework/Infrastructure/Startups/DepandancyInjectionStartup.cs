@@ -5,11 +5,13 @@ using AMW.Core.Services.Candidates;
 using AMW.Core.Services.Companies;
 using AMW.Core.Services.Diplomas;
 using AMW.Core.Services.Educations;
+using AMW.Core.Services.Jobs;
 using AMW.Data.Models.Amw;
 using AMW.Data.Models.Candidates;
 using AMW.Data.Models.Companies;
 using AMW.Data.Models.Diplomas;
 using AMW.Data.Models.Educations;
+using AMW.Data.Models.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +37,7 @@ namespace AMW.API.Framework.Infrastructure.Startups
             services.AddSingleton<IRepositoryService<Candidate>, CandidateService>();
             services.AddSingleton<IRepositoryService<Company>, CompanyService>();
             services.AddSingleton<IRepositoryService<Diploma>, DiplomaService>();
+            services.AddSingleton<IRepositoryService<Job>, JobService>();
 
 
             services.AddSingleton<IAuthService<Candidate, AmwSecure>, CandidateAuthService>();

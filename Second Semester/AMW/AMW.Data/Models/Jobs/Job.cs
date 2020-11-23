@@ -3,6 +3,7 @@ using AMW.Data.Models.Base;
 using AMW.Shared.Extensions;
 using AMW.Shared.Models;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace AMW.Data.Models.Jobs
 {
@@ -10,6 +11,7 @@ namespace AMW.Data.Models.Jobs
     {
         #region Properties
         [SqlParam]
+        [Required]
         public string Title { get; set; }
         [SqlParam]
         [JsonIgnore]
