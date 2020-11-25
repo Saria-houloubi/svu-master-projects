@@ -1,6 +1,7 @@
 ﻿using AMW.API.Attributes;
 using AMW.API.Controllers.Base;
 using AMW.Core.IServices;
+using AMW.Data.Models.Candidates;
 using AMW.Data.Models.Companies;
 using AMW.Data.Models.Jobs;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +16,64 @@ namespace AMW.API.Controllers
         #region Properties
 
         private readonly IRepositoryService<Job> jobService;
+        private readonly IRepositoryService<Candidate> candidateService;
         #endregion
 
         #region Constructer
 
-        public JobController(IRepositoryService<Job> jobService)
+        public JobController(IRepositoryService<Job> jobService, IRepositoryService<Candidate> candidateService )
         {
             this.jobService = jobService;
+            this.candidateService = candidateService;
         }
         #endregion
+        /// <summary>
+        /// Gets a list of all sutable for a candidate
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("list/suitable")]
+        [AuthorizeJwt(Roles = "Candidate")]
+        public async Task<IActionResult> GetSuitable()
+        {
+            try
+            {
+                var candidate = await candidateService.GetByIdAsync(int.Parse(User.Identity.Name));
 
+                var result = await jobService.GetByFilterAsync(new JobFilter()
+                {
+                    EducationLevel = candidate?.EducationLevel,
+                    ExperienceYears = candidate?.Experince,
+                });
+
+                return Ok(GetResponse(result));
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(ex.Message, ex);
+
+                return Ok(GetExceptionResponse<object>(ex));
+            }
+        }
+        /// <summary>
+        /// Gets a list of all jobs 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("list")]
+        public async Task<IActionResult> GetList()
+        {
+            try
+            {
+                var result = await jobService.GetByFilterAsync(new JobFilter());
+
+                return Ok(GetResponse(result));
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(ex.Message, ex);
+
+                return Ok(GetExceptionResponse<object>(ex));
+            }
+        }
         /// <summary>
         /// Creates a new job
         /// </summary>
