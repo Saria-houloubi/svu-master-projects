@@ -1,4 +1,5 @@
-﻿using AMW.Data.Models.Base;
+﻿using AMW.Data.Abstraction.Sorting;
+using AMW.Data.Models.Base;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,6 @@ namespace AMW.Core.IServices
     {
         Task<T> GetByIdAsync(int id);
 
-        Task<IEnumerable<T>> GetByFilterAsync(BaseEntityFilter filter);
+        Task<IEnumerable<T>> GetByFilterAsync(BaseEntityFilter filter, ISorter<T> sorter = null);
     }
 }

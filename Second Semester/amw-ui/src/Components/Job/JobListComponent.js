@@ -15,7 +15,8 @@ class JobListComponent extends React.Component{
             filter:{},
             companies:[],
             educationLevels:[],
-            sort:{}
+            sort:{},
+            order: {}
         }
     }
 
@@ -84,6 +85,37 @@ class JobListComponent extends React.Component{
             }
         },()=>this.getJobs())
     }
+    handelSortTypeChange = (event)=>{
+        this.setState({
+            order : {
+                ...this.state.order,
+                type : event.target.defaultValue
+            },
+            jobList : this.state.jobList.sort(this.handelSort)
+
+        })
+    }
+
+    handelSortChange = (event)=>{
+        this.setState({
+            order : {
+                ...this.state.order,
+                by : event.target.value
+            },
+            jobList : this.state.jobList.sort(this.handelSort)
+        })
+
+    }
+    handelSort= (a,b)=>{
+        if(this.state.order.by && this.state.order.type){
+            if(this.state.order.by === 'asc')
+                return a[this.state.order.type] > b[this.state.order.type]
+            else
+                return a[this.state.order.type] < b[this.state.order.type]
+        }
+        return true;
+    }
+
 
     render(){
         return(
@@ -191,14 +223,16 @@ class JobListComponent extends React.Component{
                        <Form.Label>Sort by</Form.Label>
                     </Col>
                     <Col>
-                        <Form.Control name='sortby' as='select' stateprop='sort' onChange={this.handelFormChange}>
+                        <Form.Control name='sortby' as='select' stateprop='sort' onChange={this.handelSortChange}>
                             <option value='educationLevel'>Education Level</option>
                             <option value='experienceYears'>ExperienceYears</option>
                         </Form.Control>
                     </Col>
                     <Col md='auto'>
-                        <Form.Check inline label='ASC' type='radio' name='sorttype' stateprop='sort' value='asc' onChange={this.handelFormChange}/>
-                        <Form.Check inline label='DESC' type='radio' name='sorttype' stateprop='sort' value='desc' onChange={this.handelFormChange}/>
+                        <Form.Group controlId="formBasicCheckbox" onChange={this.handelSortTypeChange}>
+                            <Form.Check inline label='ASC' type='radio' name='sorttype'  stateprop='sort' value='asc' />
+                            <Form.Check inline label='DESC' type='radio' name='sorttype' stateprop='sort' value='desc' />
+                        </Form.Group>
                     </Col>
                   
                 </Row>

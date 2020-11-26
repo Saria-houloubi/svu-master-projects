@@ -1,4 +1,5 @@
 ﻿using AMW.Core.IServices;
+using AMW.Data.Abstraction.Sorting;
 using AMW.Data.Models.Base;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace AMW.Core.Services.Base
         }
         #endregion
 
-        public virtual async Task<IEnumerable<T>> GetByFilterAsync(BaseEntityFilter filter)
+        public virtual async Task<IEnumerable<T>> GetByFilterAsync(BaseEntityFilter filter, ISorter<T> sorter = null)
         {
             if (string.IsNullOrEmpty(GetByFilterProc))
             {
@@ -48,6 +49,11 @@ namespace AMW.Core.Services.Base
                         filteredList.Add(entity);
                     }
                 } while (reader.Reader.Read()); //we activate the read after as the first one is done in the base DB class
+
+                if (sorter != null)
+                {
+                    filteredList = new List<T>(sorter.Sort(filteredList));
+                }
                 return filteredList;
 
             }, GetEntityProperties(filter));

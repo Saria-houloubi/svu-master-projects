@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AMW.Core.IServices;
+﻿using AMW.Core.IServices;
 using AMW.Core.Services.Base;
+using AMW.Data.Abstraction.Sorting;
 using AMW.Data.Models.Base;
 using AMW.Data.Models.Candidates;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AMW.Core.Services.Candidates
 {
@@ -16,7 +17,7 @@ namespace AMW.Core.Services.Candidates
         }
         #endregion
 
-        public override async Task<IEnumerable<Candidate>> GetByFilterAsync(BaseEntityFilter filter)
+        public override async Task<IEnumerable<Candidate>> GetByFilterAsync(BaseEntityFilter filter, ISorter<Candidate> sorter = null)
         {
             return await databaseExecuterService.RunStoredProcedureAsync(GetByFilterProc, (reader) =>
             {
@@ -32,6 +33,7 @@ namespace AMW.Core.Services.Candidates
 
                         filteredList.Add(entity);
                     }
+
                 } while (reader.Reader.Read()); //we activate the read after as the first one is done in the base DB class
                 return filteredList;
 

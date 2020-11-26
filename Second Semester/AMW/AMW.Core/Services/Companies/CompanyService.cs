@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AMW.Core.IServices;
+﻿using AMW.Core.IServices;
 using AMW.Core.Services.Base;
+using AMW.Data.Abstraction.Sorting;
 using AMW.Data.Models.Base;
 using AMW.Data.Models.Companies;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AMW.Core.Services.Companies
 {
@@ -20,7 +21,7 @@ namespace AMW.Core.Services.Companies
         }
         #endregion
 
-        public override async Task<IEnumerable<Company>> GetByFilterAsync(BaseEntityFilter filter)
+        public override async Task<IEnumerable<Company>> GetByFilterAsync(BaseEntityFilter filter, ISorter<Company> sorter = null)
         {
             return await databaseExecuterService.RunStoredProcedureAsync(GetByFilterProc, (reader) =>
             {
