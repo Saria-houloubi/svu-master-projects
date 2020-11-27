@@ -12,6 +12,8 @@ namespace AMW.Data.Models.Jobs
         [SqlParam]
         public string Company { get; set; }
         [SqlParam]
+        public Nullable<int> CompanyId { get; set; }
+        [SqlParam]
         public string EducationLevel { get; set; }
         [SqlParam]
         public Nullable<int> ExperienceYears { get; set; }

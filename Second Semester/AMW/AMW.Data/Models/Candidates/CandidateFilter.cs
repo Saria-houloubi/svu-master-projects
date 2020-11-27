@@ -10,6 +10,8 @@ namespace AMW.Data.Models.Candidates
         public string Login { get; set; }
         [SqlParam]
         public string EducationLevel { get; set; }
+        [SqlParam]
+        public int Experince { get; set; }
         #endregion
     }
 }

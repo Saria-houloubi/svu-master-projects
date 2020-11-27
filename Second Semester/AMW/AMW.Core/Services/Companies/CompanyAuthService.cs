@@ -5,6 +5,7 @@ using AMW.Data.Models.Companies;
 using AMW.Shared.Extensioins.String;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AMW.Core.Services.Companies
@@ -36,7 +37,7 @@ namespace AMW.Core.Services.Companies
 
             if (company != null && company is CompanyRegister fullInfo && fullInfo.Password.VertifyPassword(entity.Password))
             {
-                company.Extra.Add("token", CreateJwtToken(company));
+                company.Extra.Add("token", CreateJwtToken(company, new Claim(ClaimTypes.NameIdentifier, company.Name)));
                 return company;
             }
 

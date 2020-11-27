@@ -1,5 +1,6 @@
 ﻿using AMW.Data.Models.Base;
 using AMW.Data.Models.General;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AMW.Core.IServices
@@ -12,7 +13,7 @@ namespace AMW.Core.IServices
     public interface IAuthService<TFor, TSecure> {
         Task<TFor> TryAuthenticateAsync(TSecure entity);
 
-        string CreateJwtToken(TFor model);
+        string CreateJwtToken(TFor model, params Claim[] extra);
 
         JwtTokenSettings SetupJwtTokenSettings();
     }

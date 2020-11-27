@@ -54,6 +54,41 @@ namespace AMW.API.Controllers
                 return Ok(GetExceptionResponse<object>(ex));
             }
         }
+
+        /// <summary>
+        /// Gets a list of all sutable for a candidate
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("list/suitable/{id}/candidate")]
+        [AuthorizeJwt(Roles = "Company")]
+        public async Task<IActionResult> GetSuitableCandidate([FromRoute] int id, [FromQuery] CandidateSorter sorter)
+        {
+            try
+            {
+                object result = null;
+
+                var job = await jobService.GetByIdAsync(id);
+
+                if (job != null)
+                {
+
+                    result = await candidateService.GetByFilterAsync(new CandidateFilter()
+                    {
+                        EducationLevel = job.EducationLevel,
+                        Experince = job.ExperienceYears
+                    }, sorter);
+                }
+
+                return Ok(GetResponse(result));
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(ex.Message, ex);
+
+                return Ok(GetExceptionResponse<object>(ex));
+            }
+        }
+
         /// <summary>
         /// Gets a list of all jobs 
         /// </summary>
@@ -63,7 +98,13 @@ namespace AMW.API.Controllers
         {
             try
             {
-                var result = await jobService.GetByFilterAsync(new JobFilter(), sorter);
+                var jobFilter = new JobFilter();
+
+                if (User.IsInRole("Company"))
+                {
+                    jobFilter.CompanyId = int.Parse(User.Identity.Name);
+                }
+                var result = await jobService.GetByFilterAsync(jobFilter, sorter);
 
                 return Ok(GetResponse(result));
             }

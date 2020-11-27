@@ -21,7 +21,7 @@ namespace AMW.Core.Services.Candidates
         {
             return await databaseExecuterService.RunStoredProcedureAsync(GetByFilterProc, (reader) =>
             {
-                var filteredList = new List<CandidateRegister>();
+                var filteredList = new List<Candidate>();
 
                 do
                 {
@@ -32,6 +32,11 @@ namespace AMW.Core.Services.Candidates
                         entity.ParseData(reader);
 
                         filteredList.Add(entity);
+                    }
+
+                    if (sorter != null)
+                    {
+                        filteredList = new List<Candidate>(sorter.Sort(filteredList));
                     }
 
                 } while (reader.Reader.Read()); //we activate the read after as the first one is done in the base DB class

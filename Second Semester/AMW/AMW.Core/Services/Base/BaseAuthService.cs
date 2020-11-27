@@ -5,6 +5,7 @@ using log4net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -30,18 +31,25 @@ namespace AMW.Core.Services.Base
         }
         #endregion
 
-        public virtual string CreateJwtToken(TFor model)
+        public virtual string CreateJwtToken(TFor model, params Claim[] extra)
         {
             JwtTokenSettings = JwtTokenSettings ?? SetupJwtTokenSettings();
 
             //Set the claims for the token
-            var claims = new[]
+            var claims = new List<Claim>()
             {
                 //Set a unique key for the clam
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name,model.Id.ToString()),
-                new Claim(ClaimTypes.Role,typeof(TFor).Name)
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, model.Id.ToString()),
+                new Claim(ClaimTypes.Role, typeof(TFor).Name)
             };
+            foreach (var item in extra)
+            {
+                if (!claims.Contains(item))
+                {
+                    claims.Add(item);
+                };
+            }
             //Create the credentials that are used for the token
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtTokenSettings.SecretKey)),

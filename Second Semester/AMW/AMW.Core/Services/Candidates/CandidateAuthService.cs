@@ -5,6 +5,7 @@ using AMW.Data.Models.Candidates;
 using AMW.Shared.Extensioins.String;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AMW.Core.Services.Candidates
@@ -36,7 +37,7 @@ namespace AMW.Core.Services.Candidates
 
             if (candidate != null && candidate is CandidateRegister fullInfo && fullInfo.Password.VertifyPassword(entity.Password))
             {
-                candidate.Extra.Add("token", CreateJwtToken(candidate));
+                candidate.Extra.Add("token", CreateJwtToken(candidate, new Claim(ClaimTypes.NameIdentifier, candidate.FullName)));
                 return (candidate as Candidate);
             }
 

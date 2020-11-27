@@ -1,4 +1,5 @@
 ﻿using AMW.Data.Attributes;
+using AMW.Data.Attributes.Swagger;
 using AMW.Data.Models.Base;
 using AMW.Shared.Extensions;
 using AMW.Shared.Models;
@@ -14,8 +15,10 @@ namespace AMW.Data.Models.Jobs
         [Required]
         public string Title { get; set; }
         [SqlParam]
-        [JsonIgnore]
+        [SwaggerIgnore]
         public int CompanyId { get; set; }
+        [SwaggerIgnore]
+        public string CompanyName { get; set; }
         [SqlParam]
         public string EducationLevel { get; set; }
         [SqlParam]
@@ -35,6 +38,8 @@ namespace AMW.Data.Models.Jobs
                 EducationLevel = reader.GetValueIfExisits<string>(nameof(EducationLevel));
                 ExperienceYears = reader.GetValueIfExisits<int>(nameof(ExperienceYears));
                 Salery = reader.GetValueIfExisits<int>(nameof(Salery));
+                CompanyId = reader.GetValueIfExisits<int>(nameof(CompanyId));
+                CompanyName = reader.GetValueIfExisits<string>(nameof(CompanyName));
             }
 
         }
