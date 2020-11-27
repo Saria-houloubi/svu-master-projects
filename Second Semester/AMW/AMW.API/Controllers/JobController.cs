@@ -4,10 +4,7 @@ using AMW.Core.IServices;
 using AMW.Data.Models.Candidates;
 using AMW.Data.Models.Companies;
 using AMW.Data.Models.Jobs;
-using AMW.Shared.Enums;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AMW.API.Controllers
@@ -36,7 +33,7 @@ namespace AMW.API.Controllers
         /// <returns></returns>
         [HttpGet("list/suitable")]
         [AuthorizeJwt(Roles = "Candidate")]
-        public async Task<IActionResult> GetSuitable([FromQuery] Dictionary<string, SortType> sortProperties)
+        public async Task<IActionResult> GetSuitable([FromQuery] JobSorter sorter)
         {
             try
             {
@@ -46,10 +43,7 @@ namespace AMW.API.Controllers
                 {
                     EducationLevel = candidate?.EducationLevel,
                     ExperienceYears = candidate?.Experince,
-                }, new JobSorter()
-                {
-                    SortByProperties = sortProperties
-                });
+                }, sorter);
 
                 return Ok(GetResponse(result));
             }
@@ -65,14 +59,11 @@ namespace AMW.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<IActionResult> GetList([FromQuery] Dictionary<string, SortType> sortProperties)
+        public async Task<IActionResult> GetList([FromQuery] JobSorter sorter)
         {
             try
             {
-                var result = await jobService.GetByFilterAsync(new JobFilter(), new JobSorter()
-                {
-                    SortByProperties = sortProperties
-                });
+                var result = await jobService.GetByFilterAsync(new JobFilter(), sorter);
 
                 return Ok(GetResponse(result));
             }
